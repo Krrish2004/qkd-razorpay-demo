@@ -63,7 +63,16 @@ def simulate_transaction(n_bits=1000, error_rate=0.01, eavesdropper=False, amoun
     qkd_time = time.time() - start_time
     
     if not success:
-        logger.error("QKD key generation failed. Aborting transaction.")
+        if qkd.eavesdropper:
+            logger.error("CRITICAL SECURITY ALERT: QKD key generation failed with eavesdropper present!")
+            logger.error("Possible quantum channel tampering detected. Transaction ABORTED for security reasons.")
+            # Print a more visible security warning
+            print("\n" + "!" * 80)
+            print("!! SECURITY BREACH DETECTED: Quantum channel compromised by eavesdropper !!")
+            print("!! All transactions have been blocked as a security precaution        !!")
+            print("!" * 80 + "\n")
+        else:
+            logger.error("QKD key generation failed due to technical issues. Aborting transaction.")
         return False
     
     logger.info(f"Generated quantum-secured key: {quantum_key.hex()}")
