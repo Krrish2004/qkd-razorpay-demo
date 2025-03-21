@@ -1,0 +1,10 @@
+qiskit
+qiskit-aer
+razorpay
+requests
+cryptography
+python-dotenv
+matplotlib
+numpy
+flask
+flask-cors 

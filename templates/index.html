@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Key Distribution for Razorpay Security</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-atom spin"></i>
+            <h1>QKD + Razorpay</h1>
+        </div>
+        <h2>Quantum-Secured Payment Transactions</h2>
+    </header>
+
+    <main>
+        <section class="card" id="intro">
+            <h3>Quantum Key Distribution Demo</h3>
+            <p>This demo shows how quantum key distribution (QKD) can secure online payment transactions. 
+               The BB84 protocol is simulated to generate secure encryption keys that protect payment data.</p>
+            <div class="buttons">
+                <button id="startDemo" class="primary">Start New Simulation</button>
+                <button id="showHistory">View History</button>
+            </div>
+        </section>
+
+        <div id="configModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3>Configure Simulation</h3>
+                <form id="configForm">
+                    <div class="form-group">
+                        <label for="qubits">Number of Qubits:</label>
+                        <input type="number" id="qubits" name="qubits" min="100" max="5000" value="1000">
+                        <span class="tooltip">More qubits = more secure, but slower simulation</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="errorRate">Error Rate:</label>
+                        <input type="number" id="errorRate" name="error_rate" min="0" max="0.2" step="0.01" value="0.01">
+                        <span class="tooltip">Simulates quantum channel noise (0-0.2)</span>
+                    </div>
+                    <div class="form-group checkbox">
+                        <input type="checkbox" id="eavesdropper" name="eavesdropper">
+                        <label for="eavesdropper">Simulate Eavesdropper (Eve)</label>
+                        <span class="tooltip">Adds an eavesdropper that tries to intercept the quantum key</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Payment Amount (₹):</label>
+                        <input type="number" id="amount" name="amount" min="100" max="1000000" value="500">
+                        <span class="tooltip">Amount in INR (will be converted to paise)</span>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="primary">Start Simulation</button>
+                        <button type="button" class="cancel">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <section id="simulationContainer" class="hidden">
+            <div class="card" id="simulationInfo">
+                <h3>Simulation <span id="simulationId"></span></h3>
+                <div class="simulation-status">
+                    <div class="status-badge" id="statusBadge">Initializing</div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                    <div class="step-label" id="currentStep">Initializing simulation...</div>
+                </div>
+            </div>
+
+            <div class="columns">
+                <section class="card" id="quantumVisualization">
+                    <h3>Quantum Key Distribution</h3>
+                    <div class="visualization-container">
+                        <div id="visualizationPlaceholder">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>Generating visualization...</p>
+                        </div>
+                        <img id="qkdVisualization" class="hidden" alt="QKD Visualization">
+                    </div>
+                    <div class="qkd-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Quantum Key:</span>
+                            <span class="metric-value" id="quantumKey">Generating...</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">QKD Time:</span>
+                            <span class="metric-value" id="qkdTime">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Bits Used:</span>
+                            <span class="metric-value" id="bitsUsed">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Base Match Rate:</span>
+                            <span class="metric-value" id="baseMatchRate">-</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="card" id="transactionFlow">
+                    <h3>Transaction Flow</h3>
+                    <div class="flow-steps">
+                        <div class="flow-step" data-step="1">
+                            <div class="step-icon"><i class="fas fa-key"></i></div>
+                            <div class="step-content">
+                                <h4>Quantum Key Generation</h4>
+                                <p>BB84 protocol simulation creates a shared secret key</p>
+                                <div class="step-status" id="step1Status">Pending</div>
+                            </div>
+                        </div>
+                        <div class="flow-step" data-step="2">
+                            <div class="step-icon"><i class="fas fa-lock"></i></div>
+                            <div class="step-content">
+                                <h4>Encryption</h4>
+                                <p>Payment data encrypted with quantum-generated key</p>
+                                <div class="step-status" id="step2Status">Pending</div>
+                            </div>
+                        </div>
+                        <div class="flow-step" data-step="3">
+                            <div class="step-icon"><i class="fas fa-shopping-cart"></i></div>
+                            <div class="step-content">
+                                <h4>Razorpay Order</h4>
+                                <p>Creating and processing payment order</p>
+                                <div class="step-status" id="step3Status">Pending</div>
+                            </div>
+                        </div>
+                        <div class="flow-step" data-step="4">
+                            <div class="step-icon"><i class="fas fa-check-circle"></i></div>
+                            <div class="step-content">
+                                <h4>Verification</h4>
+                                <p>Verify payment and decrypt data</p>
+                                <div class="step-status" id="step4Status">Pending</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <section class="card" id="results">
+                <h3>Results & Performance Analysis</h3>
+                <div class="results-container">
+                    <div class="result-section">
+                        <h4>Transaction Summary</h4>
+                        <table class="results-table">
+                            <tr>
+                                <td>Order ID:</td>
+                                <td id="resultOrderId">-</td>
+                            </tr>
+                            <tr>
+                                <td>Payment ID:</td>
+                                <td id="resultPaymentId">-</td>
+                            </tr>
+                            <tr>
+                                <td>Amount:</td>
+                                <td id="resultAmount">-</td>
+                            </tr>
+                            <tr>
+                                <td>Status:</td>
+                                <td id="resultStatus">-</td>
+                            </tr>
+                            <tr>
+                                <td>Total Time:</td>
+                                <td id="resultTotalTime">-</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="result-section">
+                        <h4>Performance Comparison</h4>
+                        <table class="results-table">
+                            <tr>
+                                <td>QKD-based Encryption:</td>
+                                <td id="qkdEncryptionTime">-</td>
+                            </tr>
+                            <tr>
+                                <td>QKD-based Decryption:</td>
+                                <td id="qkdDecryptionTime">-</td>
+                            </tr>
+                            <tr>
+                                <td>Standard Encryption:</td>
+                                <td id="standardEncryptionTime">-</td>
+                            </tr>
+                            <tr>
+                                <td>Standard Decryption:</td>
+                                <td id="standardDecryptionTime">-</td>
+                            </tr>
+                            <tr>
+                                <td>Overhead:</td>
+                                <td id="overhead">-</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button id="newSimulation" class="primary">New Simulation</button>
+                    <button id="downloadReport">Download Report</button>
+                </div>
+            </section>
+        </section>
+
+        <section class="card hidden" id="historyContainer">
+            <h3>Simulation History</h3>
+            <div class="table-container">
+                <table id="historyTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Started</th>
+                            <th>Status</th>
+                            <th>Time</th>
+                            <th>Amount</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <!-- Simulation history rows will be added here -->
+                    </tbody>
+                </table>
+                <div id="noHistory" class="hidden">No simulations found</div>
+            </div>
+            <div class="buttons">
+                <button id="backToHome" class="primary">Back to Home</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Quantum Key Distribution (QKD) for Enhanced Security in Razorpay API Transactions</p>
+        <p>A System Engineering Demo | <a href="https://github.com/yourusername/qkd-razorpay-demo" target="_blank">GitHub <i class="fab fa-github"></i></a></p>
+    </footer>
+
+    <script src="/static/app.js"></script>
+</body>
+</html> 
