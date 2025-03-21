@@ -17,6 +17,7 @@ from flask_cors import CORS
 from qkd_module import QKDSimulator
 from encryption import QuantumEncryption
 from razorpay_api import RazorpayIntegration
+from fraud_detection import FraudDetectionAI
 from main import initialize_dotenv
 
 # Configure logging
@@ -82,7 +83,8 @@ def run_simulation(simulation_id, config):
         # Step 1: Generate quantum-secured keys using BB84 protocol
         update_simulation(
             simulation_id, 'running', 
-            'Initializing QKD simulator', 10
+            'Initializing QKD simulator', 10,
+            current_step_index=1  # For UI step tracking
         )
         
         # Create QKD simulator
@@ -96,7 +98,8 @@ def run_simulation(simulation_id, config):
         # Generate keys
         update_simulation(
             simulation_id, 'running', 
-            'Running quantum key distribution protocol', 15
+            'Running quantum key distribution protocol', 15,
+            current_step_index=1
         )
         
         success, quantum_key = qkd.generate_quantum_keys(key_length=32)  # 256-bit key
@@ -113,7 +116,8 @@ def run_simulation(simulation_id, config):
         # Generate visualization
         update_simulation(
             simulation_id, 'running', 
-            'Generating QKD visualization', 25
+            'Generating QKD visualization', 25,
+            current_step_index=1
         )
         
         viz_file = f"static/qkd_viz_{simulation_id}.png"
@@ -128,7 +132,8 @@ def run_simulation(simulation_id, config):
             qkd_time=qkd_time,
             bit_count=qkd.bit_count,
             base_match_rate=base_match_rate,
-            visualization_url=f"/{viz_file}"
+            visualization_url=f"/{viz_file}",
+            current_step_index=2  # Move to encryption step
         )
         
         # Step 2: Initialize encryption with quantum key
@@ -137,7 +142,8 @@ def run_simulation(simulation_id, config):
         # Step 3: Create payment data
         update_simulation(
             simulation_id, 'running', 
-            'Preparing payment data', 40
+            'Preparing payment data', 40,
+            current_step_index=2
         )
         
         # Get amount from config (in paise)
@@ -163,7 +169,8 @@ def run_simulation(simulation_id, config):
         # Step 4: Encrypt the payment data using quantum key
         update_simulation(
             simulation_id, 'running', 
-            'Encrypting payment data with quantum key', 50
+            'Encrypting payment data with quantum key', 50,
+            current_step_index=2
         )
         
         start_time = time.time()
@@ -173,7 +180,8 @@ def run_simulation(simulation_id, config):
         # Step 5: Initialize Razorpay client and create order
         update_simulation(
             simulation_id, 'running', 
-            'Creating Razorpay order', 60
+            'Creating Razorpay order', 60,
+            current_step_index=3  # Move to Razorpay step
         )
         
         razorpay_client = RazorpayIntegration(test_mode=True)
@@ -190,7 +198,8 @@ def run_simulation(simulation_id, config):
         update_simulation(
             simulation_id, 'running', 
             'Creating payment link', 70,
-            order_id=order['id']
+            order_id=order['id'],
+            current_step_index=3
         )
         
         payment_link = razorpay_client.create_payment_link(
@@ -203,7 +212,8 @@ def run_simulation(simulation_id, config):
         # Step 7: Simulate payment completion
         update_simulation(
             simulation_id, 'running', 
-            'Simulating payment completion', 80
+            'Simulating payment completion', 75,
+            current_step_index=3
         )
         
         # In a real app, we would wait for webhook or user to return after payment
@@ -212,15 +222,93 @@ def run_simulation(simulation_id, config):
         # Generate a simulated payment ID
         payment_id = f"pay_qkd_{order['id'][6:]}"
         
-        # Step 8: Verify payment and decrypt data
+        # New Step 8: Fraud Detection Analysis
         update_simulation(
             simulation_id, 'running', 
-            'Verifying payment and decrypting data', 90,
-            payment_id=payment_id
+            'Analyzing transaction for fraud patterns', 80,
+            current_step_index=4  # Move to fraud detection step
         )
+        
+        # Get fraud detection settings
+        fraud_model = config.get('fraud_model', 'heuristic')
+        fraud_sensitivity = float(config.get('fraud_sensitivity', 0.7))
+        
+        # Initialize fraud detection
+        fraud_detector = FraudDetectionAI(model_type=fraud_model, sensitivity=fraud_sensitivity)
         
         # Get payment details
         payment_details = razorpay_client.get_payment_details(payment_id)
+        
+        # Prepare transaction data for fraud analysis
+        transaction_data = {
+            "id": payment_id,
+            "amount": payment_data["amount"],
+            "currency": payment_data["currency"],
+            "payment_method": "card",
+            "timestamp": datetime.now().isoformat(),
+            "customer": payment_data["customer"],
+            "order_id": order['id']
+        }
+        
+        # Simulate device and user data
+        device_info = {
+            "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+            "ip_address": "192.168.1.1",
+            "browser": "Chrome",
+            "device_type": "desktop"
+        }
+        
+        user_info = {
+            "account_age_days": 120,
+            "num_previous_transactions": 5,
+            "last_transaction_days": 14
+        }
+        
+        # Perform fraud detection
+        start_time = time.time()
+        fraud_result = fraud_detector.analyze_transaction(
+            payment_data=transaction_data,
+            user_data=user_info,
+            device_info=device_info
+        )
+        fraud_detection_time = time.time() - start_time
+        
+        # Store fraud detection results
+        fraud_detection_results = {
+            "model_type": fraud_model,
+            "risk_score": fraud_result["risk_score"],
+            "threshold": fraud_result["threshold"],
+            "is_fraudulent": fraud_result["is_fraudulent"],
+            "confidence": fraud_result["confidence"],
+            "risk_factors": fraud_result["risk_factors"],
+            "analysis_time": fraud_detection_time * 1000  # Convert to ms
+        }
+        
+        # Check if transaction is fraudulent
+        if fraud_result["is_fraudulent"]:
+            update_simulation(
+                simulation_id, 'failed', 
+                'Transaction blocked: Potential fraud detected', 85,
+                payment_id=payment_id,
+                transaction_results={
+                    "status": "Failed - Fraud Detected",
+                    "order_id": order['id'],
+                    "payment_id": payment_id,
+                    "amount": payment_data["amount"],
+                    "currency": payment_data["currency"],
+                    "fraud_detection": fraud_detection_results
+                },
+                error=f"Potential fraud detected with {fraud_result['confidence']:.1%} confidence: {', '.join(fraud_result['risk_factors'])}"
+            )
+            return
+        
+        # Step 9: Verify payment and decrypt data
+        update_simulation(
+            simulation_id, 'running', 
+            'Verifying payment and decrypting data', 90,
+            payment_id=payment_id,
+            current_step_index=5  # Move to verification step
+        )
         
         # Verify payment signature (simulated)
         signature_valid = razorpay_client.verify_payment_signature(
@@ -263,20 +351,38 @@ def run_simulation(simulation_id, config):
         enc_overhead = (encryption_time*1000 / standard_metrics['avg_encryption_time_ms'] - 1) * 100
         dec_overhead = (decryption_time*1000 / standard_metrics['avg_decryption_time_ms'] - 1) * 100
         
+        # Prepare transaction results
+        transaction_results = {
+            "status": "Success",
+            "order_id": order['id'],
+            "payment_id": payment_id,
+            "amount": payment_data["amount"],
+            "currency": payment_data["currency"],
+            "total_time": time.time() - float(datetime.fromisoformat(simulations[simulation_id]['started_at']).timestamp()),
+            "encryption_time": encryption_time * 1000,  # Convert to ms
+            "decryption_time": decryption_time * 1000,  # Convert to ms
+            "standard_encryption_time": standard_metrics['avg_encryption_time_ms'],
+            "standard_decryption_time": standard_metrics['avg_decryption_time_ms'],
+            "overhead": (enc_overhead + dec_overhead) / 2,  # Average overhead
+            "fraud_detection": fraud_detection_results
+        }
+        
+        # Create metrics for the UI
+        qkd_metrics = {
+            "key": quantum_key.hex(),
+            "time": qkd_time,
+            "bits_used": qkd.bit_count,
+            "match_rate": base_match_rate
+        }
+        
         # Mark simulation as completed
-        total_time = time.time() - float(datetime.fromisoformat(simulations[simulation_id]['started_at']).timestamp())
         update_simulation(
             simulation_id, 'completed', 
             'Transaction completed successfully', 100,
             completion_time=datetime.now().isoformat(),
-            total_time=total_time,
-            payment_details=payment_details,
-            encryption_time=encryption_time,
-            decryption_time=decryption_time,
-            standard_encryption_time=standard_metrics['avg_encryption_time_ms'],
-            standard_decryption_time=standard_metrics['avg_decryption_time_ms'],
-            encryption_overhead=enc_overhead,
-            decryption_overhead=dec_overhead
+            transaction_results=transaction_results,
+            qkd_metrics=qkd_metrics,
+            current_step_index=6  # For UI completion
         )
         
         logger.info(f"Simulation {simulation_id} completed successfully")

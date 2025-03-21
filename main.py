@@ -14,6 +14,7 @@ from datetime import datetime
 from qkd_module import QKDSimulator
 from encryption import QuantumEncryption
 from razorpay_api import RazorpayIntegration
+from fraud_detection import FraudDetectionAI
 
 # Configure logging
 logging.basicConfig(level=logging.INFO,
@@ -30,7 +31,7 @@ def initialize_dotenv():
         logger.info("Created .env file with placeholder Razorpay credentials")
 
 def simulate_transaction(n_bits=1000, error_rate=0.01, eavesdropper=False, amount=50000, 
-                        visualize=True, test_mode=True):
+                        visualize=True, test_mode=True, fraud_model="heuristic", fraud_sensitivity=0.7):
     """
     Demonstrate a complete QKD-secured Razorpay transaction flow
     
@@ -41,6 +42,8 @@ def simulate_transaction(n_bits=1000, error_rate=0.01, eavesdropper=False, amoun
         amount (int): Transaction amount in smallest currency unit (paise for INR)
         visualize (bool): Whether to generate visualization of the QKD protocol
         test_mode (bool): Whether to use test mode for Razorpay
+        fraud_model (str): Type of fraud detection model ('heuristic', 'ml', 'quantum')
+        fraud_sensitivity (float): Sensitivity for fraud detection (0.0-1.0)
         
     Returns:
         bool: True if transaction completed successfully, False otherwise
@@ -149,13 +152,68 @@ def simulate_transaction(n_bits=1000, error_rate=0.01, eavesdropper=False, amoun
     # Generate a simulated payment ID (in real app, this would come from Razorpay)
     payment_id = f"pay_qkd_{order['id'][6:]}"
     
-    # Step 8: Retrieve payment details and decrypt using quantum key
-    logger.info("\n\nSTEP 8: PAYMENT VERIFICATION AND DECRYPTION")
+    # New Step: Fraud Detection Analysis
+    logger.info("\n\nSTEP 8: FRAUD DETECTION ANALYSIS")
     logger.info("-" * 50)
+    
+    # Initialize fraud detection system
+    fraud_detector = FraudDetectionAI(model_type=fraud_model, sensitivity=fraud_sensitivity)
+    logger.info(f"Performing fraud detection using {fraud_model} model with {fraud_sensitivity} sensitivity")
     
     # Get payment details
     payment_details = razorpay_client.get_payment_details(payment_id)
-    logger.info(f"Retrieved payment details for payment ID: {payment_id}")
+    
+    # Collect device and user info (in a real app, these would be actual values)
+    device_info = {
+        "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "ip_address": "192.168.1.1",
+        "browser": "Chrome",
+        "device_type": "desktop"
+    }
+    
+    user_info = {
+        "account_age_days": 120,
+        "num_previous_transactions": 5,
+        "last_transaction_days": 14
+    }
+    
+    # Prepare transaction data for fraud analysis
+    transaction_data = {
+        "id": payment_id,
+        "amount": payment_data["amount"],
+        "currency": payment_data["currency"],
+        "payment_method": "card",
+        "timestamp": datetime.now().isoformat(),
+        "customer": payment_data["customer"],
+        "order_id": order['id']
+    }
+    
+    # Perform fraud detection
+    start_time = time.time()
+    fraud_result = fraud_detector.analyze_transaction(
+        payment_data=transaction_data,
+        user_data=user_info,
+        device_info=device_info
+    )
+    fraud_detection_time = time.time() - start_time
+    
+    # Log fraud detection results
+    logger.info(f"Fraud detection completed in {fraud_detection_time*1000:.2f} ms")
+    logger.info(f"Risk score: {fraud_result['risk_score']:.3f} (threshold: {fraud_result['threshold']:.3f})")
+    if fraud_result["risk_factors"]:
+        logger.info(f"Risk factors identified: {', '.join(fraud_result['risk_factors'])}")
+    
+    # Check if transaction is flagged as fraudulent
+    if fraud_result["is_fraudulent"]:
+        logger.error(f"TRANSACTION BLOCKED: Potential fraud detected with {fraud_result['confidence']:.1%} confidence")
+        logger.error(f"Risk factors: {', '.join(fraud_result['risk_factors'])}")
+        return False
+    else:
+        logger.info(f"Transaction passed fraud checks with {fraud_result['confidence']:.1%} confidence")
+    
+    # Step 9: Payment Verification and Decryption (previously Step 8)
+    logger.info("\n\nSTEP 9: PAYMENT VERIFICATION AND DECRYPTION")
+    logger.info("-" * 50)
     
     # Verify payment signature (simulated)
     signature_valid = razorpay_client.verify_payment_signature(
@@ -185,7 +243,7 @@ def simulate_transaction(n_bits=1000, error_rate=0.01, eavesdropper=False, amoun
         logger.error("Decrypted data does not match original data. Possible tampering.")
         return False
     
-    # Step 9: Transaction summary
+    # Step 10: Transaction summary
     logger.info("\n\nTRANSACTION SUMMARY")
     logger.info("=" * 50)
     logger.info(f"Order ID: {order['id']}")
@@ -197,10 +255,13 @@ def simulate_transaction(n_bits=1000, error_rate=0.01, eavesdropper=False, amoun
     logger.info(f"Encryption Time: {encryption_time*1000:.2f} ms")
     logger.info(f"Decryption Time: {decryption_time*1000:.2f} ms")
     logger.info(f"API Call Time: {api_time*1000:.2f} ms")
+    logger.info(f"Fraud Detection Time: {fraud_detection_time*1000:.2f} ms")
+    logger.info(f"Fraud Risk Score: {fraud_result['risk_score']:.3f}")
+    logger.info(f"Fraud Model: {fraud_model}")
     logger.info(f"Total Transaction Time: {time.time() - (start_time - encryption_time - api_time):.2f} seconds")
     logger.info(f"Transaction successful: {signature_valid and data_valid}")
     
-    # Step 10: Performance comparison
+    # Step 11: Performance comparison
     logger.info("\n\nPERFORMANCE ANALYSIS")
     logger.info("-" * 50)
     
@@ -240,6 +301,10 @@ def parse_arguments():
     parser.add_argument('--amount', type=int, default=50000, help='Transaction amount in paise (default: 50000 = ₹500.00)')
     parser.add_argument('--no-visualize', action='store_true', help='Skip QKD visualization')
     parser.add_argument('--production', action='store_true', help='Use production mode for Razorpay (NOT RECOMMENDED)')
+    parser.add_argument('--fraud-model', type=str, choices=['heuristic', 'ml', 'quantum'], default='heuristic', 
+                        help='Type of fraud detection model to use (default: heuristic)')
+    parser.add_argument('--fraud-sensitivity', type=float, default=0.7, 
+                        help='Sensitivity level for fraud detection (0.0-1.0, default: 0.7)')
     return parser.parse_args()
 
 if __name__ == "__main__":
@@ -256,5 +321,7 @@ if __name__ == "__main__":
         eavesdropper=args.eavesdropper,
         amount=args.amount,
         visualize=not args.no_visualize,
-        test_mode=not args.production
+        test_mode=not args.production,
+        fraud_model=args.fraud_model,
+        fraud_sensitivity=args.fraud_sensitivity
     )

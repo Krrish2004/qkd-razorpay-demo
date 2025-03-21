@@ -1,9 +1,10 @@
-// QKD Razorpay Demo - Frontend JavaScript
+// QKD Razorpay Demo - Frontend JavaScript - Enhanced with Apple-like UX
 
 // Global variables
 let currentSimulation = null;
 let pollingInterval = null;
 const API_POLL_INTERVAL = 1000; // 1 second
+let isScrolling = false;
 
 // DOM Elements
 const startDemoBtn = document.getElementById('startDemo');
@@ -30,18 +31,152 @@ document.addEventListener('DOMContentLoaded', () => {
     newSimulationBtn.addEventListener('click', openConfigModal);
     downloadReportBtn.addEventListener('click', downloadReport);
 
+    // Enhanced scroll behavior
+    initSmoothScrolling();
+    
+    // Add scroll animation effects
+    initScrollAnimations();
+    
+    // Fix iOS scrolling issues
+    fixIOSScrolling();
+
     // Fetch previous simulations
     fetchSimulationHistory();
 });
 
-// Open configuration modal
-function openConfigModal() {
-    configModal.style.display = 'block';
+// Initialize smooth scrolling behavior
+function initSmoothScrolling() {
+    // Add smooth scroll behavior to all internal links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                // Prevent multiple scroll events
+                if (isScrolling) return;
+                isScrolling = true;
+                
+                // Smooth scroll to target with easing
+                scrollToElement(targetElement);
+                
+                // Update URL hash without jumping
+                window.history.pushState(null, null, targetId);
+                
+                // Reset scrolling flag after animation completes
+                setTimeout(() => {
+                    isScrolling = false;
+                }, 1000);
+            }
+        });
+    });
 }
 
-// Close configuration modal
+// Scroll to element with easing
+function scrollToElement(element) {
+    const headerOffset = 80; // Account for fixed header
+    const elementPosition = element.getBoundingClientRect().top;
+    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+    
+    window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+    });
+}
+
+// Initialize scroll-based animations
+function initScrollAnimations() {
+    // Detect elements that should animate on scroll
+    const animatedElements = document.querySelectorAll('.card, .flow-step, .result-section');
+    
+    // Set initial state (if not visible)
+    animatedElements.forEach(el => {
+        if (!isElementInViewport(el)) {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        }
+    });
+    
+    // Add scroll listener to animate elements as they come into view
+    window.addEventListener('scroll', debounce(() => {
+        animatedElements.forEach(el => {
+            if (isElementInViewport(el)) {
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            }
+        });
+    }, 50));
+}
+
+// Fix iOS scrolling issues
+function fixIOSScrolling() {
+    // Detect iOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    
+    if (isIOS) {
+        // Prevent elastic bouncing
+        document.body.addEventListener('touchmove', function(e) {
+            if (e.target === document.body) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        // Fix modal scrolling on iOS
+        document.querySelectorAll('.modal-content').forEach(modal => {
+            modal.addEventListener('touchmove', function(e) {
+                e.stopPropagation();
+            });
+        });
+    }
+}
+
+// Utility: Check if element is in viewport
+function isElementInViewport(el) {
+    const rect = el.getBoundingClientRect();
+    return (
+        rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.9 &&
+        rect.bottom >= 0
+    );
+}
+
+// Utility: Debounce function for scroll events
+function debounce(func, wait) {
+    let timeout;
+    return function() {
+        const context = this;
+        const args = arguments;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+    };
+}
+
+// Open configuration modal with animation
+function openConfigModal() {
+    configModal.style.display = 'block';
+    // Delay to allow opacity transition
+    setTimeout(() => {
+        document.querySelector('.modal-content').style.opacity = '1';
+        document.querySelector('.modal-content').style.transform = 'translateY(0)';
+    }, 10);
+    
+    // Disable body scrolling when modal is open
+    document.body.style.overflow = 'hidden';
+}
+
+// Close configuration modal with animation
 function closeConfigModal() {
-    configModal.style.display = 'none';
+    document.querySelector('.modal-content').style.opacity = '0';
+    document.querySelector('.modal-content').style.transform = 'translateY(20px)';
+    
+    // Delay hiding the modal to allow animation to complete
+    setTimeout(() => {
+        configModal.style.display = 'none';
+        // Re-enable body scrolling
+        document.body.style.overflow = '';
+    }, 300);
 }
 
 // Start a new simulation
@@ -49,41 +184,44 @@ function startSimulation(event) {
     event.preventDefault();
     
     // Get form data
-    const formData = new FormData(configForm);
-    const config = {
+    const formData = new FormData(document.getElementById('configForm'));
+    const simulationData = {
         qubits: parseInt(formData.get('qubits')),
         error_rate: parseFloat(formData.get('error_rate')),
         eavesdropper: formData.get('eavesdropper') === 'on',
-        amount: parseInt(formData.get('amount')) * 100 // Convert to paise
+        amount: parseInt(formData.get('amount')) * 100, // Convert to paise
+        fraud_model: formData.get('fraud_model'),
+        fraud_sensitivity: parseFloat(formData.get('fraud_sensitivity'))
     };
     
-    // Close the modal
+    // Validate input
+    if (isNaN(simulationData.qubits) || simulationData.qubits < 100 || simulationData.qubits > 5000) {
+        showError('Number of qubits must be between 100 and 5000');
+        return;
+    }
+    
+    if (isNaN(simulationData.error_rate) || simulationData.error_rate < 0 || simulationData.error_rate > 0.2) {
+        showError('Error rate must be between 0 and 0.2');
+        return;
+    }
+    
+    if (isNaN(simulationData.amount) || simulationData.amount < 10000 || simulationData.amount > 100000000) {
+        showError('Amount must be between ₹100 and ₹1,000,000');
+        return;
+    }
+    
+    // Show loading state
+    document.getElementById('simulationContainer').classList.remove('hidden');
+    document.getElementById('statusBadge').textContent = 'Starting...';
+    document.getElementById('statusBadge').className = 'status-badge';
+    document.getElementById('progressBar').style.width = '0%';
     closeConfigModal();
     
-    // Show simulation container
-    simulationContainer.classList.remove('hidden');
-    historyContainer.classList.add('hidden');
-    
-    // Reset UI
-    document.getElementById('simulationId').textContent = 'Starting...';
-    document.getElementById('statusBadge').textContent = 'Initializing';
-    document.getElementById('statusBadge').className = 'status-badge';
-    document.getElementById('currentStep').textContent = 'Initializing simulation...';
-    document.getElementById('progressBar').style.width = '0%';
+    // Reset result fields
     document.getElementById('quantumKey').textContent = 'Generating...';
     document.getElementById('qkdTime').textContent = '-';
     document.getElementById('bitsUsed').textContent = '-';
     document.getElementById('baseMatchRate').textContent = '-';
-    document.getElementById('qkdVisualization').classList.add('hidden');
-    document.getElementById('visualizationPlaceholder').classList.remove('hidden');
-    
-    // Reset step statuses
-    for (let i = 1; i <= 4; i++) {
-        document.getElementById(`step${i}Status`).textContent = 'Pending';
-        document.querySelector(`.flow-step[data-step="${i}"]`).className = 'flow-step';
-    }
-    
-    // Reset results section
     document.getElementById('resultOrderId').textContent = '-';
     document.getElementById('resultPaymentId').textContent = '-';
     document.getElementById('resultAmount').textContent = '-';
@@ -94,31 +232,49 @@ function startSimulation(event) {
     document.getElementById('standardEncryptionTime').textContent = '-';
     document.getElementById('standardDecryptionTime').textContent = '-';
     document.getElementById('overhead').textContent = '-';
+    document.getElementById('fraudModelType').textContent = '-';
+    document.getElementById('fraudRiskScore').textContent = '-';
+    document.getElementById('fraudThreshold').textContent = '-';
+    document.getElementById('fraudConfidence').textContent = '-';
+    document.getElementById('fraudRiskFactors').textContent = '-';
+    document.getElementById('fraudDetectionTime').textContent = '-';
     
-    // Start the simulation by calling the API
+    // Reset flow steps
+    for (let i = 1; i <= 5; i++) {
+        const step = document.querySelector(`.flow-step[data-step="${i}"]`);
+        step.classList.remove('active', 'completed', 'error');
+        document.getElementById(`step${i}Status`).textContent = 'Pending';
+    }
+    
+    // Hide visualization
+    document.getElementById('qkdVisualization').classList.add('hidden');
+    document.getElementById('visualizationPlaceholder').classList.remove('hidden');
+    
+    // Start the simulation
     fetch('/api/start_simulation', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(config)
+        body: JSON.stringify(simulationData)
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to start simulation');
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.simulation_id) {
-            // Store the simulation ID
-            currentSimulation = data.simulation_id;
-            document.getElementById('simulationId').textContent = `#${currentSimulation.substring(0, 8)}`;
-            
-            // Start polling for updates
-            startPolling(currentSimulation);
+            // Store simulation ID and start polling for updates
+            document.getElementById('simulationId').textContent = `#${data.simulation_id.substring(0, 8)}`;
+            startPolling(data.simulation_id);
         } else {
-            showError('Failed to start simulation');
+            showError('Invalid response from server');
         }
     })
     .catch(error => {
-        console.error('Error starting simulation:', error);
-        showError('Failed to start simulation: ' + error.message);
+        showError(`Error: ${error.message}`);
     });
 }
 
@@ -155,157 +311,208 @@ function fetchSimulationStatus(simulationId) {
 
 // Update the UI with simulation data
 function updateSimulationUI(simulation) {
-    // Update progress bar and status
-    document.getElementById('progressBar').style.width = `${simulation.progress}%`;
-    document.getElementById('currentStep').textContent = simulation.current_step;
+    // Update progress
+    const progressPercent = Math.min(100, Math.round(simulation.progress * 100));
+    document.getElementById('progressBar').style.width = `${progressPercent}%`;
     
     // Update status badge
     const statusBadge = document.getElementById('statusBadge');
-    statusBadge.textContent = simulation.status.charAt(0).toUpperCase() + simulation.status.slice(1);
+    statusBadge.textContent = simulation.status;
+    statusBadge.className = 'status-badge';
     
-    // Add appropriate class to status badge
-    if (simulation.status === 'completed') {
-        statusBadge.className = 'status-badge success';
-    } else if (simulation.status === 'failed') {
-        statusBadge.className = 'status-badge error';
-    } else if (simulation.status === 'running') {
-        statusBadge.className = 'status-badge';
+    if (simulation.status === 'Completed') {
+        statusBadge.classList.add('success');
+    } else if (simulation.status === 'Failed') {
+        statusBadge.classList.add('error');
+    } else if (simulation.status === 'Running') {
+        // Default style is fine
     }
     
-    // Update flow steps based on progress
+    // Update current step
+    document.getElementById('currentStep').textContent = simulation.current_step || 'Initializing...';
+    
+    // Update flow steps
     updateFlowSteps(simulation);
     
-    // Update QKD metrics if available
-    if (simulation.quantum_key) {
-        document.getElementById('quantumKey').textContent = 
-            `${simulation.quantum_key.substring(0, 8)}...${simulation.quantum_key.substring(simulation.quantum_key.length - 8)}`;
-    }
-    
-    if (simulation.qkd_time) {
-        document.getElementById('qkdTime').textContent = `${simulation.qkd_time.toFixed(2)} seconds`;
-    }
-    
-    if (simulation.bit_count) {
-        document.getElementById('bitsUsed').textContent = simulation.bit_count;
-    }
-    
-    if (simulation.base_match_rate) {
-        document.getElementById('baseMatchRate').textContent = `${(simulation.base_match_rate * 100).toFixed(2)}%`;
-    }
-    
     // Update visualization if available
-    if (simulation.visualization_url && document.getElementById('qkdVisualization').classList.contains('hidden')) {
-        const visImg = document.getElementById('qkdVisualization');
-        visImg.src = simulation.visualization_url;
-        visImg.onload = () => {
-            document.getElementById('visualizationPlaceholder').classList.add('hidden');
-            visImg.classList.remove('hidden');
-        };
+    if (simulation.visualization_url && simulation.current_step_index >= 2) {
+        const visualizationImg = document.getElementById('qkdVisualization');
+        visualizationImg.src = simulation.visualization_url + '?t=' + new Date().getTime(); // Prevent caching
+        visualizationImg.classList.remove('hidden');
+        document.getElementById('visualizationPlaceholder').classList.add('hidden');
     }
     
-    // Update results section for completed simulations
-    if (simulation.status === 'completed') {
-        document.getElementById('resultOrderId').textContent = simulation.order_id || '-';
-        document.getElementById('resultPaymentId').textContent = simulation.payment_id || '-';
+    // Update QKD metrics
+    if (simulation.qkd_metrics) {
+        document.getElementById('quantumKey').textContent = 
+            simulation.qkd_metrics.key ? 
+            `${simulation.qkd_metrics.key.substring(0, 8)}...` : 
+            'Generation failed';
         
-        if (simulation.payment_details && simulation.payment_details.amount) {
-            const amount = simulation.payment_details.amount / 100;
-            const currency = simulation.payment_details.currency || 'INR';
-            document.getElementById('resultAmount').textContent = `${amount} ${currency}`;
-        }
+        document.getElementById('qkdTime').textContent = 
+            simulation.qkd_metrics.time ? 
+            `${simulation.qkd_metrics.time.toFixed(2)}s` : 
+            '-';
         
-        document.getElementById('resultStatus').textContent = simulation.payment_details?.status || 'Success';
-        document.getElementById('resultTotalTime').textContent = `${simulation.total_time.toFixed(2)} seconds`;
+        document.getElementById('bitsUsed').textContent = 
+            simulation.qkd_metrics.bits_used || '-';
+        
+        document.getElementById('baseMatchRate').textContent = 
+            simulation.qkd_metrics.match_rate ? 
+            `${(simulation.qkd_metrics.match_rate * 100).toFixed(1)}%` : 
+            '-';
+    }
+    
+    // Update transaction results
+    if (simulation.transaction_results) {
+        const results = simulation.transaction_results;
+        
+        // Transaction summary
+        document.getElementById('resultOrderId').textContent = results.order_id || '-';
+        document.getElementById('resultPaymentId').textContent = results.payment_id || '-';
+        document.getElementById('resultAmount').textContent = results.amount ? 
+            `₹${(results.amount / 100).toFixed(2)} ${results.currency}` : 
+            '-';
+        document.getElementById('resultStatus').textContent = results.status || '-';
+        document.getElementById('resultTotalTime').textContent = results.total_time ? 
+            `${results.total_time.toFixed(2)}s` : 
+            '-';
         
         // Performance metrics
-        if (simulation.encryption_time) {
-            document.getElementById('qkdEncryptionTime').textContent = `${(simulation.encryption_time * 1000).toFixed(2)} ms`;
-        }
-        
-        if (simulation.decryption_time) {
-            document.getElementById('qkdDecryptionTime').textContent = `${(simulation.decryption_time * 1000).toFixed(2)} ms`;
-        }
-        
-        if (simulation.standard_encryption_time) {
-            document.getElementById('standardEncryptionTime').textContent = `${simulation.standard_encryption_time.toFixed(2)} ms`;
-        }
-        
-        if (simulation.standard_decryption_time) {
-            document.getElementById('standardDecryptionTime').textContent = `${simulation.standard_decryption_time.toFixed(2)} ms`;
-        }
-        
-        if (simulation.encryption_overhead && simulation.decryption_overhead) {
-            document.getElementById('overhead').textContent = 
-                `+${simulation.encryption_overhead.toFixed(2)}% (enc), +${simulation.decryption_overhead.toFixed(2)}% (dec)`;
+        document.getElementById('qkdEncryptionTime').textContent = results.encryption_time ? 
+            `${results.encryption_time.toFixed(2)}ms` : 
+            '-';
+        document.getElementById('qkdDecryptionTime').textContent = results.decryption_time ? 
+            `${results.decryption_time.toFixed(2)}ms` : 
+            '-';
+        document.getElementById('standardEncryptionTime').textContent = results.standard_encryption_time ? 
+            `${results.standard_encryption_time.toFixed(2)}ms` : 
+            '-';
+        document.getElementById('standardDecryptionTime').textContent = results.standard_decryption_time ? 
+            `${results.standard_decryption_time.toFixed(2)}ms` : 
+            '-';
+        document.getElementById('overhead').textContent = results.overhead ? 
+            `${results.overhead.toFixed(1)}%` : 
+            '-';
+            
+        // Fraud detection results
+        if (results.fraud_detection) {
+            const fraud = results.fraud_detection;
+            document.getElementById('fraudModelType').textContent = fraud.model_type || 'Not used';
+            document.getElementById('fraudRiskScore').textContent = fraud.risk_score !== undefined ? 
+                `${fraud.risk_score.toFixed(3)}` : 
+                '-';
+            document.getElementById('fraudThreshold').textContent = fraud.threshold !== undefined ? 
+                `${fraud.threshold.toFixed(3)}` : 
+                '-';
+            document.getElementById('fraudConfidence').textContent = fraud.confidence !== undefined ? 
+                `${(fraud.confidence * 100).toFixed(1)}%` : 
+                '-';
+            document.getElementById('fraudRiskFactors').textContent = fraud.risk_factors && fraud.risk_factors.length > 0 ? 
+                fraud.risk_factors.join(', ') : 
+                'None detected';
+            document.getElementById('fraudDetectionTime').textContent = fraud.analysis_time ? 
+                `${fraud.analysis_time.toFixed(2)}ms` : 
+                '-';
+                
+            // If fraudulent transaction was detected, show the status as Failed
+            if (fraud.is_fraudulent) {
+                document.getElementById('resultStatus').textContent = 'Failed - Fraud Detected';
+                document.getElementById('resultStatus').classList.add('error-text');
+            }
         }
     }
     
-    // Show error message if simulation failed
-    if (simulation.status === 'failed' && simulation.error) {
-        showError(`Simulation failed: ${simulation.error}`);
-    }
+    // Add smooth reveal animations for updated content
+    const newElements = document.querySelectorAll('.newly-updated');
+    newElements.forEach(el => {
+        el.classList.remove('newly-updated');
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(10px)';
+        
+        // Trigger reflow
+        void el.offsetWidth;
+        
+        // Apply animation
+        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+    });
 }
 
 // Update the flow steps based on the simulation progress
 function updateFlowSteps(simulation) {
-    // Reset all steps
-    for (let i = 1; i <= 4; i++) {
-        document.querySelector(`.flow-step[data-step="${i}"]`).className = 'flow-step';
-        document.getElementById(`step${i}Status`).textContent = 'Pending';
+    // Clear previous states
+    for (let i = 1; i <= 5; i++) {
+        const step = document.querySelector(`.flow-step[data-step="${i}"]`);
+        step.classList.remove('active', 'completed', 'error');
     }
     
-    // Determine active and completed steps based on progress
-    let activeStep = 0;
+    // Get current step index
+    const currentStepIndex = simulation.current_step_index || 0;
     
-    if (simulation.progress >= 10 && simulation.progress < 30) {
-        // QKD step
-        activeStep = 1;
-        document.getElementById('step1Status').textContent = 'In Progress';
-    } else if (simulation.progress >= 30 && simulation.progress < 60) {
-        // Encryption step
-        activeStep = 2;
-        document.getElementById('step1Status').textContent = 'Completed';
-        document.getElementById('step2Status').textContent = 'In Progress';
-    } else if (simulation.progress >= 60 && simulation.progress < 90) {
-        // Razorpay order step
-        activeStep = 3;
-        document.getElementById('step1Status').textContent = 'Completed';
-        document.getElementById('step2Status').textContent = 'Completed';
-        document.getElementById('step3Status').textContent = 'In Progress';
-    } else if (simulation.progress >= 90) {
-        // Verification step
-        activeStep = 4;
-        document.getElementById('step1Status').textContent = 'Completed';
-        document.getElementById('step2Status').textContent = 'Completed';
-        document.getElementById('step3Status').textContent = 'Completed';
-        document.getElementById('step4Status').textContent = 'In Progress';
-    }
+    // Map API step indices to UI steps
+    // 0: Initializing, 1: QKD, 2: Encryption, 3: Payment, 4: Fraud Detection, 5: Verification
+    const stepMap = {
+        0: { uiStep: 0, status: 'Initializing' },
+        1: { uiStep: 1, status: 'Generating quantum key' },
+        2: { uiStep: 2, status: 'Encrypting payment data' },
+        3: { uiStep: 3, status: 'Processing payment' },
+        4: { uiStep: 4, status: 'Analyzing for fraud' },
+        5: { uiStep: 5, status: 'Verifying transaction' }
+    };
     
-    // Mark steps as active or completed
-    for (let i = 1; i <= 4; i++) {
-        const stepElement = document.querySelector(`.flow-step[data-step="${i}"]`);
+    // Update each step's status
+    for (let i = 1; i <= 5; i++) {
+        const step = document.querySelector(`.flow-step[data-step="${i}"]`);
+        const statusEl = document.getElementById(`step${i}Status`);
         
-        if (i < activeStep) {
-            // Completed steps
-            stepElement.classList.add('completed');
-        } else if (i === activeStep) {
-            // Active step
-            stepElement.classList.add('active');
+        if (i < currentStepIndex) {
+            // Previous steps are completed
+            step.classList.add('completed');
+            statusEl.textContent = 'Completed';
+        } else if (i === currentStepIndex) {
+            // Current step is active
+            step.classList.add('active');
+            statusEl.textContent = stepMap[i]?.status || 'Processing';
+        } else {
+            // Future steps are pending
+            statusEl.textContent = 'Pending';
         }
     }
     
-    // If simulation is completed, mark all steps as completed
-    if (simulation.status === 'completed') {
-        for (let i = 1; i <= 4; i++) {
-            document.querySelector(`.flow-step[data-step="${i}"]`).className = 'flow-step completed';
-            document.getElementById(`step${i}Status`).textContent = 'Completed';
+    // Handle step errors
+    if (simulation.step_errors) {
+        for (const [stepIndex, error] of Object.entries(simulation.step_errors)) {
+            const uiStep = parseInt(stepIndex) + 1; // API steps are 0-indexed
+            const step = document.querySelector(`.flow-step[data-step="${uiStep}"]`);
+            if (step) {
+                step.classList.add('error');
+                step.classList.remove('active', 'completed');
+                document.getElementById(`step${uiStep}Status`).textContent = 'Failed';
+            }
         }
     }
     
-    // If simulation failed, mark the active step as error
-    if (simulation.status === 'failed') {
-        document.querySelector(`.flow-step[data-step="${activeStep}"]`).classList.add('error');
-        document.getElementById(`step${activeStep}Status`).textContent = 'Failed';
+    // Special case for fraud detection result
+    if (simulation.transaction_results && 
+        simulation.transaction_results.fraud_detection && 
+        simulation.transaction_results.fraud_detection.is_fraudulent) {
+        
+        const fraudStep = document.querySelector('.flow-step[data-step="4"]');
+        if (fraudStep) {
+            fraudStep.classList.add('error');
+            fraudStep.classList.remove('active', 'completed');
+            document.getElementById('step4Status').textContent = 'Fraud Detected';
+            
+            // Mark verification step as failed too
+            const verificationStep = document.querySelector('.flow-step[data-step="5"]');
+            if (verificationStep) {
+                verificationStep.classList.add('error');
+                verificationStep.classList.remove('active', 'completed');
+                document.getElementById('step5Status').textContent = 'Failed';
+            }
+        }
     }
 }
 
@@ -458,67 +665,79 @@ function downloadReport() {
 
 // Generate report content from simulation data
 function generateReportContent(simulation) {
-    const lines = [
-        "Quantum Key Distribution (QKD) for Razorpay Security - Simulation Report",
-        "=======================================================================",
-        "",
-        `Simulation ID: ${simulation.id}`,
-        `Started At: ${new Date(simulation.started_at).toLocaleString()}`,
-        `Status: ${simulation.status}`,
-        "",
-        "Configuration:",
-        `- Qubits: ${simulation.config.n_bits}`,
-        `- Error Rate: ${simulation.config.error_rate}`,
-        `- Eavesdropper: ${simulation.config.eavesdropper ? 'Yes' : 'No'}`,
-        `- Amount: ₹${simulation.config.amount / 100}`,
-        "",
-        "QKD Results:",
-        `- Quantum Key: ${simulation.quantum_key || 'N/A'}`,
-        `- QKD Time: ${simulation.qkd_time ? simulation.qkd_time.toFixed(2) + ' seconds' : 'N/A'}`,
-        `- Bits Used: ${simulation.bit_count || 'N/A'}`,
-        `- Base Match Rate: ${simulation.base_match_rate ? (simulation.base_match_rate * 100).toFixed(2) + '%' : 'N/A'}`,
-        "",
-        "Transaction Details:",
-        `- Order ID: ${simulation.order_id || 'N/A'}`,
-        `- Payment ID: ${simulation.payment_id || 'N/A'}`,
-        `- Amount: ${simulation.payment_details?.amount ? simulation.payment_details.amount / 100 + ' ' + (simulation.payment_details.currency || 'INR') : 'N/A'}`,
-        `- Status: ${simulation.payment_details?.status || 'N/A'}`,
-        `- Total Time: ${simulation.total_time ? simulation.total_time.toFixed(2) + ' seconds' : 'N/A'}`,
-        "",
-        "Performance Metrics:",
-        `- QKD-based Encryption: ${simulation.encryption_time ? (simulation.encryption_time * 1000).toFixed(2) + ' ms' : 'N/A'}`,
-        `- QKD-based Decryption: ${simulation.decryption_time ? (simulation.decryption_time * 1000).toFixed(2) + ' ms' : 'N/A'}`,
-        `- Standard Encryption: ${simulation.standard_encryption_time ? simulation.standard_encryption_time.toFixed(2) + ' ms' : 'N/A'}`,
-        `- Standard Decryption: ${simulation.standard_decryption_time ? simulation.standard_decryption_time.toFixed(2) + ' ms' : 'N/A'}`,
-        `- Encryption Overhead: ${simulation.encryption_overhead ? simulation.encryption_overhead.toFixed(2) + '%' : 'N/A'}`,
-        `- Decryption Overhead: ${simulation.decryption_overhead ? simulation.decryption_overhead.toFixed(2) + '%' : 'N/A'}`,
-        "",
-        "Steps Timeline:",
-    ];
+    // Function to format date
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+    };
     
-    // Add steps timeline
-    if (simulation.steps && simulation.steps.length > 0) {
-        simulation.steps.forEach(step => {
-            const time = new Date(step.timestamp).toLocaleTimeString();
-            lines.push(`- ${time}: ${step.name} (${step.progress}%)`);
-        });
-    } else {
-        lines.push("No steps data available");
+    // Get results
+    const results = simulation.transaction_results || {};
+    const qkdMetrics = simulation.qkd_metrics || {};
+    const fraudResults = results.fraud_detection || {};
+    
+    // Build report content
+    let content = `
+    QKD-Razorpay Simulation Report
+    ===============================
+    
+    Simulation ID: ${simulation.id}
+    Date: ${formatDate(simulation.created_at)}
+    Status: ${simulation.status}
+    Duration: ${results.total_time ? results.total_time.toFixed(2) + 's' : 'Unknown'}
+    
+    Configuration
+    ------------
+    Number of Qubits: ${simulation.config?.qubits || 'Unknown'}
+    Error Rate: ${simulation.config?.error_rate || 'Unknown'}
+    Eavesdropper: ${simulation.config?.eavesdropper ? 'Enabled' : 'Disabled'}
+    Amount: ₹${((simulation.config?.amount || 0) / 100).toFixed(2)} INR
+    Fraud Model: ${simulation.config?.fraud_model || 'heuristic'}
+    Fraud Sensitivity: ${simulation.config?.fraud_sensitivity || '0.7'}
+    
+    Quantum Key Distribution Results
+    -------------------------------
+    QKD Time: ${qkdMetrics.time ? qkdMetrics.time.toFixed(2) + 's' : 'Unknown'}
+    Bits Used: ${qkdMetrics.bits_used || 'Unknown'}
+    Base Match Rate: ${qkdMetrics.match_rate ? (qkdMetrics.match_rate * 100).toFixed(1) + '%' : 'Unknown'}
+    
+    Transaction Details
+    ------------------
+    Order ID: ${results.order_id || 'Unknown'}
+    Payment ID: ${results.payment_id || 'Unknown'}
+    Amount: ${results.amount ? '₹' + (results.amount / 100).toFixed(2) + ' ' + results.currency : 'Unknown'}
+    Status: ${results.status || 'Unknown'}
+    
+    Fraud Detection Results
+    ----------------------
+    Model: ${fraudResults.model_type || 'Not used'}
+    Risk Score: ${fraudResults.risk_score !== undefined ? fraudResults.risk_score.toFixed(3) : 'Unknown'}
+    Threshold: ${fraudResults.threshold !== undefined ? fraudResults.threshold.toFixed(3) : 'Unknown'}
+    Fraudulent: ${fraudResults.is_fraudulent ? 'Yes' : 'No'}
+    Confidence: ${fraudResults.confidence !== undefined ? (fraudResults.confidence * 100).toFixed(1) + '%' : 'Unknown'}
+    Analysis Time: ${fraudResults.analysis_time ? fraudResults.analysis_time.toFixed(2) + 'ms' : 'Unknown'}
+    Risk Factors: ${
+        (fraudResults.risk_factors && fraudResults.risk_factors.length) 
+        ? '\n      - ' + fraudResults.risk_factors.join('\n      - ') 
+        : 'None detected'
     }
     
-    // Add error information if applicable
-    if (simulation.status === 'failed' && simulation.error) {
-        lines.push("");
-        lines.push("Error Information:");
-        lines.push(`- ${simulation.error}`);
-    }
+    Performance Metrics
+    ------------------
+    QKD-based Encryption: ${results.encryption_time ? results.encryption_time.toFixed(2) + 'ms' : 'Unknown'}
+    QKD-based Decryption: ${results.decryption_time ? results.decryption_time.toFixed(2) + 'ms' : 'Unknown'}
+    Standard Encryption: ${results.standard_encryption_time ? results.standard_encryption_time.toFixed(2) + 'ms' : 'Unknown'}
+    Standard Decryption: ${results.standard_decryption_time ? results.standard_decryption_time.toFixed(2) + 'ms' : 'Unknown'}
+    QKD Overhead: ${results.overhead ? results.overhead.toFixed(1) + '%' : 'Unknown'}
     
-    // Add footer
-    lines.push("");
-    lines.push("Generated at: " + new Date().toLocaleString());
-    lines.push("QKD-Razorpay Demo - A System Engineering Project");
+    Notes
+    -----
+    This report was generated from a simulation of quantum key distribution (QKD)
+    integrated with Razorpay payment processing and enhanced with AI fraud detection.
+    The BB84 protocol was used for key generation.
+    `;
     
-    return lines.join('\n');
+    return content;
 }
 
 // Show an error message

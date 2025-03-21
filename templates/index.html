@@ -2,10 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0071e3">
     <title>Quantum Key Distribution for Razorpay Security</title>
     <link rel="stylesheet" href="/static/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Preload critical fonts for performance -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=SF+Pro+Text:wght@400;500;600&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=SF+Pro+Text:wght@400;500;600&display=swap">
 </head>
 <body>
     <header>
@@ -17,10 +24,11 @@
     </header>
 
     <main>
-        <section class="card" id="intro">
+        <section class="card animate-on-scroll" id="intro">
             <h3>Quantum Key Distribution Demo</h3>
             <p>This demo shows how quantum key distribution (QKD) can secure online payment transactions. 
-               The BB84 protocol is simulated to generate secure encryption keys that protect payment data.</p>
+               The BB84 protocol is simulated to generate secure encryption keys that protect payment data,
+               now enhanced with AI-powered fraud detection.</p>
             <div class="buttons">
                 <button id="startDemo" class="primary">Start New Simulation</button>
                 <button id="showHistory">View History</button>
@@ -52,6 +60,28 @@
                         <input type="number" id="amount" name="amount" min="100" max="1000000" value="500">
                         <span class="tooltip">Amount in INR (will be converted to paise)</span>
                     </div>
+                    
+                    <!-- New Fraud Detection Settings -->
+                    <div class="form-section">
+                        <h4>Fraud Detection Settings</h4>
+                        <div class="form-group">
+                            <label for="fraudModel">AI Model Type:</label>
+                            <select id="fraudModel" name="fraud_model">
+                                <option value="heuristic">Heuristic (Rule-based)</option>
+                                <option value="ml">Machine Learning</option>
+                                <option value="quantum">Quantum-enhanced</option>
+                            </select>
+                            <span class="tooltip">Type of AI model used for fraud detection</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="fraudSensitivity">Detection Sensitivity:</label>
+                            <input type="range" id="fraudSensitivity" name="fraud_sensitivity" 
+                                  min="0.1" max="1.0" step="0.1" value="0.7">
+                            <span id="sensitivityValue">0.7</span>
+                            <span class="tooltip">Higher values flag more transactions as suspicious</span>
+                        </div>
+                    </div>
+                    
                     <div class="form-actions">
                         <button type="submit" class="primary">Start Simulation</button>
                         <button type="button" class="cancel">Cancel</button>
@@ -129,12 +159,21 @@
                                 <div class="step-status" id="step3Status">Pending</div>
                             </div>
                         </div>
+                        <!-- New Fraud Detection Step -->
                         <div class="flow-step" data-step="4">
+                            <div class="step-icon"><i class="fas fa-shield-alt"></i></div>
+                            <div class="step-content">
+                                <h4>Fraud Detection</h4>
+                                <p>AI analysis of transaction for fraud patterns</p>
+                                <div class="step-status" id="step4Status">Pending</div>
+                            </div>
+                        </div>
+                        <div class="flow-step" data-step="5">
                             <div class="step-icon"><i class="fas fa-check-circle"></i></div>
                             <div class="step-content">
                                 <h4>Verification</h4>
                                 <p>Verify payment and decrypt data</p>
-                                <div class="step-status" id="step4Status">Pending</div>
+                                <div class="step-status" id="step5Status">Pending</div>
                             </div>
                         </div>
                     </div>
@@ -169,6 +208,34 @@
                             </tr>
                         </table>
                     </div>
+                    
+                    <!-- New Fraud Detection Results Section -->
+                    <div class="result-section">
+                        <h4>Fraud Detection Results</h4>
+                        <table class="results-table">
+                            <tr>
+                                <td>Model Type:</td>
+                                <td id="fraudModelType">-</td>
+                            </tr>
+                            <tr>
+                                <td>Risk Score:</td>
+                                <td id="fraudRiskScore">-</td>
+                            </tr>
+                            <tr>
+                                <td>Threshold:</td>
+                                <td id="fraudThreshold">-</td>
+                            </tr>
+                            <tr>
+                                <td>Confidence:</td>
+                                <td id="fraudConfidence">-</td>
+                            </tr>
+                            <tr>
+                                <td>Risk Factors:</td>
+                                <td id="fraudRiskFactors">-</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
                     <div class="result-section">
                         <h4>Performance Comparison</h4>
                         <table class="results-table">
@@ -187,6 +254,10 @@
                             <tr>
                                 <td>Standard Decryption:</td>
                                 <td id="standardDecryptionTime">-</td>
+                            </tr>
+                            <tr>
+                                <td>Fraud Detection Time:</td>
+                                <td id="fraudDetectionTime">-</td>
                             </tr>
                             <tr>
                                 <td>Overhead:</td>
@@ -229,10 +300,43 @@
     </main>
 
     <footer>
-        <p>Quantum Key Distribution (QKD) for Enhanced Security in Razorpay API Transactions</p>
+        <p>Quantum Key Distribution (QKD) with AI Fraud Detection for Enhanced Security in Razorpay API Transactions</p>
         <p>A System Engineering Demo | <a href="https://github.com/yourusername/qkd-razorpay-demo" target="_blank">GitHub <i class="fab fa-github"></i></a></p>
     </footer>
 
     <script src="/static/app.js"></script>
+    
+    <script>
+        // Helper for smooth scroll to element
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+        
+        // Fix iOS viewport height issues
+        function setVH() {
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+        
+        // Set the vh value on page load and resize
+        window.addEventListener('load', setVH);
+        window.addEventListener('resize', setVH);
+        
+        // Handle sensitivity slider display
+        document.addEventListener('DOMContentLoaded', function() {
+            const sensitivitySlider = document.getElementById('fraudSensitivity');
+            const sensitivityValue = document.getElementById('sensitivityValue');
+            
+            if (sensitivitySlider && sensitivityValue) {
+                // Update the display value when slider changes
+                sensitivitySlider.addEventListener('input', function() {
+                    sensitivityValue.textContent = this.value;
+                });
+            }
+        });
+    </script>
 </body>
 </html> 

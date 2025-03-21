@@ -83,20 +83,20 @@ class QKDSimulator:
                 # Eve measures
                 qc.measure(0, 0)
                 
-                # Create new circuit to re-prepare qubit for Bob
-                qc = QuantumCircuit(1, 1)
-                
-                # Run and get the result
+                # Run Eve's measurement
                 job = sampler.run([qc])
                 result = job.result()
                 counts = result.quasi_dists[0]
                 eve_result = 1 if counts.get(1, 0) > counts.get(0, 0) else 0
                 
-                # Eve re-prepares qubit
+                # Create new circuit to re-prepare qubit for Bob
+                qc = QuantumCircuit(1, 1)
+                
+                # Eve re-prepares qubit based on her measurement
                 if eve_result == 1:
                     qc.x(0)
                 
-                # If Eve used Hadamard basis
+                # If Eve used Hadamard basis, apply it again
                 if eve_basis == 1:
                     qc.h(0)
             
