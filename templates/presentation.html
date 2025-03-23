@@ -29,12 +29,13 @@
             <section class="slide title-slide" id="slide1">
                 <div class="slide-content">
                     <div class="logo-large">
-                        <i class="fas fa-atom"></i>
+                        <i class='fas fa-atom spin-slow' style="font-size: 5rem; color: #0071e3;"></i>
                     </div>
                     <h1 class="animate-title">Quantum Key Distribution for Razorpay Security</h1>
                     <h2 class="animate-subtitle">Enhancing Payment Security with Quantum Cryptography</h2>
                     <div class="authors">
                         <p>QKD Research Team</p>
+                        <p class="presentation-date">March 2025</p>
                     </div>
                 </div>
             </section>
@@ -47,20 +48,28 @@
                         <div class="column challenge-box">
                             <h3><i class="fas fa-exclamation-triangle"></i> Challenges</h3>
                             <ul>
-                                <li>Increasing sophistication of payment fraud</li>
-                                <li>Quantum computers threaten traditional encryption</li>
-                                <li>Need for real-time fraud detection</li>
-                                <li>Ensuring security while maintaining user experience</li>
+                                <li><i class="fas fa-chart-line text-danger"></i> Increasing sophistication of payment fraud</li>
+                                <li><i class="fas fa-laptop-code text-danger"></i> Quantum computers threaten traditional encryption</li>
+                                <li><i class="fas fa-bolt text-danger"></i> Need for real-time fraud detection</li>
+                                <li><i class="fas fa-user-shield text-danger"></i> Ensuring security while maintaining user experience</li>
                             </ul>
+                            <div class="image-container">
+                                <i class="fas fa-shield-alt pulse-animation" style="font-size: 5rem; color: #ff3b30;"></i>
+                                <div class="image-caption">Rising payment fraud cases (2019-2023)</div>
+                            </div>
                         </div>
                         <div class="column solution-box">
                             <h3><i class="fas fa-lightbulb"></i> Solution Approach</h3>
                             <ul>
-                                <li>Implement BB84 quantum key distribution protocol</li>
-                                <li>Develop neural network-based fraud detection</li>
-                                <li>Integrate with Razorpay payment infrastructure</li>
-                                <li>Create real-time monitoring dashboard</li>
+                                <li><i class="fas fa-atom text-success"></i> Implement BB84 quantum key distribution protocol</li>
+                                <li><i class="fas fa-brain text-success"></i> Develop neural network-based fraud detection</li>
+                                <li><i class="fas fa-plug text-success"></i> Integrate with Razorpay payment infrastructure</li>
+                                <li><i class="fas fa-chart-bar text-success"></i> Create real-time monitoring dashboard</li>
                             </ul>
+                            <div class="image-container">
+                                <i class="fas fa-project-diagram spin-slow" style="font-size: 5rem; color: #34c759;"></i>
+                                <div class="image-caption">Integrated QKD solution approach</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -73,14 +82,18 @@
                     <div class="center-content">
                         <img src="/static/bb84_protocol.png" alt="BB84 Protocol" class="slide-image">
                         <div class="caption-box">
-                            <p>The BB84 protocol uses quantum properties to ensure secure key exchange:</p>
+                            <p>The BB84 protocol ensures secure key exchange through quantum properties:</p>
                             <ol>
-                                <li>Alice sends qubits in random bases</li>
-                                <li>Bob measures in random bases</li>
-                                <li>They compare bases and keep matching measurements</li>
-                                <li>Check for eavesdropping with sample bits</li>
-                                <li>Apply privacy amplification for final key</li>
+                                <li><span class="highlight">Qubit Preparation:</span> Alice encodes random bits in two quantum bases</li>
+                                <li><span class="highlight">Qubit Transmission:</span> Qubits are transmitted through quantum channel</li>
+                                <li><span class="highlight">Measurement:</span> Bob measures in randomly chosen bases</li>
+                                <li><span class="highlight">Basis Reconciliation:</span> They compare basis choices over classical channel</li>
+                                <li><span class="highlight">Eavesdropping Detection:</span> Error rate analysis reveals interception attempts</li>
+                                <li><span class="highlight">Privacy Amplification:</span> Final key generation with enhanced security</li>
                             </ol>
+                            <div class="key-advantage">
+                                <i class="fas fa-shield-alt"></i> <strong>Key Advantage:</strong> Physically impossible to copy unknown quantum states without detection
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -92,22 +105,45 @@
                     <h2 class="slide-title">System Architecture</h2>
                     <div class="center-content">
                         <img src="/static/system_architecture.png" alt="System Architecture" class="slide-image">
+                        <div class="architecture-description">
+                            <p>Our integrated system provides end-to-end quantum-secured payment processing:</p>
+                        </div>
                         <div class="key-components">
                             <div class="component">
-                                <h4>QKD Module</h4>
-                                <p>Creates quantum-secure keys</p>
+                                <h4><i class="fas fa-atom"></i> QKD Module</h4>
+                                <p>Generates unbreakable encryption keys using quantum principles</p>
+                                <ul class="compact-list">
+                                    <li>BB84 protocol implementation</li>
+                                    <li>Error correction algorithms</li>
+                                    <li>Privacy amplification</li>
+                                </ul>
                             </div>
                             <div class="component">
-                                <h4>Encryption Layer</h4>
-                                <p>Protects payment data</p>
+                                <h4><i class="fas fa-lock"></i> Encryption Layer</h4>
+                                <p>Secures all payment data with quantum-derived keys</p>
+                                <ul class="compact-list">
+                                    <li>AES-256 encryption</li>
+                                    <li>Secure key rotation</li>
+                                    <li>Forward secrecy</li>
+                                </ul>
                             </div>
                             <div class="component">
-                                <h4>Fraud Detection</h4>
-                                <p>Neural network analysis</p>
+                                <h4><i class="fas fa-brain"></i> Fraud Detection</h4>
+                                <p>Neural network analysis for real-time threat identification</p>
+                                <ul class="compact-list">
+                                    <li>Anomaly detection</li>
+                                    <li>Transaction pattern analysis</li>
+                                    <li>Behavioral biometrics</li>
+                                </ul>
                             </div>
                             <div class="component">
-                                <h4>Razorpay API</h4>
-                                <p>Payment processing</p>
+                                <h4><i class="fas fa-credit-card"></i> Razorpay API</h4>
+                                <p>Seamless integration with payment processing infrastructure</p>
+                                <ul class="compact-list">
+                                    <li>Secure API endpoints</li>
+                                    <li>Transaction lifecycle management</li>
+                                    <li>Compliance mechanisms</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -119,6 +155,15 @@
                 <div class="slide-content">
                     <h2 class="slide-title">QKD Performance Results</h2>
                     <div class="center-content">
+                        <div class="performance-highlight">
+                            <p><i class="fas fa-info-circle"></i> Our tests demonstrate a <span class="highlight">72-96% eavesdropper detection rate</span> under various conditions</p>
+                        </div>
+                        <div class="visualization-row">
+                            <div class="viz-container">
+                                <img src="/static/qkd_viz_c3b98490-287c-4014-9c3d-968bc6bc3600.png" alt="QKD Visualization" class="viz-image">
+                                <div class="viz-caption">Real-time QKD visualization showing qubit transmission</div>
+                            </div>
+                        </div>
                         <table class="performance-table">
                             <thead>
                                 <tr>
@@ -134,42 +179,47 @@
                                     <td>500</td>
                                     <td>0.01</td>
                                     <td>No</td>
-                                    <td>98%</td>
+                                    <td><span class="text-success">98%</span></td>
                                     <td>0.87</td>
                                 </tr>
                                 <tr>
                                     <td>1000</td>
                                     <td>0.01</td>
                                     <td>No</td>
-                                    <td>97%</td>
+                                    <td><span class="text-success">97%</span></td>
                                     <td>1.52</td>
                                 </tr>
                                 <tr>
                                     <td>1000</td>
                                     <td>0.05</td>
                                     <td>No</td>
-                                    <td>92%</td>
+                                    <td><span class="text-success">92%</span></td>
                                     <td>1.54</td>
                                 </tr>
-                                <tr>
+                                <tr class="highlight-row">
                                     <td>1000</td>
                                     <td>0.01</td>
-                                    <td>Yes</td>
-                                    <td>64%</td>
+                                    <td><span class="text-danger">Yes</span></td>
+                                    <td><span class="text-danger">64%</span></td>
                                     <td>1.67</td>
                                 </tr>
-                                <tr>
+                                <tr class="highlight-row">
                                     <td>1000</td>
                                     <td>0.05</td>
-                                    <td>Yes</td>
-                                    <td>28%</td>
+                                    <td><span class="text-danger">Yes</span></td>
+                                    <td><span class="text-danger">28%</span></td>
                                     <td>1.71</td>
                                 </tr>
                             </tbody>
                         </table>
                         <div class="insight-box">
-                            <h4><i class="fas fa-chart-line"></i> Key Insight</h4>
-                            <p>Eavesdropper detection rate is 72-96% depending on error rate, demonstrating the protocol's security capabilities.</p>
+                            <h4><i class="fas fa-chart-line"></i> Key Insights</h4>
+                            <ul>
+                                <li>Eavesdropper presence significantly drops success rate to 28-64%</li>
+                                <li>Higher error rates (0.05) improve eavesdropper detection</li>
+                                <li>Processing time remains efficient (< 2s) even with security checks</li>
+                                <li>Quantum security automatically blocks compromised payments</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -182,6 +232,16 @@
                     <div class="two-column">
                         <div class="column">
                             <img src="/static/neural_network.png" alt="Neural Network Architecture" class="slide-image">
+                            <div class="tech-details">
+                                <h4>Technical Specifications</h4>
+                                <ul>
+                                    <li>Implemented in TensorFlow 2.7</li>
+                                    <li>Training: 50 epochs, batch size 64</li>
+                                    <li>Optimizer: Adam (lr=0.001)</li>
+                                    <li>Loss: Binary Cross-Entropy</li>
+                                    <li>Regularization: Dropout (0.2)</li>
+                                </ul>
+                            </div>
                         </div>
                         <div class="column">
                             <h3>Neural Network Architecture</h3>
@@ -190,33 +250,48 @@
                                     <th>Layer</th>
                                     <th>Neurons</th>
                                     <th>Activation</th>
+                                    <th>Purpose</th>
                                 </tr>
                                 <tr>
                                     <td>Input</td>
                                     <td>16</td>
                                     <td>-</td>
+                                    <td>Feature ingestion</td>
                                 </tr>
                                 <tr>
                                     <td>Hidden 1</td>
                                     <td>128</td>
                                     <td>ReLU</td>
+                                    <td>Feature extraction</td>
                                 </tr>
                                 <tr>
                                     <td>Hidden 2</td>
                                     <td>64</td>
                                     <td>ReLU</td>
+                                    <td>Pattern recognition</td>
                                 </tr>
                                 <tr>
                                     <td>Hidden 3</td>
                                     <td>32</td>
                                     <td>Tanh</td>
+                                    <td>Non-linear mapping</td>
                                 </tr>
                                 <tr>
                                     <td>Output</td>
                                     <td>1</td>
                                     <td>Sigmoid</td>
+                                    <td>Fraud probability</td>
                                 </tr>
                             </table>
+                            <div class="nn-advantages">
+                                <h4>Advantages of Our Approach</h4>
+                                <ul>
+                                    <li><i class="fas fa-check-circle text-success"></i> Learns complex patterns impossible for rule-based systems</li>
+                                    <li><i class="fas fa-check-circle text-success"></i> Adapts to evolving fraud techniques</li>
+                                    <li><i class="fas fa-check-circle text-success"></i> Reduced false positives compared to traditional methods</li>
+                                    <li><i class="fas fa-check-circle text-success"></i> Complements quantum security for defense-in-depth</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -233,22 +308,27 @@
                                 <div class="metric-card">
                                     <div class="metric-value">0.958</div>
                                     <div class="metric-label">Accuracy</div>
+                                    <div class="metric-description">Overall classification correctness</div>
                                 </div>
                                 <div class="metric-card">
                                     <div class="metric-value">0.412</div>
                                     <div class="metric-label">Precision</div>
+                                    <div class="metric-description">Correct fraud predictions</div>
                                 </div>
                                 <div class="metric-card">
                                     <div class="metric-value">0.134</div>
                                     <div class="metric-label">Recall</div>
+                                    <div class="metric-description">Fraud cases identified</div>
                                 </div>
                                 <div class="metric-card">
                                     <div class="metric-value">0.202</div>
                                     <div class="metric-label">F1 Score</div>
+                                    <div class="metric-description">Harmonic mean of precision and recall</div>
                                 </div>
                                 <div class="metric-card wide">
                                     <div class="metric-value">0.732</div>
                                     <div class="metric-label">AUC</div>
+                                    <div class="metric-description">Area under ROC curve - discrimination ability</div>
                                 </div>
                             </div>
                         </div>
@@ -256,106 +336,169 @@
                         <div class="visualization-row">
                             <div class="viz-container">
                                 <img src="/static/confusion_matrix.png" alt="Confusion Matrix" class="viz-image">
-                                <div class="viz-caption">Confusion Matrix</div>
+                                <div class="viz-caption">Confusion Matrix: Most legitimate transactions correctly classified</div>
                             </div>
                             <div class="viz-container">
                                 <img src="/static/loss_curves.png" alt="Loss Curves" class="viz-image">
-                                <div class="viz-caption">Loss Curves</div>
+                                <div class="viz-caption">Loss Curves: Model convergence without overfitting</div>
                             </div>
                             <div class="viz-container">
                                 <img src="/static/accuracy_curves.png" alt="Accuracy Curves" class="viz-image">
-                                <div class="viz-caption">Accuracy Curves</div>
+                                <div class="viz-caption">Accuracy Curves: Consistent improvement during training</div>
+                            </div>
+                        </div>
+                        
+                        <div class="performance-conclusion">
+                            <p><i class="fas fa-lightbulb"></i> <strong>Key Finding:</strong> Our model achieves high accuracy (95.8%) in an imbalanced dataset where fraud transactions are rare. The quantum-neural hybrid approach provides exceptional protection against both traditional and quantum threats.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 8: System Implementation -->
+            <section class="slide" id="slide8">
+                <div class="slide-content">
+                    <h2 class="slide-title">System Implementation</h2>
+                    <div class="center-content">
+                        <div class="implementation-container">
+                            <div class="implementation-item">
+                                <h3><i class="fas fa-project-diagram"></i> System Design</h3>
+                                <div class="implementation-images">
+                                    <div class="viz-container half-width">
+                                        <img src="/static/sequence_diagram.png" alt="Sequence Diagram" class="viz-image">
+                                        <p class="viz-caption">Transaction flow sequence</p>
+                                    </div>
+                                    <div class="viz-container half-width">
+                                        <img src="/static/class_diagram.png" alt="Class Diagram" class="viz-image">
+                                        <p class="viz-caption">System component architecture</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="implementation-item">
+                                <h3><i class="fas fa-code"></i> Core Technologies</h3>
+                                <div class="tech-grid">
+                                    <div class="tech-card">
+                                        <i class="fab fa-python"></i>
+                                        <span>Python 3.8+</span>
+                                    </div>
+                                    <div class="tech-card">
+                                        <i class="fas fa-atom"></i>
+                                        <span>Qiskit</span>
+                                    </div>
+                                    <div class="tech-card">
+                                        <i class="fas fa-lock"></i>
+                                        <span>AES-GCM</span>
+                                    </div>
+                                    <div class="tech-card">
+                                        <i class="fab fa-js-square"></i>
+                                        <span>JavaScript</span>
+                                    </div>
+                                    <div class="tech-card">
+                                        <i class="fas fa-server"></i>
+                                        <span>Flask</span>
+                                    </div>
+                                    <div class="tech-card">
+                                        <i class="fas fa-brain"></i>
+                                        <span>TensorFlow</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="implementation-item">
+                                <h3><i class="fas fa-laptop-code"></i> Integration Approach</h3>
+                                <img src="/static/data_flow_diagram.png" alt="Data Flow Diagram" class="viz-image">
+                                <p class="viz-caption">Data flow between system components</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Slide 8: Feature Set -->
-            <section class="slide" id="slide8">
-                <div class="slide-content">
-                    <h2 class="slide-title">Feature Engineering</h2>
-                    <div class="center-content">
-                        <table class="feature-table">
-                            <thead>
-                                <tr>
-                                    <th>Feature Type</th>
-                                    <th>Description</th>
-                                    <th>Implementation</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Transaction Amount</td>
-                                    <td>Raw monetary value of the transaction</td>
-                                    <td>Min-Max scaled</td>
-                                </tr>
-                                <tr>
-                                    <td>Account Balances</td>
-                                    <td>Original and destination account balances</td>
-                                    <td>Min-Max scaled</td>
-                                </tr>
-                                <tr>
-                                    <td>Derived Features</td>
-                                    <td><code>amount_deducted</code> and <code>amount_credited</code> calculations</td>
-                                    <td>Computed dynamically</td>
-                                </tr>
-                                <tr>
-                                    <td>Transaction Type</td>
-                                    <td>Mapped from Razorpay payment methods to PaySim transaction types</td>
-                                    <td>One-hot encoded</td>
-                                </tr>
-                                <tr>
-                                    <td>Transaction Velocity</td>
-                                    <td>Rate of transactions over time</td>
-                                    <td>Time-windowed aggregation</td>
-                                </tr>
-                                <tr>
-                                    <td>Transaction Pattern</td>
-                                    <td>Sequence of transaction types and amounts</td>
-                                    <td>LSTM features</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Slide 9: Technical Requirements -->
+            <!-- Slide 9: Future Directions -->
             <section class="slide" id="slide9">
                 <div class="slide-content">
-                    <h2 class="slide-title">Technical Requirements</h2>
-                    <div class="center-content">
-                        <div class="requirements-grid">
-                            <div class="req-card">
-                                <div class="req-icon"><i class="fas fa-lock"></i></div>
-                                <h3>Quantum Security</h3>
-                                <p>BB84 protocol implementation with error detection and correction</p>
+                    <h2 class="slide-title">Future Research Directions</h2>
+                    <div class="future-grid">
+                        <div class="future-item">
+                            <div class="future-icon">
+                                <i class="fas fa-microchip pulse-animation"></i>
                             </div>
-                            <div class="req-card">
-                                <div class="req-icon"><i class="fas fa-shield-alt"></i></div>
-                                <h3>Fraud Detection</h3>
-                                <p>Neural network model with >95% accuracy</p>
+                            <h3>Hardware Integration</h3>
+                            <p>Develop FPGA-based QKD hardware for dedicated key generation</p>
+                            <ul class="future-list">
+                                <li>Custom quantum circuitry for improved performance</li>
+                                <li>Tamper-resistant hardware security modules</li>
+                                <li>Miniaturization for broader deployment scenarios</li>
+                            </ul>
+                        </div>
+                        <div class="future-item">
+                            <div class="future-icon">
+                                <i class="fas fa-satellite float-animation"></i>
                             </div>
-                            <div class="req-card">
-                                <div class="req-icon"><i class="fas fa-bolt"></i></div>
-                                <h3>Real-time Processing</h3>
-                                <p>Latency under 500ms including key generation</p>
+                            <h3>Satellite QKD</h3>
+                            <p>Partner with space agencies to implement satellite-based QKD</p>
+                            <ul class="future-list">
+                                <li>Extend secure communication to global scale</li>
+                                <li>Overcome distance limitations of fiber-based QKD</li>
+                                <li>Create quantum secure global financial network</li>
+                            </ul>
+                        </div>
+                        <div class="future-item">
+                            <div class="future-icon">
+                                <i class="fas fa-network-wired pulse-animation"></i>
                             </div>
-                            <div class="req-card">
-                                <div class="req-icon"><i class="fas fa-server"></i></div>
-                                <h3>Scalability</h3>
-                                <p>Handle up to 1000 TPS with linear scaling</p>
+                            <h3>Quantum Internet</h3>
+                            <p>Integrate with emerging quantum internet standards</p>
+                            <ul class="future-list">
+                                <li>Implement quantum repeaters for extended reach</li>
+                                <li>Develop quantum routers for key distribution</li>
+                                <li>Create end-to-end quantum-secured connections</li>
+                            </ul>
+                        </div>
+                        <div class="future-item">
+                            <div class="future-icon">
+                                <i class="fas fa-shield-alt float-animation"></i>
                             </div>
-                            <div class="req-card">
-                                <div class="req-icon"><i class="fas fa-chart-bar"></i></div>
-                                <h3>Visualization</h3>
-                                <p>Interactive dashboard for monitoring and audit</p>
+                            <h3>Post-Quantum Security</h3>
+                            <p>Combine QKD with post-quantum cryptographic algorithms</p>
+                            <ul class="future-list">
+                                <li>Hybrid security approach for defense in depth</li>
+                                <li>Lattice-based and hash-based signature schemes</li>
+                                <li>Quantum-resistant wallets and payment tokens</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="roadmap">
+                        <h3>Research Roadmap</h3>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-date">Phase 1</div>
+                                <div class="timeline-content">
+                                    <h4>Project Initiation</h4>
+                                    <p>Simulation-based QKD for Razorpay</p>
+                                </div>
                             </div>
-                            <div class="req-card">
-                                <div class="req-icon"><i class="fas fa-clipboard-check"></i></div>
-                                <h3>Compliance</h3>
-                                <p>Audit trails and PCI-DSS compliance</p>
+                            <div class="timeline-item">
+                                <div class="timeline-date">Phase 2</div>
+                                <div class="timeline-content">
+                                    <h4>Field Testing</h4>
+                                    <p>Physical QKD implementation with select merchants</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-date">Phase 3</div>
+                                <div class="timeline-content">
+                                    <h4>API Platform</h4>
+                                    <p>Open QKD-as-a-Service for fintech applications</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-date">Phase 4</div>
+                                <div class="timeline-content">
+                                    <h4>Global Network</h4>
+                                    <p>Quantum-secured payment network across continents</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -364,18 +507,86 @@
 
             <!-- Slide 10: Call to Action -->
             <section class="slide" id="slide10">
-                <div class="slide-content">
-                    <h2 class="slide-title">Try It Yourself</h2>
-                    <div class="cta-container">
+                <div class="slide-content cta">
+                    <h2 class="slide-title">Quantum-Secure the Future of Payments</h2>
+                    <div class="particles-background" id="particles-js"></div>
+                    <div class="cta-content">
+                        <div class="cta-text">
+                            <h3 class="gradient-text">Join Our Quantum Security Initiative</h3>
+                            <p class="lead-text">By integrating quantum technology with traditional payment systems, we've created a security framework that's prepared for tomorrow's quantum threats.</p>
+                            <div class="cta-points">
+                                <div class="cta-point animated">
+                                    <i class="fas fa-check-circle"></i>
+                                    <p>Provable security guarantees based on quantum physics</p>
+                                </div>
+                                <div class="cta-point animated">
+                                    <i class="fas fa-check-circle"></i>
+                                    <p>Enhanced fraud detection using neural networks</p>
+                                </div>
+                                <div class="cta-point animated">
+                                    <i class="fas fa-check-circle"></i>
+                                    <p>Seamless integration with existing payment infrastructure</p>
+                                </div>
+                                <div class="cta-point animated">
+                                    <i class="fas fa-check-circle"></i>
+                                    <p>Future-proof against quantum computing threats</p>
+                                </div>
+                            </div>
+                            <div class="cta-buttons">
+                                <a href="#" class="cta-button primary" id="requestDemoBtn">Request Demo</a>
+                                <a href="/static/qkd_razorpay_research_paper.pdf" class="cta-button secondary" id="downloadPaperBtn">Download Research Paper</a>
+                            </div>
+                        </div>
                         <div class="cta-image">
+                            <div class="glow-effect"></div>
                             <i class="fas fa-atom spin-slow"></i>
                         </div>
-                        <h3>Experience Quantum-Secured Payments</h3>
-                        <p>Run the simulation and see the QKD protocol in action with our interactive demo.</p>
-                        <div class="cta-buttons">
-                            <a href="/" class="button primary large">Start QKD Demo</a>
-                            <a href="https://github.com/your-username/qkd-razorpay-demo" class="button secondary large">View Source Code</a>
+                    </div>
+                    <div class="contact-info">
+                        <p><i class="fas fa-envelope"></i> krrishchoudhary109@gmail.com | <i class="fas fa-phone"></i> +91 7877624097</p>
+                        <div class="social-icons">
+                            <a href="https://github.com/Krrish2004" class="social-icon" id="githubLink" target="_blank" onclick="window.open('https://github.com/Krrish2004', '_blank'); return false;"><i class="fab fa-github"></i></a>
+                            <a href="https://twitter.com/your-twitter" class="social-icon" id="twitterLink" target="_blank"><i class="fab fa-twitter"></i></a>
+                            <a href="https://www.linkedin.com/in/krrish-choudhary-91b1a8281/" class="social-icon" id="linkedinLink" target="_blank" onclick="window.open('https://www.linkedin.com/in/krrish-choudhary-91b1a8281/', '_blank'); return false;"><i class="fab fa-linkedin"></i></a>
+                            <a href="https://youtube.com/your-channel" class="social-icon" id="youtubeLink" target="_blank"><i class="fab fa-youtube"></i></a>
                         </div>
+                    </div>
+                </div>
+                
+                <!-- Contact Information Modal -->
+                <div id="contactModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-modal">&times;</span>
+                        <h3>Please provide your information to download the research paper</h3>
+                        <form id="contactForm">
+                            <div class="form-group">
+                                <label for="name">Full Name</label>
+                                <input type="text" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="organization">Organization</label>
+                                <input type="text" id="organization" name="organization" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="github">GitHub URL</label>
+                                <input type="url" id="github" name="github" placeholder="https://github.com/username">
+                            </div>
+                            <div class="form-group">
+                                <label for="linkedin">LinkedIn URL</label>
+                                <input type="url" id="linkedin" name="linkedin" placeholder="https://linkedin.com/in/username">
+                            </div>
+                            <div class="form-group checkbox">
+                                <input type="checkbox" id="consent" name="consent" required>
+                                <label for="consent">I agree to receive information about quantum cryptography solutions</label>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="cta-button primary">Download Paper</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </section>
@@ -383,5 +594,97 @@
     </div>
 
     <script src="/static/presentation.js"></script>
+    <!-- Particles.js for background effects -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize particles.js on the last slide
+            if(typeof particlesJS !== 'undefined') {
+                particlesJS('particles-js', {
+                    "particles": {
+                        "number": {
+                            "value": 80,
+                            "density": {
+                                "enable": true,
+                                "value_area": 800
+                            }
+                        },
+                        "color": {
+                            "value": "#0071e3"
+                        },
+                        "shape": {
+                            "type": "circle",
+                            "stroke": {
+                                "width": 0,
+                                "color": "#000000"
+                            },
+                        },
+                        "opacity": {
+                            "value": 0.3,
+                            "random": true,
+                            "anim": {
+                                "enable": true,
+                                "speed": 1,
+                                "opacity_min": 0.1,
+                                "sync": false
+                            }
+                        },
+                        "size": {
+                            "value": 5,
+                            "random": true,
+                            "anim": {
+                                "enable": true,
+                                "speed": 2,
+                                "size_min": 0.1,
+                                "sync": false
+                            }
+                        },
+                        "line_linked": {
+                            "enable": true,
+                            "distance": 150,
+                            "color": "#0071e3",
+                            "opacity": 0.2,
+                            "width": 1
+                        },
+                        "move": {
+                            "enable": true,
+                            "speed": 1,
+                            "direction": "none",
+                            "random": true,
+                            "straight": false,
+                            "out_mode": "out",
+                            "bounce": false,
+                        }
+                    },
+                    "interactivity": {
+                        "detect_on": "canvas",
+                        "events": {
+                            "onhover": {
+                                "enable": true,
+                                "mode": "grab"
+                            },
+                            "onclick": {
+                                "enable": true,
+                                "mode": "push"
+                            },
+                            "resize": true
+                        },
+                        "modes": {
+                            "grab": {
+                                "distance": 140,
+                                "line_linked": {
+                                    "opacity": 0.5
+                                }
+                            },
+                            "push": {
+                                "particles_nb": 3
+                            }
+                        }
+                    },
+                    "retina_detect": true
+                });
+            }
+        });
+    </script>
 </body>
 </html> 

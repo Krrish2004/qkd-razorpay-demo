@@ -4,6 +4,7 @@
 let currentSlide = 1;
 const totalSlides = 10;
 let isAnimating = false;
+let modal = null; // Define modal at global scope
 
 // DOM Elements
 const slidesContainer = document.getElementById('slidesContainer');
@@ -29,6 +30,71 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Add background starfield effect
     createStarfield();
+    
+    // Initialize social links
+    setupSocialLinks();
+
+    // Contact modal functionality
+    modal = document.getElementById('contactModal');
+    const downloadBtn = document.getElementById('downloadPaperBtn');
+    const closeModal = document.querySelector('.close-modal');
+    const contactForm = document.getElementById('contactForm');
+
+    // Only initialize modal if elements exist
+    if (modal && downloadBtn && closeModal && contactForm) {
+        downloadBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showModal();
+        });
+
+        closeModal.addEventListener('click', hideModal);
+
+        // Close modal on background click
+        window.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                hideModal();
+            }
+        });
+
+        // Handle form submission
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                organization: document.getElementById('organization').value,
+                github: document.getElementById('github').value,
+                linkedin: document.getElementById('linkedin').value,
+                phone: "+91 7877624097", // Add the phone number
+                consent: document.getElementById('consent').checked
+            };
+            
+            // Save to local storage (in a real app, would send to server)
+            localStorage.setItem('qkd_contact_info', JSON.stringify(formData));
+            
+            // Update social links if provided
+            if (formData.github) {
+                document.getElementById('githubLink').href = formData.github;
+                document.getElementById('githubLink').setAttribute('target', '_blank');
+            }
+            
+            if (formData.linkedin) {
+                document.getElementById('linkedinLink').href = formData.linkedin;
+                document.getElementById('linkedinLink').setAttribute('target', '_blank');
+            }
+            
+            // Redirect to the PDF
+            hideModal();
+            
+            // Trigger download after a short delay
+            setTimeout(function() {
+                // Direct download link to ensure it works
+                window.open('/static/qkd_razorpay_research_paper.pdf', '_blank');
+            }, 300);
+        });
+    }
 });
 
 // Set up the initial slide state
@@ -260,4 +326,53 @@ const slideObserver = new MutationObserver((mutations) => {
 // Start observing slides
 slides.forEach(slide => {
     slideObserver.observe(slide, { attributes: true });
-}); 
+});
+
+function showModal() {
+    if (modal) modal.classList.add('show');
+}
+
+function hideModal() {
+    if (modal) modal.classList.remove('show');
+}
+
+// Setup social links functionality
+function setupSocialLinks() {
+    const githubLink = document.getElementById('githubLink');
+    const linkedinLink = document.getElementById('linkedinLink');
+    const twitterLink = document.getElementById('twitterLink');
+    const youtubeLink = document.getElementById('youtubeLink');
+    
+    // Setup GitHub link
+    if (githubLink) {
+        githubLink.setAttribute('target', '_blank');
+        githubLink.href = "https://github.com/Krrish2004";
+        githubLink.addEventListener('click', function(e) {
+            window.open(this.href, '_blank');
+        });
+    }
+    
+    // Setup LinkedIn link
+    if (linkedinLink) {
+        linkedinLink.setAttribute('target', '_blank');
+        linkedinLink.href = "https://www.linkedin.com/in/krrish-choudhary-91b1a8281/";
+        linkedinLink.addEventListener('click', function(e) {
+            window.open(this.href, '_blank');
+        });
+    }
+    
+    // Setup other social links with default behavior
+    if (twitterLink) {
+        twitterLink.setAttribute('target', '_blank');
+        twitterLink.addEventListener('click', function(e) {
+            window.open(this.href, '_blank');
+        });
+    }
+    
+    if (youtubeLink) {
+        youtubeLink.setAttribute('target', '_blank');
+        youtubeLink.addEventListener('click', function(e) {
+            window.open(this.href, '_blank');
+        });
+    }
+} 
