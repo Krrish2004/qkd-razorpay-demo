@@ -1,0 +1,84 @@
+@startuml
+skinparam backgroundColor white
+skinparam sequenceArrowThickness 1.5
+skinparam sequenceMessageAlign center
+skinparam roundcorner 8
+skinparam sequenceGroupBodyBackgroundColor #EEEEEE
+skinparam sequenceGroupBorderColor #666666
+skinparam SequenceActorBorderThickness 1.5
+skinparam SequenceBoxBorderColor #999999
+skinparam SequenceBoxBackgroundColor #F8F8F8
+skinparam NoteBackgroundColor #FFF9C4
+skinparam NoteBorderColor #E6C700
+
+title BB84 Quantum Key Distribution Protocol
+
+actor "Alice (Sender)" as Alice
+actor "Bob (Receiver)" as Bob
+actor "Eve (Eavesdropper)" as Eve
+
+note over Alice, Bob: <b>BB84 Protocol Steps</b>
+
+== 1. Quantum Transmission ==
+
+Alice -> Alice: Generate random bits\n(0s and 1s)
+Alice -> Alice: Randomly select basis\n(rectilinear + or diagonal x)
+note right of Alice
+  Example:
+  Random bits: 1 0 1 1 0 0 1 0
+  Random bases: + x + x + x x +
+end note
+
+Alice -[#blue]> Bob: Transmit qubits through quantum channel
+note top
+  Qubits encoded based on:
+  Rectilinear (+) basis:
+    0 → |0⟩ (horizontal polarization)
+    1 → |1⟩ (vertical polarization)
+  Diagonal (x) basis:
+    0 → |+⟩ (45° polarization)
+    1 → |−⟩ (135° polarization)
+end note
+
+note over Eve #ffcccc
+  If Eve measures qubits, she disturbs
+  the quantum state and introduces errors
+end note
+Eve -[#red]> Eve: May attempt to\nintercept qubits
+
+Bob -> Bob: Randomly select measurement basis\n(rectilinear + or diagonal x)
+Bob -> Bob: Measure received qubits
+
+== 2. Basis Reconciliation ==
+
+Bob <-[#black]-> Alice: Publicly announce measurement and preparation bases
+note over Alice, Bob
+  They discard bits where bases didn't match
+  (These measurements gave random results)
+end note
+
+== 3. Error Estimation and Key Distillation ==
+
+Alice -> Alice: Select random subset of bits
+Alice <-[#black]-> Bob: Compare selected bits to check for errors
+note right
+  Error rate > threshold: Abort (eavesdropper detected)
+  Error rate < threshold: Continue
+end note
+
+group Privacy Amplification
+    Alice <-[#black]-> Bob: Apply hash function to remaining bits
+    note over Alice, Bob
+      Final shared quantum key
+      with reduced eavesdropper knowledge
+    end note
+end group
+
+== 4. Key Verification ==
+
+note over Alice, Bob
+  Final secure symmetric key for 
+  classical encryption algorithms
+end note
+
+@enduml 

@@ -1,0 +1,58 @@
+@startuml
+skinparam backgroundColor white
+skinparam sequenceArrowThickness 2
+skinparam sequenceParticipantBorderThickness 1
+skinparam noteBackgroundColor lightyellow
+skinparam noteBorderColor darkgray
+
+skinparam sequence {
+  ArrowColor black
+  ActorBorderColor #5B9BD5
+  LifeLineBorderColor gray
+  LifeLineBackgroundColor lightgray
+  ParticipantBorderColor #5B9BD5
+  ParticipantBackgroundColor #D4E6F1
+  ParticipantFontStyle bold
+}
+
+actor User
+participant "App Controller" as App
+participant "QKD Module" as QKD
+participant "Encryption" as Enc
+participant "Fraud Detection" as Fraud
+participant "Razorpay API" as Razorpay
+
+User -> App: Payment Request
+activate User
+activate App
+
+App -> App: Initialize QKD
+App -> QKD: Generate Key
+activate QKD
+QKD -> QKD: Internal QKD Process
+QKD --> App: Return Key
+deactivate QKD
+
+App -> Enc: Encrypt Data
+activate Enc
+Enc -> Enc: Apply Encryption
+Enc --> App: Encrypted Result
+deactivate Enc
+
+App -> Fraud: Verify Transaction
+activate Fraud
+Fraud -> Fraud: Run AI Model
+Fraud --> App: Analysis Result
+deactivate Fraud
+
+App -> Razorpay: Process Payment
+activate Razorpay
+Razorpay -> Razorpay: Payment Processing
+Razorpay --> App: Payment Confirmation
+deactivate Razorpay
+
+App --> User: Display Result
+deactivate App
+deactivate User
+
+@enduml 

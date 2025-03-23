@@ -1,0 +1,66 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam roundCorner 15
+skinparam handwritten false
+
+skinparam usecase {
+  BackgroundColor #D4E6F1
+  BorderColor #5B9BD5
+  BorderThickness 1.5
+  FontStyle bold
+}
+
+skinparam actor {
+  BackgroundColor white
+  BorderColor #5B9BD5
+}
+
+skinparam arrow {
+  Color #333333
+  Thickness 1.5
+}
+
+' Actors
+actor "Customer" as customer
+actor "Merchant" as merchant
+actor "Payment Processor" as processor
+actor "System Admin" as admin
+
+' Main use cases
+rectangle "QKD-Secured Payment System" {
+  usecase "Initiate Payment" as UC1
+  usecase "Generate Quantum Keys" as UC2
+  usecase "Encrypt Transaction Data" as UC3
+  usecase "Detect Fraud" as UC4
+  usecase "Process Payment" as UC5
+  usecase "Verify Transaction Security" as UC6
+  usecase "Generate Receipt" as UC7
+  usecase "Monitor System Health" as UC8
+  usecase "View Transaction History" as UC9
+}
+
+' Relationships
+customer --> UC1
+customer --> UC7
+customer --> UC9
+
+merchant --> UC1
+merchant --> UC6
+merchant --> UC9
+
+processor --> UC5
+
+admin --> UC8
+admin --> UC6
+
+' Dependencies between use cases
+UC1 ..> UC2 : <<include>>
+UC1 ..> UC3 : <<include>>
+UC3 ..> UC4 : <<include>>
+UC4 ..> UC5 : <<include>>
+UC5 ..> UC7 : <<include>>
+
+@enduml 

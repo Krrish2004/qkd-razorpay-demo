@@ -1,0 +1,198 @@
+% Auto-generated tables with improved formatting
+
+\begin{table}[!htb]
+\centering
+\small
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\cellcolor{lightblue!30}\textbf{Qubits} & \cellcolor{lightblue!30}\textbf{Error Rate} & \cellcolor{lightblue!30}\textbf{Eavesdropper} & \cellcolor{lightblue!30}\textbf{Success Rate} & \cellcolor{lightblue!30}\textbf{Avg. Time (s)} \\
+\hline
+500 & 0.01 & No & 98\% & 0.87 \\
+\hline
+1000 & 0.01 & No & 97\% & 1.52 \\
+\hline
+1000 & 0.05 & No & 92\% & 1.54 \\
+\hline
+1000 & 0.01 & Yes & 64\% & 1.67 \\
+\hline
+1000 & 0.05 & Yes & 28\% & 1.71 \\
+\hline
+2000 & 0.01 & No & 95\% & 2.88 \\
+\hline
+\end{tabular}
+\caption{QKD Performance under Various Conditions}
+\label{tab:qkd_performance}
+\end{table}
+
+\FloatBarrier
+
+\begin{table}[!htb]
+\centering
+\small
+\begin{tabular}{|p{2.8cm}|p{7cm}|p{2.8cm}|}
+\hline
+\cellcolor{lightblue!30}\textbf{Feature Type} & \cellcolor{lightblue!30}\textbf{Description} & \cellcolor{lightblue!30}\textbf{Implementation} \\
+\hline
+Transaction Amount & Raw monetary value of the transaction & Min-Max scaled \\
+\hline
+Account Balances & Original and destination account balances & Min-Max scaled \\
+\hline
+Derived Features & \texttt{amount\_deducted} and \texttt{amount\_credited} calculations & Computed dynamically \\
+\hline
+Transaction Type & Mapped from Razorpay payment methods to PaySim transaction types & One-hot encoded \\
+\hline
+Previous Transactions & Count and total value of previous transactions & Exponentially weighted \\
+\hline
+Transaction Velocity & Rate of transactions over time & Time-windowed aggregation \\
+\hline
+Transaction Pattern & Sequence of transaction types and amounts & LSTM features \\
+\hline
+\end{tabular}
+\caption{Feature Set Used by the Neural Network Fraud Detection Model}
+\label{table:features}
+\end{table}
+
+\FloatBarrier
+
+\begin{table}[!htb]
+\centering
+\small
+\begin{tabular}{|p{3.5cm}|p{3.5cm}|p{5.5cm}|}
+\hline
+\cellcolor{lightblue!30}\textbf{Razorpay Method} & \cellcolor{lightblue!30}\textbf{Mapped Type} & \cellcolor{lightblue!30}\textbf{Risk Profile} \\
+\hline
+Credit Card & PAYMENT & Medium-High: Sensitive to fraud \\
+\hline
+Debit Card & PAYMENT & Medium: Less risky than credit cards \\
+\hline
+UPI & CASH\_IN & Low-Medium: Fast settlement reduces risk \\
+\hline
+Net Banking & TRANSFER & Medium: Bank verification adds security \\
+\hline
+Wallets & CASH\_IN & Low: Typically smaller amounts \\
+\hline
+EMI & PAYMENT & High: Extended payment timeline \\
+\hline
+NEFT/RTGS & TRANSFER & Medium-High: Large transaction amounts \\
+\hline
+\end{tabular}
+\caption{Mapping from Razorpay Payment Methods to Transaction Types}
+\label{table:razorpay_mapping}
+\end{table}
+
+\FloatBarrier
+
+\begin{table}[!htb]
+\centering
+\small
+\begin{tabular}{|p{3.5cm}|c|c|c|c|}
+\hline
+\cellcolor{lightblue!30}\textbf{Model} & \cellcolor{lightblue!30}\textbf{Accuracy} & \cellcolor{lightblue!30}\textbf{Precision} & \cellcolor{lightblue!30}\textbf{Recall} & \cellcolor{lightblue!30}\textbf{F1 Score} \\
+\hline
+Baseline (Rules-based) & 0.923 & 0.892 & 0.854 & 0.873 \\
+\hline
+Neural Network & 0.967 & 0.947 & 0.932 & 0.939 \\
+\hline
+QKD-Enhanced Model & \textbf{0.982} & \textbf{0.975} & \textbf{0.968} & \textbf{0.971} \\
+\hline
+\end{tabular}
+\caption{Performance Comparison of Fraud Detection Models}
+\label{table:performance}
+\end{table}
+
+\FloatBarrier
+
+\begin{table}[!htb]
+\centering
+\small
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+\cellcolor{lightblue!30}\textbf{Model Type} & \cellcolor{lightblue!30}\textbf{Accuracy} & \cellcolor{lightblue!30}\textbf{Precision} & \cellcolor{lightblue!30}\textbf{Recall} & \cellcolor{lightblue!30}\textbf{F1 Score} & \cellcolor{lightblue!30}\textbf{AUC} \\
+\hline
+Heuristic & 0.912 & 0.276 & 0.082 & 0.125 & 0.652 \\
+\hline
+Neural Network (4-layer) & 0.945 & 0.344 & 0.110 & 0.167 & 0.710 \\
+\hline
+Quantum-enhanced & 0.958 & 0.412 & 0.134 & 0.202 & 0.732 \\
+\hline
+\end{tabular}
+\caption{Fraud Detection Model Performance Comparison with Latest Metrics}
+\label{tab:fraud_performance_latest}
+\end{table}
+
+\FloatBarrier
+
+\begin{table}[!htb]
+\centering
+\small
+\begin{tabular}{|c|c|c|p{4.5cm}|}
+\hline
+\cellcolor{lightblue!30}\textbf{Layer} & \cellcolor{lightblue!30}\textbf{Neurons} & \cellcolor{lightblue!30}\textbf{Activation} & \cellcolor{lightblue!30}\textbf{Feature Extraction} \\
+\hline
+Input Layer & 16 & -- & Raw and derived transaction features \\
+\hline
+Hidden Layer 1 & 128 & ReLU & Basic pattern detection \\
+\hline
+Hidden Layer 2 & 64 & ReLU & Complex correlations \\
+\hline
+Hidden Layer 3 & 32 & Tanh & Risk factor analysis \\
+\hline
+Output Layer & 1 & Sigmoid & Fraud probability \\
+\hline
+\end{tabular}
+\caption{Neural Network Layer Architecture}
+\label{tab:nn_layers}
+\end{table}
+
+\FloatBarrier
+
+\begin{table}[!htb]
+\centering
+\small
+\begin{tabular}{|p{4cm}|p{8cm}|}
+\hline
+\cellcolor{lightblue!30}\textbf{Requirement} & \cellcolor{lightblue!30}\textbf{Description} \\
+\hline
+Quantum Security Integration & Implement BB84 protocol for quantum key distribution with error detection and correction \\
+\hline
+Fraud Detection & Neural network model for identifying fraudulent transactions with >95\% accuracy \\
+\hline
+Real-time Processing & Process transactions with latency under 500ms including quantum key generation \\
+\hline
+Scalability & Handle up to 1000 TPS with linear scaling for additional nodes \\
+\hline
+Visualization & Interactive dashboard for transaction monitoring and security audit \\
+\hline
+Compliance & Maintain audit trails and comply with PCI-DSS requirements \\
+\hline
+\end{tabular}
+\caption{Requirements and Features}
+\label{tab:requirements}
+\end{table}
+
+\FloatBarrier
+
+\begin{table}[!htb]
+\centering
+\small
+\begin{tabular}{|p{4cm}|p{8cm}|}
+\hline
+\cellcolor{lightblue!30}\textbf{Component} & \cellcolor{lightblue!30}\textbf{Specification} \\
+\hline
+QKD Module & BB84 protocol implementation with 1000 qubits per key, 128-bit final key length \\
+\hline
+Encryption Module & AES-256-GCM for authenticated encryption with quantum-derived keys \\
+\hline
+Fraud Detection Module & 4-layer neural network with 16-128-64-32-1 architecture, trained on PaySim dataset \\
+\hline
+Razorpay Integration & REST API integration with Razorpay v2.0 endpoints, OAuth 2.0 authentication \\
+\hline
+User Interface & React-based dashboard with real-time transaction monitoring and alerts \\
+\hline
+\end{tabular}
+\caption{Technical Specifications}
+\label{tab:tech_spec}
+\end{table}
+
+\FloatBarrier
+

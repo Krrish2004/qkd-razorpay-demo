@@ -398,12 +398,18 @@ def run_simulation(simulation_id, config):
 # API Routes
 @app.route('/')
 def index():
-    """Serve the main page"""
+    """Render the main application page"""
     return render_template('index.html')
+
+# Add new presentation route
+@app.route('/presentation')
+def presentation():
+    """Render the presentation page"""
+    return render_template('presentation.html')
 
 @app.route('/api/start_simulation', methods=['POST'])
 def start_simulation():
-    """Start a new QKD-secured transaction simulation"""
+    """Start a new QKD-Razorpay simulation"""
     try:
         # Get configuration from request
         config = request.json

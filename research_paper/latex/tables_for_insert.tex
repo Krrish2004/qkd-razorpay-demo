@@ -1,0 +1,183 @@
+% QKD Performance Table
+\begin{table}[!htb]
+\centering
+\small
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{Qubits} & \textbf{Error Rate} & \textbf{Eavesdropper} & \textbf{Success Rate} & \textbf{Avg. Time (s)} \\
+\hline
+500 & 0.01 & No & 98\% & 0.87 \\
+\hline
+1000 & 0.01 & No & 97\% & 1.52 \\
+\hline
+1000 & 0.05 & No & 92\% & 1.54 \\
+\hline
+1000 & 0.01 & Yes & 64\% & 1.67 \\
+\hline
+1000 & 0.05 & Yes & 28\% & 1.71 \\
+\hline
+2000 & 0.01 & No & 95\% & 2.88 \\
+\hline
+\end{tabular}
+\caption{QKD Performance under Various Conditions}
+\label{tab:qkd_performance}
+\end{table}
+
+% Base Matching Table
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Qubits} & \textbf{Theoretical Match Rate} & \textbf{Observed Match Rate} \\
+\hline
+500 & 50\% & 49.8\% \\
+\hline
+1000 & 50\% & 50.2\% \\
+\hline
+2000 & 50\% & 49.9\% \\
+\hline
+\end{tabular}
+\caption{Base Matching Rates in BB84 Protocol Implementation}
+\label{tab:base_matching}
+\end{table}
+
+% Model Comparison Table
+\begin{table}[!htb]
+\centering
+\small
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+\cellcolor{lightblue!30}\textbf{Model Type} & \cellcolor{lightblue!30}\textbf{Accuracy} & \cellcolor{lightblue!30}\textbf{Precision} & \cellcolor{lightblue!30}\textbf{Recall} & \cellcolor{lightblue!30}\textbf{F1 Score} & \cellcolor{lightblue!30}\textbf{AUC} \\
+\hline
+Heuristic & 0.912 & 0.276 & 0.082 & 0.125 & 0.652 \\
+\hline
+Neural Network (4-layer) & 0.945 & 0.344 & 0.110 & 0.167 & 0.710 \\
+\hline
+Quantum-enhanced & 0.958 & 0.412 & 0.134 & 0.202 & 0.732 \\
+\hline
+\end{tabular}
+\caption{Fraud Detection Model Performance Comparison with Latest Metrics}
+\label{tab:fraud_performance_latest}
+\end{table}
+
+% Neural Network Layer Architecture Table
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Layer} & \textbf{Neurons} & \textbf{Activation} & \textbf{Feature Extraction} \\
+\hline
+Input Layer & 16 & -- & Raw and derived transaction features \\
+\hline
+Hidden Layer 1 & 128 & ReLU & Basic pattern detection \\
+\hline
+Hidden Layer 2 & 64 & ReLU & Complex correlations \\
+\hline
+Hidden Layer 3 & 32 & Tanh & Risk factor analysis \\
+\hline
+Output Layer & 1 & Sigmoid & Fraud probability \\
+\hline
+\end{tabular}
+\caption{Neural Network Layer Architecture}
+\label{tab:nn_layers}
+\end{table}
+
+% Feature Set Table
+\begin{table}[!htb]
+\centering
+\small
+\begin{tabular}{|p{2.8cm}|p{7cm}|p{2.8cm}|}
+\hline
+\cellcolor{lightblue!30}\textbf{Feature Type} & \cellcolor{lightblue!30}\textbf{Description} & \cellcolor{lightblue!30}\textbf{Implementation} \\
+\hline
+Transaction Amount & Raw monetary value of the transaction & Min-Max scaled \\
+\hline
+Account Balances & Original and destination account balances & Min-Max scaled \\
+\hline
+Derived Features & \texttt{amount\_deducted} and \texttt{amount\_credited} calculations & Computed dynamically \\
+\hline
+Transaction Type & Mapped from Razorpay payment methods to PaySim transaction types & One-hot encoded \\
+\hline
+Previous Transactions & Count and total value of previous transactions & Exponentially weighted \\
+\hline
+Transaction Velocity & Rate of transactions over time & Time-windowed aggregation \\
+\hline
+Transaction Pattern & Sequence of transaction types and amounts & LSTM features \\
+\hline
+\end{tabular}
+\caption{Feature Set Used by the Neural Network Fraud Detection Model}
+\label{table:features}
+\end{table}
+
+% Payment Method Mapping Table
+\begin{table}[!htb]
+\small
+\centering
+\begin{tabular}{|p{3.5cm}|p{3.5cm}|p{5.5cm}|}
+\hline
+\textbf{Razorpay Payment Method} & \textbf{Transaction Type} & \textbf{Description} \\
+\hline
+Credit Card & PAYMENT & Card-based payment with credit facility \\
+\hline
+Debit Card & PAYMENT & Card-based payment tied to bank account \\
+\hline
+UPI & TRANSFER & Direct bank account transfer via UPI \\
+\hline
+Net Banking & TRANSFER & Direct bank transfer via internet banking \\
+\hline
+Wallet & CASH_IN & Pre-loaded wallet balance transaction \\
+\hline
+EMI & DEBIT & Extended payment with installments \\
+\hline
+\end{tabular}
+\caption{Mapping of Razorpay Payment Methods to Transaction Types}
+\label{table:razorpay_mapping}
+\end{table}
+
+% Requirements Table
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|p{4cm}|p{8cm}|}
+\hline
+\textbf{Requirement} & \textbf{Description} \\
+\hline
+Quantum Key Generation & Implement BB84 protocol for secure key generation \\
+\hline
+Transaction Security & AES-GCM encryption using quantum-derived keys \\
+\hline
+Fraud Detection & Neural network model with 95\%+ accuracy \\
+\hline
+API Integration & Seamless integration with Razorpay API \\
+\hline
+Performance & Key generation < 3 seconds, transaction processing < 1 second \\
+\hline
+User Experience & Intuitive visualization of security measures \\
+\hline
+\end{tabular}
+\caption{System Requirements and Features}
+\label{tab:requirements}
+\end{table}
+
+% Technical Specifications Table
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|p{4cm}|p{8cm}|}
+\hline
+\textbf{Component} & \textbf{Specification} \\
+\hline
+QKD Implementation & Python with SimulaQron quantum simulator \\
+\hline
+Encryption & AES-256-GCM with quantum-derived keys \\
+\hline
+Neural Network & TensorFlow 2.8 with 4-layer architecture \\
+\hline
+User Interface & React JS with Material UI components \\
+\hline
+API Integration & Razorpay v1.3.0 API integration \\
+\hline
+Deployment & Docker containers with Kubernetes orchestration \\
+\hline
+\end{tabular}
+\caption{Technical Specifications}
+\label{tab:tech_specs}
+\end{table} 

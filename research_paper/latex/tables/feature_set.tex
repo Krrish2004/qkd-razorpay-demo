@@ -1,0 +1,25 @@
+\begin{table}[!htb]
+\centering
+\small
+\begin{tabular}{|p{3.2cm}|p{7.5cm}|p{3.2cm}|}
+\hline
+\cellcolor{lightblue!30}\textbf{Feature Type} & \cellcolor{lightblue!30}\textbf{Description} & \cellcolor{lightblue!30}\textbf{Implementation} \\
+\hline
+Transaction Amount & Raw monetary value of the transaction & Min-Max scaled \\
+\hline
+Account Balances & Original and destination account balances & Min-Max scaled \\
+\hline
+Derived Features & \texttt{amount\_deducted} and \texttt{amount\_credited} calculations & Computed dynamically \\
+\hline
+Transaction Type & Mapped from Razorpay payment methods to PaySim transaction types & One-hot encoded \\
+\hline
+Previous Transactions & Count and total value of previous transactions & Exponentially weighted \\
+\hline
+Transaction Velocity & Rate of transactions over time & Time-windowed aggregation \\
+\hline
+Transaction Pattern & Sequence of transaction types and amounts & LSTM features \\
+\hline
+\end{tabular}
+\caption{Feature Set Used by the Neural Network Fraud Detection Model}
+\label{table:features}
+\end{table}

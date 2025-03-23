@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0071e3">
+    <title>QKD-Razorpay Project Presentation</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/presentation.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=SF+Pro+Text:wght@400;500;600&display=swap">
+</head>
+<body class="presentation-body">
+    <div class="presentation-wrapper">
+        <!-- Navigation controls -->
+        <div class="presentation-controls">
+            <button class="nav-button prev" id="prevSlide"><i class="fas fa-chevron-left"></i></button>
+            <div class="slide-indicator" id="slideIndicator">1 / 10</div>
+            <button class="nav-button next" id="nextSlide"><i class="fas fa-chevron-right"></i></button>
+            <a href="/" class="home-button"><i class="fas fa-home"></i></a>
+        </div>
+
+        <!-- Slides container -->
+        <div class="slides-container" id="slidesContainer">
+            <!-- Slide 1: Title -->
+            <section class="slide title-slide" id="slide1">
+                <div class="slide-content">
+                    <div class="logo-large">
+                        <i class="fas fa-atom"></i>
+                    </div>
+                    <h1 class="animate-title">Quantum Key Distribution for Razorpay Security</h1>
+                    <h2 class="animate-subtitle">Enhancing Payment Security with Quantum Cryptography</h2>
+                    <div class="authors">
+                        <p>QKD Research Team</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 2: Problem Statement -->
+            <section class="slide" id="slide2">
+                <div class="slide-content">
+                    <h2 class="slide-title">Problem Statement</h2>
+                    <div class="two-column">
+                        <div class="column challenge-box">
+                            <h3><i class="fas fa-exclamation-triangle"></i> Challenges</h3>
+                            <ul>
+                                <li>Increasing sophistication of payment fraud</li>
+                                <li>Quantum computers threaten traditional encryption</li>
+                                <li>Need for real-time fraud detection</li>
+                                <li>Ensuring security while maintaining user experience</li>
+                            </ul>
+                        </div>
+                        <div class="column solution-box">
+                            <h3><i class="fas fa-lightbulb"></i> Solution Approach</h3>
+                            <ul>
+                                <li>Implement BB84 quantum key distribution protocol</li>
+                                <li>Develop neural network-based fraud detection</li>
+                                <li>Integrate with Razorpay payment infrastructure</li>
+                                <li>Create real-time monitoring dashboard</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 3: BB84 Protocol -->
+            <section class="slide" id="slide3">
+                <div class="slide-content">
+                    <h2 class="slide-title">Quantum Key Distribution - BB84 Protocol</h2>
+                    <div class="center-content">
+                        <img src="/static/bb84_protocol.png" alt="BB84 Protocol" class="slide-image">
+                        <div class="caption-box">
+                            <p>The BB84 protocol uses quantum properties to ensure secure key exchange:</p>
+                            <ol>
+                                <li>Alice sends qubits in random bases</li>
+                                <li>Bob measures in random bases</li>
+                                <li>They compare bases and keep matching measurements</li>
+                                <li>Check for eavesdropping with sample bits</li>
+                                <li>Apply privacy amplification for final key</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 4: System Architecture -->
+            <section class="slide" id="slide4">
+                <div class="slide-content">
+                    <h2 class="slide-title">System Architecture</h2>
+                    <div class="center-content">
+                        <img src="/static/system_architecture.png" alt="System Architecture" class="slide-image">
+                        <div class="key-components">
+                            <div class="component">
+                                <h4>QKD Module</h4>
+                                <p>Creates quantum-secure keys</p>
+                            </div>
+                            <div class="component">
+                                <h4>Encryption Layer</h4>
+                                <p>Protects payment data</p>
+                            </div>
+                            <div class="component">
+                                <h4>Fraud Detection</h4>
+                                <p>Neural network analysis</p>
+                            </div>
+                            <div class="component">
+                                <h4>Razorpay API</h4>
+                                <p>Payment processing</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 5: QKD Performance -->
+            <section class="slide" id="slide5">
+                <div class="slide-content">
+                    <h2 class="slide-title">QKD Performance Results</h2>
+                    <div class="center-content">
+                        <table class="performance-table">
+                            <thead>
+                                <tr>
+                                    <th>Qubits</th>
+                                    <th>Error Rate</th>
+                                    <th>Eavesdropper</th>
+                                    <th>Success Rate</th>
+                                    <th>Avg. Time (s)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>500</td>
+                                    <td>0.01</td>
+                                    <td>No</td>
+                                    <td>98%</td>
+                                    <td>0.87</td>
+                                </tr>
+                                <tr>
+                                    <td>1000</td>
+                                    <td>0.01</td>
+                                    <td>No</td>
+                                    <td>97%</td>
+                                    <td>1.52</td>
+                                </tr>
+                                <tr>
+                                    <td>1000</td>
+                                    <td>0.05</td>
+                                    <td>No</td>
+                                    <td>92%</td>
+                                    <td>1.54</td>
+                                </tr>
+                                <tr>
+                                    <td>1000</td>
+                                    <td>0.01</td>
+                                    <td>Yes</td>
+                                    <td>64%</td>
+                                    <td>1.67</td>
+                                </tr>
+                                <tr>
+                                    <td>1000</td>
+                                    <td>0.05</td>
+                                    <td>Yes</td>
+                                    <td>28%</td>
+                                    <td>1.71</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="insight-box">
+                            <h4><i class="fas fa-chart-line"></i> Key Insight</h4>
+                            <p>Eavesdropper detection rate is 72-96% depending on error rate, demonstrating the protocol's security capabilities.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 6: Neural Network Architecture -->
+            <section class="slide" id="slide6">
+                <div class="slide-content">
+                    <h2 class="slide-title">Neural Network Fraud Detection</h2>
+                    <div class="two-column">
+                        <div class="column">
+                            <img src="/static/neural_network.png" alt="Neural Network Architecture" class="slide-image">
+                        </div>
+                        <div class="column">
+                            <h3>Neural Network Architecture</h3>
+                            <table class="small-table">
+                                <tr>
+                                    <th>Layer</th>
+                                    <th>Neurons</th>
+                                    <th>Activation</th>
+                                </tr>
+                                <tr>
+                                    <td>Input</td>
+                                    <td>16</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td>Hidden 1</td>
+                                    <td>128</td>
+                                    <td>ReLU</td>
+                                </tr>
+                                <tr>
+                                    <td>Hidden 2</td>
+                                    <td>64</td>
+                                    <td>ReLU</td>
+                                </tr>
+                                <tr>
+                                    <td>Hidden 3</td>
+                                    <td>32</td>
+                                    <td>Tanh</td>
+                                </tr>
+                                <tr>
+                                    <td>Output</td>
+                                    <td>1</td>
+                                    <td>Sigmoid</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 7: Model Performance -->
+            <section class="slide" id="slide7">
+                <div class="slide-content">
+                    <h2 class="slide-title">Fraud Detection Performance</h2>
+                    <div class="metrics-container">
+                        <div class="metrics-box">
+                            <h3>Performance Metrics</h3>
+                            <div class="metrics-grid">
+                                <div class="metric-card">
+                                    <div class="metric-value">0.958</div>
+                                    <div class="metric-label">Accuracy</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-value">0.412</div>
+                                    <div class="metric-label">Precision</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-value">0.134</div>
+                                    <div class="metric-label">Recall</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-value">0.202</div>
+                                    <div class="metric-label">F1 Score</div>
+                                </div>
+                                <div class="metric-card wide">
+                                    <div class="metric-value">0.732</div>
+                                    <div class="metric-label">AUC</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="visualization-row">
+                            <div class="viz-container">
+                                <img src="/static/confusion_matrix.png" alt="Confusion Matrix" class="viz-image">
+                                <div class="viz-caption">Confusion Matrix</div>
+                            </div>
+                            <div class="viz-container">
+                                <img src="/static/loss_curves.png" alt="Loss Curves" class="viz-image">
+                                <div class="viz-caption">Loss Curves</div>
+                            </div>
+                            <div class="viz-container">
+                                <img src="/static/accuracy_curves.png" alt="Accuracy Curves" class="viz-image">
+                                <div class="viz-caption">Accuracy Curves</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 8: Feature Set -->
+            <section class="slide" id="slide8">
+                <div class="slide-content">
+                    <h2 class="slide-title">Feature Engineering</h2>
+                    <div class="center-content">
+                        <table class="feature-table">
+                            <thead>
+                                <tr>
+                                    <th>Feature Type</th>
+                                    <th>Description</th>
+                                    <th>Implementation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Transaction Amount</td>
+                                    <td>Raw monetary value of the transaction</td>
+                                    <td>Min-Max scaled</td>
+                                </tr>
+                                <tr>
+                                    <td>Account Balances</td>
+                                    <td>Original and destination account balances</td>
+                                    <td>Min-Max scaled</td>
+                                </tr>
+                                <tr>
+                                    <td>Derived Features</td>
+                                    <td><code>amount_deducted</code> and <code>amount_credited</code> calculations</td>
+                                    <td>Computed dynamically</td>
+                                </tr>
+                                <tr>
+                                    <td>Transaction Type</td>
+                                    <td>Mapped from Razorpay payment methods to PaySim transaction types</td>
+                                    <td>One-hot encoded</td>
+                                </tr>
+                                <tr>
+                                    <td>Transaction Velocity</td>
+                                    <td>Rate of transactions over time</td>
+                                    <td>Time-windowed aggregation</td>
+                                </tr>
+                                <tr>
+                                    <td>Transaction Pattern</td>
+                                    <td>Sequence of transaction types and amounts</td>
+                                    <td>LSTM features</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 9: Technical Requirements -->
+            <section class="slide" id="slide9">
+                <div class="slide-content">
+                    <h2 class="slide-title">Technical Requirements</h2>
+                    <div class="center-content">
+                        <div class="requirements-grid">
+                            <div class="req-card">
+                                <div class="req-icon"><i class="fas fa-lock"></i></div>
+                                <h3>Quantum Security</h3>
+                                <p>BB84 protocol implementation with error detection and correction</p>
+                            </div>
+                            <div class="req-card">
+                                <div class="req-icon"><i class="fas fa-shield-alt"></i></div>
+                                <h3>Fraud Detection</h3>
+                                <p>Neural network model with >95% accuracy</p>
+                            </div>
+                            <div class="req-card">
+                                <div class="req-icon"><i class="fas fa-bolt"></i></div>
+                                <h3>Real-time Processing</h3>
+                                <p>Latency under 500ms including key generation</p>
+                            </div>
+                            <div class="req-card">
+                                <div class="req-icon"><i class="fas fa-server"></i></div>
+                                <h3>Scalability</h3>
+                                <p>Handle up to 1000 TPS with linear scaling</p>
+                            </div>
+                            <div class="req-card">
+                                <div class="req-icon"><i class="fas fa-chart-bar"></i></div>
+                                <h3>Visualization</h3>
+                                <p>Interactive dashboard for monitoring and audit</p>
+                            </div>
+                            <div class="req-card">
+                                <div class="req-icon"><i class="fas fa-clipboard-check"></i></div>
+                                <h3>Compliance</h3>
+                                <p>Audit trails and PCI-DSS compliance</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 10: Call to Action -->
+            <section class="slide" id="slide10">
+                <div class="slide-content">
+                    <h2 class="slide-title">Try It Yourself</h2>
+                    <div class="cta-container">
+                        <div class="cta-image">
+                            <i class="fas fa-atom spin-slow"></i>
+                        </div>
+                        <h3>Experience Quantum-Secured Payments</h3>
+                        <p>Run the simulation and see the QKD protocol in action with our interactive demo.</p>
+                        <div class="cta-buttons">
+                            <a href="/" class="button primary large">Start QKD Demo</a>
+                            <a href="https://github.com/your-username/qkd-razorpay-demo" class="button secondary large">View Source Code</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="/static/presentation.js"></script>
+</body>
+</html> 

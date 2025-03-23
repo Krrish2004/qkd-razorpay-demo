@@ -869,4 +869,34 @@ footer a:hover {
     #historyTable tr:hover {
         background-color: rgba(255, 255, 255, 0.05);
     }
+}
+
+/* Add styles for the main navigation */
+.main-nav {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+    gap: 20px;
+}
+
+.main-nav a {
+    color: #fff;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.main-nav a:hover {
+    background: rgba(0, 113, 227, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.main-nav a.active {
+    background: #0071e3;
+    color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 } 

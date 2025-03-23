@@ -6,5 +6,9 @@ cryptography
 python-dotenv
 matplotlib
 numpy
+scikit-learn
+pandas
+joblib
+torch
 flask
 flask-cors 

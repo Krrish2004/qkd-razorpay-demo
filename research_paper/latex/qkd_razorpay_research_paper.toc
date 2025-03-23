@@ -1,0 +1,70 @@
+\contentsline {section}{\numberline {I}Introduction}{2}{section.1}%
+\contentsline {subsection}{\numberline {\mbox {I-A}}Problem Statement}{3}{subsection.1.1}%
+\contentsline {subsection}{\numberline {\mbox {I-B}}Objectives}{3}{subsection.1.2}%
+\contentsline {subsection}{\numberline {\mbox {I-C}}Significance}{3}{subsection.1.3}%
+\contentsline {subsection}{\numberline {\mbox {I-D}}Quantum Key Distribution}{3}{subsection.1.4}%
+\contentsline {subsection}{\numberline {\mbox {I-E}}BB84 Protocol}{4}{subsection.1.5}%
+\contentsline {subsection}{\numberline {\mbox {I-F}}Quantum Computing Threats to Classical Cryptography}{4}{subsection.1.6}%
+\contentsline {subsection}{\numberline {\mbox {I-G}}Payment Gateway Security}{4}{subsection.1.7}%
+\contentsline {section}{\numberline {II}System Architecture and Design}{4}{section.2}%
+\contentsline {subsection}{\numberline {\mbox {II-A}}System Overview}{4}{subsection.2.1}%
+\contentsline {subsection}{\numberline {\mbox {II-B}}Architecture Diagram}{5}{subsection.2.2}%
+\contentsline {subsection}{\numberline {\mbox {II-C}}Class Diagram}{6}{subsection.2.3}%
+\contentsline {subsection}{\numberline {\mbox {II-D}}Sequence Diagram}{6}{subsection.2.4}%
+\contentsline {subsection}{\numberline {\mbox {II-E}}Data Flow Diagram}{7}{subsection.2.5}%
+\contentsline {subsection}{\numberline {\mbox {II-F}}Use Case Diagram}{7}{subsection.2.6}%
+\contentsline {section}{\numberline {III}Requirements Analysis}{8}{section.3}%
+\contentsline {subsection}{\numberline {\mbox {III-A}}Functional Requirements}{8}{subsection.3.1}%
+\contentsline {subsection}{\numberline {\mbox {III-B}}Non-Functional Requirements}{9}{subsection.3.2}%
+\contentsline {section}{\numberline {IV}Implementation Details}{10}{section.4}%
+\contentsline {subsection}{\numberline {\mbox {IV-A}}QKD Module Implementation}{10}{subsection.4.1}%
+\contentsline {subsubsection}{\numberline {\mbox {IV-A}1}BB84 Protocol Implementation}{10}{subsubsection.4.1.1}%
+\contentsline {subsubsection}{\numberline {\mbox {IV-A}2}Quantum Circuit Implementation}{10}{subsubsection.4.1.2}%
+\contentsline {subsubsection}{\numberline {\mbox {IV-A}3}Eavesdropper Simulation}{12}{subsubsection.4.1.3}%
+\contentsline {subsection}{\numberline {\mbox {IV-B}}Encryption Module Implementation}{13}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {\mbox {IV-B}1}Key Derivation}{13}{subsubsection.4.2.1}%
+\contentsline {subsubsection}{\numberline {\mbox {IV-B}2}Encryption Process}{13}{subsubsection.4.2.2}%
+\contentsline {subsubsection}{\numberline {\mbox {IV-B}3}Decryption Process}{14}{subsubsection.4.2.3}%
+\contentsline {subsection}{\numberline {\mbox {IV-C}}Fraud Detection Module Implementation}{14}{subsection.4.3}%
+\contentsline {subsubsection}{\numberline {\mbox {IV-C}1}Fraud Detection Models}{14}{subsubsection.4.3.1}%
+\contentsline {subsubsection}{\numberline {\mbox {IV-C}2}Transaction Analysis}{15}{subsubsection.4.3.2}%
+\contentsline {subsubsection}{\numberline {\mbox {IV-C}3}Neural Network Model Implementation}{16}{subsubsection.4.3.3}%
+\contentsline {subsubsection}{\numberline {\mbox {IV-C}4}Synthetic Dataset Generation}{17}{subsubsection.4.3.4}%
+\contentsline {subsubsection}{\numberline {\mbox {IV-C}5}Feature Engineering for Neural Network}{18}{subsubsection.4.3.5}%
+\contentsline {subsection}{\numberline {\mbox {IV-D}}Web Application Implementation with Enhanced UI}{19}{subsection.4.4}%
+\contentsline {subsubsection}{\numberline {\mbox {IV-D}1}Frontend Enhancements}{19}{subsubsection.4.4.1}%
+\contentsline {subsubsection}{\numberline {\mbox {IV-D}2}Integrated Fraud Detection UI}{20}{subsubsection.4.4.2}%
+\contentsline {subsubsection}{\numberline {\mbox {IV-D}3}Enhanced Simulation Process}{20}{subsubsection.4.4.3}%
+\contentsline {section}{\numberline {V}Experimental Results and Evaluation}{22}{section.5}%
+\contentsline {subsection}{\numberline {\mbox {V-A}}QKD Performance Analysis}{22}{subsection.5.1}%
+\contentsline {subsubsection}{\numberline {\mbox {V-A}1}Key Generation Success Rate}{22}{subsubsection.5.1.1}%
+\contentsline {subsubsection}{\numberline {\mbox {V-A}2}Base Matching Analysis}{23}{subsubsection.5.1.2}%
+\contentsline {subsubsection}{\numberline {\mbox {V-A}3}Eavesdropper Detection}{23}{subsubsection.5.1.3}%
+\contentsline {subsection}{\numberline {\mbox {V-B}}Encryption Performance}{23}{subsection.5.2}%
+\contentsline {subsubsection}{\numberline {\mbox {V-B}1}Quantum vs. Standard Encryption}{23}{subsubsection.5.2.1}%
+\contentsline {subsubsection}{\numberline {\mbox {V-B}2}Security Analysis}{23}{subsubsection.5.2.2}%
+\contentsline {subsection}{\numberline {\mbox {V-C}}System Performance}{23}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {\mbox {V-C}1}Transaction Flow Timing}{23}{subsubsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {\mbox {V-C}2}Web Application Performance}{24}{subsubsection.5.3.2}%
+\contentsline {subsection}{\numberline {\mbox {V-D}}Fraud Detection Performance}{24}{subsection.5.4}%
+\contentsline {subsubsection}{\numberline {\mbox {V-D}1}Model Training Process}{24}{subsubsection.5.4.1}%
+\contentsline {subsubsection}{\numberline {\mbox {V-D}2}Model Comparison}{25}{subsubsection.5.4.2}%
+\contentsline {subsection}{\numberline {\mbox {V-E}}Fraud Detection Insights}{26}{subsection.5.5}%
+\contentsline {subsection}{\numberline {\mbox {V-F}}UI/UX Considerations}{27}{subsection.5.6}%
+\contentsline {section}{\numberline {VI}Conclusion}{27}{section.6}%
+\contentsline {section}{\numberline {VII}Neural Network Fraud Detection Model}{28}{section.7}%
+\contentsline {subsection}{\numberline {\mbox {VII-A}}Model Architecture}{28}{subsection.7.1}%
+\contentsline {subsection}{\numberline {\mbox {VII-B}}BB84 Protocol Implementation}{28}{subsection.7.2}%
+\contentsline {subsection}{\numberline {\mbox {VII-C}}Feature Engineering}{28}{subsection.7.3}%
+\contentsline {subsection}{\numberline {\mbox {VII-D}}Training Methodology}{29}{subsection.7.4}%
+\contentsline {subsection}{\numberline {\mbox {VII-E}}Performance Metrics}{30}{subsection.7.5}%
+\contentsline {subsection}{\numberline {\mbox {VII-F}}Fraud Pattern Recognition}{30}{subsection.7.6}%
+\contentsline {subsection}{\numberline {\mbox {VII-G}}Integration with Quantum Security}{31}{subsection.7.7}%
+\contentsline {section}{\numberline {VIII}Future Work}{31}{section.8}%
+\contentsline {subsection}{\numberline {\mbox {VIII-A}}Hardware Implementation}{31}{subsection.8.1}%
+\contentsline {subsection}{\numberline {\mbox {VIII-B}}Neural Network Enhancements}{31}{subsection.8.2}%
+\contentsline {subsection}{\numberline {\mbox {VIII-C}}Scalability and Performance Optimization}{31}{subsection.8.3}%
+\contentsline {subsection}{\numberline {\mbox {VIII-D}}Regulatory and Standardization Efforts}{32}{subsection.8.4}%
+\contentsline {subsection}{\numberline {\mbox {VIII-E}}Real-world Deployment Studies}{32}{subsection.8.5}%
+\contentsline {section}{\numberline {IX}Acknowledgments}{32}{section.9}%
+\contentsline {section}{References}{32}{section.9}%

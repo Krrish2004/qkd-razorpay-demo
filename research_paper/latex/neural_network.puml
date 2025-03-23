@@ -1,0 +1,34 @@
+@startuml
+title Neural Network Architecture for Fraud Detection
+
+skinparam backgroundColor white
+skinparam arrowColor black
+
+rectangle "Input Layer\n7 neurons" as input #lightblue
+rectangle "Hidden Layer 1\n12 neurons" as h1 #lightcyan
+rectangle "Hidden Layer 2\n8 neurons" as h2 #lightcyan  
+rectangle "Hidden Layer 3\n4 neurons" as h3 #lightcyan
+rectangle "Output Layer\n1 neuron" as output #lightgreen
+
+input --> h1
+h1 --> h2
+h2 --> h3
+h3 --> output
+
+note bottom of input
+  Input Features:
+  Transaction Amount, Time Since Last Transaction,
+  Transaction Velocity, Geographic Risk Score,
+  Device Reputation, Payment Method Risk,
+  Customer History Score
+end note
+
+note bottom of output
+  Model Details:
+  Optimizer: Adam (lr=0.001)
+  Loss: Binary Cross-Entropy
+  Metrics: AUC, Precision, Recall
+  Output: Fraud probability (0-1)
+end note
+
+@enduml 

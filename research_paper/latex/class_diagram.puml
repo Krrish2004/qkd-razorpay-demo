@@ -1,0 +1,64 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam roundCorner 8
+skinparam classAttributeIconSize 0
+
+skinparam class {
+  BackgroundColor #D4E6F1
+  ArrowColor #333333
+  BorderColor #5B9BD5
+  BorderThickness 1.5
+  FontStyle bold
+}
+
+skinparam arrow {
+  Thickness 2
+}
+
+class QKDSimulator {
+  +generate_quantum_keys()
+  +simulate_quantum_transmission()
+  +detect_eavesdropping()
+}
+
+class QuantumEncryption {
+  +encrypt_data()
+  +decrypt_data()
+  +derive_key()
+}
+
+class FraudDetectionAI {
+  +analyze_transaction()
+  +extract_features()
+  +determine_risk_factors()
+}
+
+class SimpleNN {
+  +train()
+  +predict()
+  +process_features()
+}
+
+class RazorpayIntegration {
+  +create_order()
+  +process_payment()
+  +verify_signature()
+}
+
+class ApplicationController {
+  +init_payment()
+  +secure_transaction()
+  +display_result()
+}
+
+QKDSimulator -right-> QuantumEncryption : uses
+FraudDetectionAI -right-> SimpleNN : contains
+ApplicationController -up-> QKDSimulator : manages
+ApplicationController -up-> QuantumEncryption
+ApplicationController -up-> FraudDetectionAI : uses
+ApplicationController -left-> RazorpayIntegration : integrates
+
+@enduml 

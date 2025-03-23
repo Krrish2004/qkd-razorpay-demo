@@ -1,0 +1,71 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam roundCorner 10
+skinparam componentStyle uml2
+
+skinparam component {
+  BackgroundColor #D4E6F1
+  BorderColor #5B9BD5
+  BorderThickness 2
+  FontStyle bold
+}
+
+skinparam interface {
+  BackgroundColor white
+  BorderColor #5B9BD5
+}
+
+skinparam arrow {
+  Color #333333
+  Thickness 2
+}
+
+skinparam note {
+  BackgroundColor lightyellow
+  BorderColor darkgray
+}
+
+component "User Interface" as UI
+component "QKD Module" as QKD {
+  note right of QKD
+    BB84 Protocol Implementation
+    Quantum Key Generation
+    Eavesdropping Detection
+  end note
+}
+
+component "Encryption Layer" as Encryption {
+  note right of Encryption
+    AES-GCM Encryption
+    Key Derivation
+    Secure Data Protection
+  end note
+}
+
+component "Fraud Detection" as Fraud {
+  note right of Fraud
+    Neural Network Analysis
+    Risk Scoring
+    Transaction Validation
+  end note
+}
+
+component "Razorpay API" as Razorpay {
+  note right of Razorpay
+    Payment Processing
+    Order Management
+    Signature Verification
+  end note
+}
+
+UI -down-> QKD : 1. Initiates key generation
+QKD -down-> Encryption : 2. Provides quantum keys
+UI -down-> Encryption : 3. Sends payment data
+Encryption -down-> Fraud : 4. Forwards encrypted data
+Fraud -down-> Razorpay : 5. Sends verified transaction
+Razorpay -up-> UI : 6. Returns payment status
+
+@enduml 

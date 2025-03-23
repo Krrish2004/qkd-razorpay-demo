@@ -1,0 +1,68 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam roundCorner 10
+skinparam ArrowColor #333333
+skinparam ArrowThickness 2
+
+skinparam rectangle {
+  BackgroundColor #D4E6F1
+  BorderColor #5B9BD5
+  BorderThickness 2
+  FontStyle bold
+}
+
+skinparam database {
+  BackgroundColor #E8F4F8
+  BorderColor #4B96D1
+}
+
+skinparam cloud {
+  BackgroundColor #F8F9FA
+  BorderColor #5B9BD5
+}
+
+skinparam arrow {
+  Color #333333
+  Thickness 2
+}
+
+' Entities
+rectangle "User" as user
+rectangle "Application Controller" as app
+rectangle "QKD Module" as qkd
+rectangle "Encryption Module" as enc
+rectangle "Fraud Detection" as fraud
+cloud "Razorpay API" as razorpay
+database "Transaction DB" as db
+
+' Data flows
+user -right-> app : Payment Request\n(Amount, Currency, Metadata)
+app -down-> qkd : Key Request
+qkd -up-> app : Quantum Key
+app -right-> enc : Payment Data +\nQuantum Key
+enc -right-> fraud : Encrypted Payment\nData
+fraud -right-> razorpay : Verified Transaction\n(Encrypted)
+razorpay -down-> db : Store Transaction
+razorpay -left-> app : Payment Status
+app -up-> user : Transaction Result
+
+' Label the data transformations
+note bottom of qkd
+  Transforms random bits
+  into secure quantum keys
+end note
+
+note bottom of enc
+  Transforms plaintext
+  into quantum-secured ciphertext
+end note
+
+note bottom of fraud
+  Transforms transaction data
+  into risk assessment score
+end note
+
+@enduml 
