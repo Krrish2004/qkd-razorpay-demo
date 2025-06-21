@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  qkd-razorpay-app:
+    build: .
+    container_name: qkd-razorpay-demo
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - FLASK_APP=app.py
+      - PYTHONUNBUFFERED=1
+    volumes:
+      # Mount static directory for persistent storage of generated files
+      - ./static:/app/static
+      # Mount models directory
+      - ./models:/app/models
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - qkd-network
+
+  # Optional: Add a reverse proxy (nginx) for production
+  nginx:
+    image: nginx:alpine
+    container_name: qkd-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro  # For SSL certificates if needed
+    depends_on:
+      - qkd-razorpay-app
+    restart: unless-stopped
+    networks:
+      - qkd-network
+    profiles:
+      - production  # Only start nginx when using 'production' profile
+
+networks:
+  qkd-network:
+    driver: bridge
+
+volumes:
+  static_data:
+  models_data: 

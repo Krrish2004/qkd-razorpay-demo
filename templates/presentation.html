@@ -1,599 +1,1223 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#0071e3">
+    <meta name="theme-color" content="#0ea5e9">
     <title>QKD-Razorpay Project Presentation</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <link rel="stylesheet" href="/static/presentation.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'quantum': {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        'cyber': {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    },
+                    fontFamily: {
+                        'sans': ['-apple-system', 'BlinkMacSystemFont', 'SF Pro Text', 'Inter', 'Segoe UI', 'system-ui', 'sans-serif'],
+                        'display': ['-apple-system', 'BlinkMacSystemFont', 'SF Pro Display', 'Inter', 'system-ui', 'sans-serif']
+                    },
+                    animation: {
+                        'quantum-spin': 'spin 8s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                        'fade-in': 'fadeIn 0.6s ease-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' }
+                        },
+                        glow: {
+                            'from': { boxShadow: '0 0 20px #0ea5e9' },
+                            'to': { boxShadow: '0 0 30px #22c55e, 0 0 40px #22c55e' }
+                        },
+                        slideUp: {
+                            'from': { transform: 'translateY(20px)', opacity: '0' },
+                            'to': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        fadeIn: {
+                            'from': { opacity: '0' },
+                            'to': { opacity: '1' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=SF+Pro+Text:wght@400;500;600&display=swap">
+    
+    <!-- Custom CSS for additional effects -->
+    <style>
+        .slide-container {
+            min-height: 100vh;
+            scroll-snap-type: y mandatory;
+        }
+        
+        .slide {
+            scroll-snap-align: start;
+            min-height: 100vh;
+        }
+        
+        .quantum-glow {
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        @keyframes quantum-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes glow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        @keyframes slide-up {
+            0% { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+        
+        @keyframes fade-in {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .animate-quantum-spin {
+            animation: quantum-spin 8s linear infinite;
+        }
+        
+        .animate-glow {
+            animation: glow 2s ease-in-out infinite;
+        }
+        
+        .animate-slide-up {
+            animation: slide-up 0.8s ease-out forwards;
+        }
+        
+        .animate-fade-in {
+            animation: fade-in 1s ease-out forwards;
+        }
+        
+        .animate-pulse-slow {
+            animation: glow 3s ease-in-out infinite;
+        }
+    </style>
 </head>
-<body class="presentation-body">
-    <div class="presentation-wrapper">
-        <!-- Navigation controls -->
-        <div class="presentation-controls">
-            <button class="nav-button prev" id="prevSlide"><i class="fas fa-chevron-left"></i></button>
-            <div class="slide-indicator" id="slideIndicator">1 / 10</div>
-            <button class="nav-button next" id="nextSlide"><i class="fas fa-chevron-right"></i></button>
-            <a href="/" class="home-button"><i class="fas fa-home"></i></a>
+<body class="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
+    <!-- Fixed Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-gray-900 bg-opacity-90 backdrop-blur-lg shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="relative">
+                        <i class="fas fa-atom text-2xl text-white animate-quantum-spin"></i>
+                        <div class="absolute inset-0 animate-glow rounded-full"></div>
+                    </div>
+                    <span class="text-xl font-bold text-white font-display">QKD Presentation</span>
+                </div>
+                
+                <!-- Navigation Controls -->
+                <div class="flex items-center space-x-4">
+                    <button id="prevSlide" class="bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-lg transition-all duration-200 transform hover:scale-105">
+                        <i class="fas fa-chevron-up"></i>
+                    </button>
+                    <div id="slideIndicator" class="text-white font-medium px-3 py-1 bg-white bg-opacity-20 rounded-lg">
+                        1 / 10
+                    </div>
+                    <button id="nextSlide" class="bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-lg transition-all duration-200 transform hover:scale-105">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <a href="/" class="bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-lg transition-all duration-200 transform hover:scale-105">
+                        <i class="fas fa-home"></i>
+                    </a>
+                </div>
+            </div>
         </div>
+    </nav>
 
-        <!-- Slides container -->
-        <div class="slides-container" id="slidesContainer">
-            <!-- Slide 1: Title -->
-            <section class="slide title-slide" id="slide1">
-                <div class="slide-content">
-                    <div class="logo-large">
-                        <i class='fas fa-atom spin-slow' style="font-size: 5rem; color: #0071e3;"></i>
-                    </div>
-                    <h1 class="animate-title">Quantum Key Distribution for Razorpay Security</h1>
-                    <h2 class="animate-subtitle">Enhancing Payment Security with Quantum Cryptography</h2>
-                    <div class="authors">
-                        <p>QKD Research Team</p>
-                        <p class="presentation-date">March 2025</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Slide 2: Problem Statement -->
-            <section class="slide" id="slide2">
-                <div class="slide-content">
-                    <h2 class="slide-title">Problem Statement</h2>
-                    <div class="two-column">
-                        <div class="column challenge-box">
-                            <h3><i class="fas fa-exclamation-triangle"></i> Challenges</h3>
-                            <ul>
-                                <li><i class="fas fa-chart-line text-danger"></i> Increasing sophistication of payment fraud</li>
-                                <li><i class="fas fa-laptop-code text-danger"></i> Quantum computers threaten traditional encryption</li>
-                                <li><i class="fas fa-bolt text-danger"></i> Need for real-time fraud detection</li>
-                                <li><i class="fas fa-user-shield text-danger"></i> Ensuring security while maintaining user experience</li>
-                            </ul>
-                            <div class="image-container">
-                                <i class="fas fa-shield-alt pulse-animation" style="font-size: 5rem; color: #ff3b30;"></i>
-                                <div class="image-caption">Rising payment fraud cases (2019-2023)</div>
-                            </div>
-                        </div>
-                        <div class="column solution-box">
-                            <h3><i class="fas fa-lightbulb"></i> Solution Approach</h3>
-                            <ul>
-                                <li><i class="fas fa-atom text-success"></i> Implement BB84 quantum key distribution protocol</li>
-                                <li><i class="fas fa-brain text-success"></i> Develop neural network-based fraud detection</li>
-                                <li><i class="fas fa-plug text-success"></i> Integrate with Razorpay payment infrastructure</li>
-                                <li><i class="fas fa-chart-bar text-success"></i> Create real-time monitoring dashboard</li>
-                            </ul>
-                            <div class="image-container">
-                                <i class="fas fa-project-diagram spin-slow" style="font-size: 5rem; color: #34c759;"></i>
-                                <div class="image-caption">Integrated QKD solution approach</div>
-                            </div>
-                        </div>
+    <!-- Slides container -->
+    <div class="slide-container" id="slidesContainer">
+        <!-- Slide 1: Title -->
+        <section class="slide flex items-center justify-center bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 relative overflow-hidden" id="slide1">
+            <!-- Grid Background Pattern -->
+            <div class="absolute inset-0 opacity-20">
+                <div class="absolute inset-0" style="background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 20px 20px;"></div>
+            </div>
+            <div class="text-center px-8 py-16 max-w-6xl mx-auto animate-fade-in relative z-10">
+                <div class="mb-8">
+                    <div class="inline-flex items-center justify-center w-32 h-32 bg-white bg-opacity-20 rounded-full mb-8 animate-float">
+                        <i class="fas fa-atom text-6xl text-white animate-quantum-spin"></i>
                     </div>
                 </div>
-            </section>
-
-            <!-- Slide 3: BB84 Protocol -->
-            <section class="slide" id="slide3">
-                <div class="slide-content">
-                    <h2 class="slide-title">Quantum Key Distribution - BB84 Protocol</h2>
-                    <div class="center-content">
-                        <img src="/static/bb84_protocol.png" alt="BB84 Protocol" class="slide-image">
-                        <div class="caption-box">
-                            <p>The BB84 protocol ensures secure key exchange through quantum properties:</p>
-                            <ol>
-                                <li><span class="highlight">Qubit Preparation:</span> Alice encodes random bits in two quantum bases</li>
-                                <li><span class="highlight">Qubit Transmission:</span> Qubits are transmitted through quantum channel</li>
-                                <li><span class="highlight">Measurement:</span> Bob measures in randomly chosen bases</li>
-                                <li><span class="highlight">Basis Reconciliation:</span> They compare basis choices over classical channel</li>
-                                <li><span class="highlight">Eavesdropping Detection:</span> Error rate analysis reveals interception attempts</li>
-                                <li><span class="highlight">Privacy Amplification:</span> Final key generation with enhanced security</li>
-                            </ol>
-                            <div class="key-advantage">
-                                <i class="fas fa-shield-alt"></i> <strong>Key Advantage:</strong> Physically impossible to copy unknown quantum states without detection
-                            </div>
-                        </div>
+                
+                <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 font-display animate-slide-up">
+                    Quantum Key Distribution
+                </h1>
+                <h2 class="text-3xl md:text-4xl font-semibold text-blue-100 mb-8 animate-slide-up" style="animation-delay: 0.2s">
+                    for Razorpay Security
+                </h2>
+                
+                <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-3xl p-8 mb-8 animate-slide-up" style="animation-delay: 0.4s">
+                    <p class="text-xl md:text-2xl text-blue-100 mb-4">
+                        Enhancing Payment Security with Quantum Cryptography
+                    </p>
+                    <p class="text-lg text-blue-200">
+                        Combining BB84 Protocol with AI-Powered Fraud Detection
+                    </p>
+                </div>
+                
+                <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-8 text-white animate-slide-up" style="animation-delay: 0.6s">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-user-graduate text-cyber-400"></i>
+                        <span class="text-lg">QKD Research Team</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-calendar text-cyber-400"></i>
+                        <span class="text-lg">March 2025</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-university text-cyber-400"></i>
+                        <span class="text-lg">Quantum Cryptography Lab</span>
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <!-- Slide 4: System Architecture -->
-            <section class="slide" id="slide4">
-                <div class="slide-content">
-                    <h2 class="slide-title">System Architecture</h2>
-                    <div class="center-content">
-                        <img src="/static/system_architecture.png" alt="System Architecture" class="slide-image">
-                        <div class="architecture-description">
-                            <p>Our integrated system provides end-to-end quantum-secured payment processing:</p>
-                        </div>
-                        <div class="key-components">
-                            <div class="component">
-                                <h4><i class="fas fa-atom"></i> QKD Module</h4>
-                                <p>Generates unbreakable encryption keys using quantum principles</p>
-                                <ul class="compact-list">
-                                    <li>BB84 protocol implementation</li>
-                                    <li>Error correction algorithms</li>
-                                    <li>Privacy amplification</li>
-                                </ul>
-                            </div>
-                            <div class="component">
-                                <h4><i class="fas fa-lock"></i> Encryption Layer</h4>
-                                <p>Secures all payment data with quantum-derived keys</p>
-                                <ul class="compact-list">
-                                    <li>AES-256 encryption</li>
-                                    <li>Secure key rotation</li>
-                                    <li>Forward secrecy</li>
-                                </ul>
-                            </div>
-                            <div class="component">
-                                <h4><i class="fas fa-brain"></i> Fraud Detection</h4>
-                                <p>Neural network analysis for real-time threat identification</p>
-                                <ul class="compact-list">
-                                    <li>Anomaly detection</li>
-                                    <li>Transaction pattern analysis</li>
-                                    <li>Behavioral biometrics</li>
-                                </ul>
-                            </div>
-                            <div class="component">
-                                <h4><i class="fas fa-credit-card"></i> Razorpay API</h4>
-                                <p>Seamless integration with payment processing infrastructure</p>
-                                <ul class="compact-list">
-                                    <li>Secure API endpoints</li>
-                                    <li>Transaction lifecycle management</li>
-                                    <li>Compliance mechanisms</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+        <!-- Slide 2: Problem Statement -->
+        <section class="slide bg-white dark:bg-gray-800 pt-20 pb-12" id="slide2">
+            <div class="max-w-7xl mx-auto px-8 py-16">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 font-display">
+                        Problem Statement
+                    </h2>
+                    <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                        Current payment systems face unprecedented challenges in the quantum era
+                    </p>
                 </div>
-            </section>
-
-            <!-- Slide 5: QKD Performance -->
-            <section class="slide" id="slide5">
-                <div class="slide-content">
-                    <h2 class="slide-title">QKD Performance Results</h2>
-                    <div class="center-content">
-                        <div class="performance-highlight">
-                            <p><i class="fas fa-info-circle"></i> Our tests demonstrate a <span class="highlight">72-96% eavesdropper detection rate</span> under various conditions</p>
-                        </div>
-                        <div class="visualization-row">
-                            <div class="viz-container">
-                                <img src="/static/qkd_viz_c3b98490-287c-4014-9c3d-968bc6bc3600.png" alt="QKD Visualization" class="viz-image">
-                                <div class="viz-caption">Real-time QKD visualization showing qubit transmission</div>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Challenges -->
+                    <div class="bg-gradient-to-br from-red-50 to-pink-50 dark:from-red-900 dark:to-pink-900 rounded-3xl p-8 shadow-xl transform hover:scale-105 transition-all duration-300">
+                        <div class="flex items-center mb-6">
+                            <div class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-exclamation-triangle text-2xl text-white"></i>
                             </div>
-                        </div>
-                        <table class="performance-table">
-                            <thead>
-                                <tr>
-                                    <th>Qubits</th>
-                                    <th>Error Rate</th>
-                                    <th>Eavesdropper</th>
-                                    <th>Success Rate</th>
-                                    <th>Avg. Time (s)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>500</td>
-                                    <td>0.01</td>
-                                    <td>No</td>
-                                    <td><span class="text-success">98%</span></td>
-                                    <td>0.87</td>
-                                </tr>
-                                <tr>
-                                    <td>1000</td>
-                                    <td>0.01</td>
-                                    <td>No</td>
-                                    <td><span class="text-success">97%</span></td>
-                                    <td>1.52</td>
-                                </tr>
-                                <tr>
-                                    <td>1000</td>
-                                    <td>0.05</td>
-                                    <td>No</td>
-                                    <td><span class="text-success">92%</span></td>
-                                    <td>1.54</td>
-                                </tr>
-                                <tr class="highlight-row">
-                                    <td>1000</td>
-                                    <td>0.01</td>
-                                    <td><span class="text-danger">Yes</span></td>
-                                    <td><span class="text-danger">64%</span></td>
-                                    <td>1.67</td>
-                                </tr>
-                                <tr class="highlight-row">
-                                    <td>1000</td>
-                                    <td>0.05</td>
-                                    <td><span class="text-danger">Yes</span></td>
-                                    <td><span class="text-danger">28%</span></td>
-                                    <td>1.71</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="insight-box">
-                            <h4><i class="fas fa-chart-line"></i> Key Insights</h4>
-                            <ul>
-                                <li>Eavesdropper presence significantly drops success rate to 28-64%</li>
-                                <li>Higher error rates (0.05) improve eavesdropper detection</li>
-                                <li>Processing time remains efficient (< 2s) even with security checks</li>
-                                <li>Quantum security automatically blocks compromised payments</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Slide 6: Neural Network Architecture -->
-            <section class="slide" id="slide6">
-                <div class="slide-content">
-                    <h2 class="slide-title">Neural Network Fraud Detection</h2>
-                    <div class="two-column">
-                        <div class="column">
-                            <img src="/static/neural_network.png" alt="Neural Network Architecture" class="slide-image">
-                            <div class="tech-details">
-                                <h4>Technical Specifications</h4>
-                                <ul>
-                                    <li>Implemented in TensorFlow 2.7</li>
-                                    <li>Training: 50 epochs, batch size 64</li>
-                                    <li>Optimizer: Adam (lr=0.001)</li>
-                                    <li>Loss: Binary Cross-Entropy</li>
-                                    <li>Regularization: Dropout (0.2)</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="column">
-                            <h3>Neural Network Architecture</h3>
-                            <table class="small-table">
-                                <tr>
-                                    <th>Layer</th>
-                                    <th>Neurons</th>
-                                    <th>Activation</th>
-                                    <th>Purpose</th>
-                                </tr>
-                                <tr>
-                                    <td>Input</td>
-                                    <td>16</td>
-                                    <td>-</td>
-                                    <td>Feature ingestion</td>
-                                </tr>
-                                <tr>
-                                    <td>Hidden 1</td>
-                                    <td>128</td>
-                                    <td>ReLU</td>
-                                    <td>Feature extraction</td>
-                                </tr>
-                                <tr>
-                                    <td>Hidden 2</td>
-                                    <td>64</td>
-                                    <td>ReLU</td>
-                                    <td>Pattern recognition</td>
-                                </tr>
-                                <tr>
-                                    <td>Hidden 3</td>
-                                    <td>32</td>
-                                    <td>Tanh</td>
-                                    <td>Non-linear mapping</td>
-                                </tr>
-                                <tr>
-                                    <td>Output</td>
-                                    <td>1</td>
-                                    <td>Sigmoid</td>
-                                    <td>Fraud probability</td>
-                                </tr>
-                            </table>
-                            <div class="nn-advantages">
-                                <h4>Advantages of Our Approach</h4>
-                                <ul>
-                                    <li><i class="fas fa-check-circle text-success"></i> Learns complex patterns impossible for rule-based systems</li>
-                                    <li><i class="fas fa-check-circle text-success"></i> Adapts to evolving fraud techniques</li>
-                                    <li><i class="fas fa-check-circle text-success"></i> Reduced false positives compared to traditional methods</li>
-                                    <li><i class="fas fa-check-circle text-success"></i> Complements quantum security for defense-in-depth</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Slide 7: Model Performance -->
-            <section class="slide" id="slide7">
-                <div class="slide-content">
-                    <h2 class="slide-title">Fraud Detection Performance</h2>
-                    <div class="metrics-container">
-                        <div class="metrics-box">
-                            <h3>Performance Metrics</h3>
-                            <div class="metrics-grid">
-                                <div class="metric-card">
-                                    <div class="metric-value">0.958</div>
-                                    <div class="metric-label">Accuracy</div>
-                                    <div class="metric-description">Overall classification correctness</div>
-                                </div>
-                                <div class="metric-card">
-                                    <div class="metric-value">0.412</div>
-                                    <div class="metric-label">Precision</div>
-                                    <div class="metric-description">Correct fraud predictions</div>
-                                </div>
-                                <div class="metric-card">
-                                    <div class="metric-value">0.134</div>
-                                    <div class="metric-label">Recall</div>
-                                    <div class="metric-description">Fraud cases identified</div>
-                                </div>
-                                <div class="metric-card">
-                                    <div class="metric-value">0.202</div>
-                                    <div class="metric-label">F1 Score</div>
-                                    <div class="metric-description">Harmonic mean of precision and recall</div>
-                                </div>
-                                <div class="metric-card wide">
-                                    <div class="metric-value">0.732</div>
-                                    <div class="metric-label">AUC</div>
-                                    <div class="metric-description">Area under ROC curve - discrimination ability</div>
-                                </div>
-                            </div>
+                            <h3 class="text-2xl font-bold text-red-800 dark:text-red-200">Current Challenges</h3>
                         </div>
                         
-                        <div class="visualization-row">
-                            <div class="viz-container">
-                                <img src="/static/confusion_matrix.png" alt="Confusion Matrix" class="viz-image">
-                                <div class="viz-caption">Confusion Matrix: Most legitimate transactions correctly classified</div>
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-start space-x-3">
+                                <i class="fas fa-chart-line text-red-500 mt-1"></i>
+                                <span class="text-gray-700 dark:text-gray-300">Increasing sophistication of payment fraud attacks</span>
+                            </li>
+                            <li class="flex items-start space-x-3">
+                                <i class="fas fa-laptop-code text-red-500 mt-1"></i>
+                                <span class="text-gray-700 dark:text-gray-300">Quantum computers threaten traditional encryption</span>
+                            </li>
+                            <li class="flex items-start space-x-3">
+                                <i class="fas fa-bolt text-red-500 mt-1"></i>
+                                <span class="text-gray-700 dark:text-gray-300">Need for real-time fraud detection systems</span>
+                            </li>
+                            <li class="flex items-start space-x-3">
+                                <i class="fas fa-user-shield text-red-500 mt-1"></i>
+                                <span class="text-gray-700 dark:text-gray-300">Balancing security with user experience</span>
+                            </li>
+                        </ul>
+                        
+                        <div class="text-center">
+                            <i class="fas fa-shield-alt text-6xl text-red-500 animate-pulse-slow mb-4"></i>
+                            <p class="text-sm text-red-600 dark:text-red-400 font-medium">Rising payment fraud cases (2019-2023)</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Solutions -->
+                    <div class="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900 dark:to-emerald-900 rounded-3xl p-8 shadow-xl transform hover:scale-105 transition-all duration-300">
+                        <div class="flex items-center mb-6">
+                            <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-lightbulb text-2xl text-white"></i>
                             </div>
-                            <div class="viz-container">
-                                <img src="/static/loss_curves.png" alt="Loss Curves" class="viz-image">
-                                <div class="viz-caption">Loss Curves: Model convergence without overfitting</div>
-                            </div>
-                            <div class="viz-container">
-                                <img src="/static/accuracy_curves.png" alt="Accuracy Curves" class="viz-image">
-                                <div class="viz-caption">Accuracy Curves: Consistent improvement during training</div>
-                            </div>
+                            <h3 class="text-2xl font-bold text-green-800 dark:text-green-200">Our Solution</h3>
                         </div>
                         
-                        <div class="performance-conclusion">
-                            <p><i class="fas fa-lightbulb"></i> <strong>Key Finding:</strong> Our model achieves high accuracy (95.8%) in an imbalanced dataset where fraud transactions are rare. The quantum-neural hybrid approach provides exceptional protection against both traditional and quantum threats.</p>
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-start space-x-3">
+                                <i class="fas fa-atom text-green-500 mt-1"></i>
+                                <span class="text-gray-700 dark:text-gray-300">Implement BB84 quantum key distribution protocol</span>
+                            </li>
+                            <li class="flex items-start space-x-3">
+                                <i class="fas fa-brain text-green-500 mt-1"></i>
+                                <span class="text-gray-700 dark:text-gray-300">Develop neural network-based fraud detection</span>
+                            </li>
+                            <li class="flex items-start space-x-3">
+                                <i class="fas fa-plug text-green-500 mt-1"></i>
+                                <span class="text-gray-700 dark:text-gray-300">Integrate with Razorpay payment infrastructure</span>
+                            </li>
+                            <li class="flex items-start space-x-3">
+                                <i class="fas fa-chart-bar text-green-500 mt-1"></i>
+                                <span class="text-gray-700 dark:text-gray-300">Create real-time monitoring dashboard</span>
+                            </li>
+                        </ul>
+                        
+                        <div class="text-center">
+                            <i class="fas fa-project-diagram text-6xl text-green-500 animate-quantum-spin mb-4"></i>
+                            <p class="text-sm text-green-600 dark:text-green-400 font-medium">Integrated QKD solution approach</p>
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <!-- Slide 8: System Implementation -->
-            <section class="slide" id="slide8">
-                <div class="slide-content">
-                    <h2 class="slide-title">System Implementation</h2>
-                    <div class="center-content">
-                        <div class="implementation-container">
-                            <div class="implementation-item">
-                                <h3><i class="fas fa-project-diagram"></i> System Design</h3>
-                                <div class="implementation-images">
-                                    <div class="viz-container half-width">
-                                        <img src="/static/sequence_diagram.png" alt="Sequence Diagram" class="viz-image">
-                                        <p class="viz-caption">Transaction flow sequence</p>
-                                    </div>
-                                    <div class="viz-container half-width">
-                                        <img src="/static/class_diagram.png" alt="Class Diagram" class="viz-image">
-                                        <p class="viz-caption">System component architecture</p>
+        <!-- Slide 3: BB84 Protocol -->
+        <section class="slide bg-gradient-to-br from-blue-900 to-purple-900 pt-20 pb-12" id="slide3">
+            <div class="max-w-7xl mx-auto px-8 py-16">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl md:text-6xl font-bold text-white mb-6 font-display">
+                        BB84 Quantum Protocol
+                    </h2>
+                    <p class="text-xl text-blue-200 max-w-3xl mx-auto">
+                        The foundation of quantum-secure key distribution
+                    </p>
+                </div>
+                
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <!-- Protocol Image -->
+                    <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-3xl p-8">
+                        <img src="/static/bb84_protocol.png" alt="BB84 Protocol" class="w-full rounded-2xl shadow-lg mb-6">
+                        <div class="bg-quantum-500 bg-opacity-20 rounded-2xl p-6">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-shield-alt text-2xl text-cyber-400 mr-3"></i>
+                                <h4 class="text-xl font-bold text-white">Key Advantage</h4>
+                            </div>
+                            <p class="text-blue-200">
+                                Physically impossible to copy unknown quantum states without detection - guaranteed by laws of physics
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Protocol Steps -->
+                    <div class="space-y-6">
+                        <h3 class="text-2xl font-bold text-white mb-8">Protocol Steps</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 transform hover:scale-105 transition-all duration-300">
+                                <div class="flex items-start space-x-4">
+                                    <div class="w-8 h-8 bg-cyber-500 rounded-full flex items-center justify-center text-white font-bold">1</div>
+                                    <div>
+                                        <h4 class="text-lg font-semibold text-white mb-2">Qubit Preparation</h4>
+                                        <p class="text-blue-200">Alice encodes random bits in two quantum bases (rectilinear and diagonal)</p>
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class="implementation-item">
-                                <h3><i class="fas fa-code"></i> Core Technologies</h3>
-                                <div class="tech-grid">
-                                    <div class="tech-card">
-                                        <i class="fab fa-python"></i>
-                                        <span>Python 3.8+</span>
-                                    </div>
-                                    <div class="tech-card">
-                                        <i class="fas fa-atom"></i>
-                                        <span>Qiskit</span>
-                                    </div>
-                                    <div class="tech-card">
-                                        <i class="fas fa-lock"></i>
-                                        <span>AES-GCM</span>
-                                    </div>
-                                    <div class="tech-card">
-                                        <i class="fab fa-js-square"></i>
-                                        <span>JavaScript</span>
-                                    </div>
-                                    <div class="tech-card">
-                                        <i class="fas fa-server"></i>
-                                        <span>Flask</span>
-                                    </div>
-                                    <div class="tech-card">
-                                        <i class="fas fa-brain"></i>
-                                        <span>TensorFlow</span>
+                            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 transform hover:scale-105 transition-all duration-300">
+                                <div class="flex items-start space-x-4">
+                                    <div class="w-8 h-8 bg-cyber-500 rounded-full flex items-center justify-center text-white font-bold">2</div>
+                                    <div>
+                                        <h4 class="text-lg font-semibold text-white mb-2">Quantum Transmission</h4>
+                                        <p class="text-blue-200">Qubits are transmitted through quantum channel to Bob</p>
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class="implementation-item">
-                                <h3><i class="fas fa-laptop-code"></i> Integration Approach</h3>
-                                <img src="/static/data_flow_diagram.png" alt="Data Flow Diagram" class="viz-image">
-                                <p class="viz-caption">Data flow between system components</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Slide 9: Future Directions -->
-            <section class="slide" id="slide9">
-                <div class="slide-content">
-                    <h2 class="slide-title">Future Research Directions</h2>
-                    <div class="future-grid">
-                        <div class="future-item">
-                            <div class="future-icon">
-                                <i class="fas fa-microchip pulse-animation"></i>
-                            </div>
-                            <h3>Hardware Integration</h3>
-                            <p>Develop FPGA-based QKD hardware for dedicated key generation</p>
-                            <ul class="future-list">
-                                <li>Custom quantum circuitry for improved performance</li>
-                                <li>Tamper-resistant hardware security modules</li>
-                                <li>Miniaturization for broader deployment scenarios</li>
-                            </ul>
-                        </div>
-                        <div class="future-item">
-                            <div class="future-icon">
-                                <i class="fas fa-satellite float-animation"></i>
-                            </div>
-                            <h3>Satellite QKD</h3>
-                            <p>Partner with space agencies to implement satellite-based QKD</p>
-                            <ul class="future-list">
-                                <li>Extend secure communication to global scale</li>
-                                <li>Overcome distance limitations of fiber-based QKD</li>
-                                <li>Create quantum secure global financial network</li>
-                            </ul>
-                        </div>
-                        <div class="future-item">
-                            <div class="future-icon">
-                                <i class="fas fa-network-wired pulse-animation"></i>
-                            </div>
-                            <h3>Quantum Internet</h3>
-                            <p>Integrate with emerging quantum internet standards</p>
-                            <ul class="future-list">
-                                <li>Implement quantum repeaters for extended reach</li>
-                                <li>Develop quantum routers for key distribution</li>
-                                <li>Create end-to-end quantum-secured connections</li>
-                            </ul>
-                        </div>
-                        <div class="future-item">
-                            <div class="future-icon">
-                                <i class="fas fa-shield-alt float-animation"></i>
-                            </div>
-                            <h3>Post-Quantum Security</h3>
-                            <p>Combine QKD with post-quantum cryptographic algorithms</p>
-                            <ul class="future-list">
-                                <li>Hybrid security approach for defense in depth</li>
-                                <li>Lattice-based and hash-based signature schemes</li>
-                                <li>Quantum-resistant wallets and payment tokens</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="roadmap">
-                        <h3>Research Roadmap</h3>
-                        <div class="timeline">
-                            <div class="timeline-item">
-                                <div class="timeline-date">Phase 1</div>
-                                <div class="timeline-content">
-                                    <h4>Project Initiation</h4>
-                                    <p>Simulation-based QKD for Razorpay</p>
+                            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 transform hover:scale-105 transition-all duration-300">
+                                <div class="flex items-start space-x-4">
+                                    <div class="w-8 h-8 bg-cyber-500 rounded-full flex items-center justify-center text-white font-bold">3</div>
+                                    <div>
+                                        <h4 class="text-lg font-semibold text-white mb-2">Random Measurement</h4>
+                                        <p class="text-blue-200">Bob measures qubits in randomly chosen bases</p>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="timeline-item">
-                                <div class="timeline-date">Phase 2</div>
-                                <div class="timeline-content">
-                                    <h4>Field Testing</h4>
-                                    <p>Physical QKD implementation with select merchants</p>
+                            
+                            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 transform hover:scale-105 transition-all duration-300">
+                                <div class="flex items-start space-x-4">
+                                    <div class="w-8 h-8 bg-cyber-500 rounded-full flex items-center justify-center text-white font-bold">4</div>
+                                    <div>
+                                        <h4 class="text-lg font-semibold text-white mb-2">Basis Reconciliation</h4>
+                                        <p class="text-blue-200">Alice and Bob compare basis choices over classical channel</p>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="timeline-item">
-                                <div class="timeline-date">Phase 3</div>
-                                <div class="timeline-content">
-                                    <h4>API Platform</h4>
-                                    <p>Open QKD-as-a-Service for fintech applications</p>
+                            
+                            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 transform hover:scale-105 transition-all duration-300">
+                                <div class="flex items-start space-x-4">
+                                    <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white font-bold">5</div>
+                                    <div>
+                                        <h4 class="text-lg font-semibold text-white mb-2">Eavesdropping Detection</h4>
+                                        <p class="text-blue-200">Error rate analysis reveals any interception attempts</p>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="timeline-item">
-                                <div class="timeline-date">Phase 4</div>
-                                <div class="timeline-content">
-                                    <h4>Global Network</h4>
-                                    <p>Quantum-secured payment network across continents</p>
+                            
+                            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 transform hover:scale-105 transition-all duration-300">
+                                <div class="flex items-start space-x-4">
+                                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">6</div>
+                                    <div>
+                                        <h4 class="text-lg font-semibold text-white mb-2">Privacy Amplification</h4>
+                                        <p class="text-blue-200">Final secure key generation with enhanced security</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: System Architecture -->
+        <section class="slide bg-gray-100 dark:bg-gray-800 pt-20 pb-12" id="slide4">
+            <div class="max-w-7xl mx-auto px-8 py-16">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 font-display">System Architecture</h2>
+                    <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">Integrated quantum-secured payment processing system</p>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-700 rounded-3xl shadow-xl p-8 mb-12">
+                    <img src="/static/system_architecture.png" alt="System Architecture" class="w-full rounded-2xl shadow-lg mb-6">
+                    <p class="text-center text-gray-600 dark:text-gray-300 text-lg">
+                        Our integrated system provides end-to-end quantum-secured payment processing
+                    </p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-gradient-to-br from-quantum-50 to-blue-50 dark:from-quantum-900 dark:to-blue-900 rounded-3xl p-6 shadow-lg transform hover:scale-105 transition-all duration-300">
+                        <div class="w-16 h-16 bg-quantum-500 rounded-full flex items-center justify-center mb-4">
+                            <i class="fas fa-atom text-2xl text-white"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-900 dark:text-white mb-3">QKD Module</h4>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">Generates unbreakable encryption keys using quantum principles</p>
+                        <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                            <li class="flex items-center"><i class="fas fa-check text-quantum-500 mr-2"></i>BB84 protocol implementation</li>
+                            <li class="flex items-center"><i class="fas fa-check text-quantum-500 mr-2"></i>Error correction algorithms</li>
+                            <li class="flex items-center"><i class="fas fa-check text-quantum-500 mr-2"></i>Privacy amplification</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900 dark:to-emerald-900 rounded-3xl p-6 shadow-lg transform hover:scale-105 transition-all duration-300">
+                        <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mb-4">
+                            <i class="fas fa-lock text-2xl text-white"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Encryption Layer</h4>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">Secures all payment data with quantum-derived keys</p>
+                        <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>AES-256 encryption</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Secure key rotation</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Forward secrecy</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900 dark:to-pink-900 rounded-3xl p-6 shadow-lg transform hover:scale-105 transition-all duration-300">
+                        <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mb-4">
+                            <i class="fas fa-brain text-2xl text-white"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Fraud Detection</h4>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">Neural network analysis for real-time threat identification</p>
+                        <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                            <li class="flex items-center"><i class="fas fa-check text-purple-500 mr-2"></i>Anomaly detection</li>
+                            <li class="flex items-center"><i class="fas fa-check text-purple-500 mr-2"></i>Transaction pattern analysis</li>
+                            <li class="flex items-center"><i class="fas fa-check text-purple-500 mr-2"></i>Behavioral biometrics</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900 dark:to-red-900 rounded-3xl p-6 shadow-lg transform hover:scale-105 transition-all duration-300">
+                        <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mb-4">
+                            <i class="fas fa-credit-card text-2xl text-white"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Razorpay API</h4>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">Seamless integration with payment processing infrastructure</p>
+                        <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                            <li class="flex items-center"><i class="fas fa-check text-orange-500 mr-2"></i>Secure API endpoints</li>
+                            <li class="flex items-center"><i class="fas fa-check text-orange-500 mr-2"></i>Transaction lifecycle management</li>
+                            <li class="flex items-center"><i class="fas fa-check text-orange-500 mr-2"></i>Compliance mechanisms</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
             </section>
 
-            <!-- Slide 10: Call to Action -->
-            <section class="slide" id="slide10">
-                <div class="slide-content cta">
-                    <h2 class="slide-title">Quantum-Secure the Future of Payments</h2>
-                    <div class="particles-background" id="particles-js"></div>
-                    <div class="cta-content">
-                        <div class="cta-text">
-                            <h3 class="gradient-text">Join Our Quantum Security Initiative</h3>
-                            <p class="lead-text">By integrating quantum technology with traditional payment systems, we've created a security framework that's prepared for tomorrow's quantum threats.</p>
-                            <div class="cta-points">
-                                <div class="cta-point animated">
-                                    <i class="fas fa-check-circle"></i>
-                                    <p>Provable security guarantees based on quantum physics</p>
-                                </div>
-                                <div class="cta-point animated">
-                                    <i class="fas fa-check-circle"></i>
-                                    <p>Enhanced fraud detection using neural networks</p>
-                                </div>
-                                <div class="cta-point animated">
-                                    <i class="fas fa-check-circle"></i>
-                                    <p>Seamless integration with existing payment infrastructure</p>
-                                </div>
-                                <div class="cta-point animated">
-                                    <i class="fas fa-check-circle"></i>
-                                    <p>Future-proof against quantum computing threats</p>
-                                </div>
-                            </div>
-                            <div class="cta-buttons">
-                                <a href="#" class="cta-button primary" id="requestDemoBtn">Request Demo</a>
-                                <a href="/static/qkd_razorpay_research_paper.pdf" class="cta-button secondary" id="downloadPaperBtn">Download Research Paper</a>
-                            </div>
-                        </div>
-                        <div class="cta-image">
-                            <div class="glow-effect"></div>
-                            <i class="fas fa-atom spin-slow"></i>
-                        </div>
+        <!-- Slide 5: QKD Performance -->
+        <section class="slide bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900 pt-20 pb-12" id="slide5">
+            <div class="max-w-7xl mx-auto px-8 py-16">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 font-display">QKD Performance Results</h2>
+                    <div class="bg-gradient-to-r from-quantum-500 to-cyber-500 text-white rounded-full px-8 py-4 inline-flex items-center space-x-3 shadow-lg">
+                        <i class="fas fa-info-circle text-xl"></i>
+                        <span class="text-lg font-semibold">Our tests demonstrate a 72-96% eavesdropper detection rate under various conditions</span>
                     </div>
-                    <div class="contact-info">
-                        <p><i class="fas fa-envelope"></i> krrishchoudhary109@gmail.com | <i class="fas fa-phone"></i> +91 7877624097</p>
-                        <div class="social-icons">
-                            <a href="https://github.com/Krrish2004" class="social-icon" id="githubLink" target="_blank" onclick="window.open('https://github.com/Krrish2004', '_blank'); return false;"><i class="fab fa-github"></i></a>
-                            <a href="https://twitter.com/your-twitter" class="social-icon" id="twitterLink" target="_blank"><i class="fab fa-twitter"></i></a>
-                            <a href="https://www.linkedin.com/in/krrish-choudhary-91b1a8281/" class="social-icon" id="linkedinLink" target="_blank" onclick="window.open('https://www.linkedin.com/in/krrish-choudhary-91b1a8281/', '_blank'); return false;"><i class="fab fa-linkedin"></i></a>
-                            <a href="https://youtube.com/your-channel" class="social-icon" id="youtubeLink" target="_blank"><i class="fab fa-youtube"></i></a>
+                </div>
+                
+                <div class="grid lg:grid-cols-2 gap-12 mb-12">
+                    <div class="bg-white dark:bg-gray-700 rounded-3xl shadow-xl p-8">
+                        <img src="/static/qkd_viz_c3b98490-287c-4014-9c3d-968bc6bc3600.png" alt="QKD Visualization" class="w-full rounded-2xl shadow-md mb-4">
+                        <p class="text-center text-gray-600 dark:text-gray-300 font-medium">Real-time QKD visualization showing qubit transmission</p>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-700 rounded-3xl shadow-xl p-8">
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                            <i class="fas fa-chart-line text-quantum-500 mr-3"></i>
+                            Key Insights
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-2 h-2 bg-red-500 rounded-full mt-2"></div>
+                                <p class="text-gray-600 dark:text-gray-300">Eavesdropper presence significantly drops success rate to 28-64%</p>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-2 h-2 bg-yellow-500 rounded-full mt-2"></div>
+                                <p class="text-gray-600 dark:text-gray-300">Higher error rates (0.05) improve eavesdropper detection</p>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                                <p class="text-gray-600 dark:text-gray-300">Processing time remains efficient (< 2s) even with security checks</p>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                                <p class="text-gray-600 dark:text-gray-300">Quantum security automatically blocks compromised payments</p>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Contact Information Modal -->
-                <div id="contactModal" class="modal">
-                    <div class="modal-content">
-                        <span class="close-modal">&times;</span>
-                        <h3>Please provide your information to download the research paper</h3>
-                        <form id="contactForm">
-                            <div class="form-group">
-                                <label for="name">Full Name</label>
-                                <input type="text" id="name" name="name" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email Address</label>
-                                <input type="email" id="email" name="email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="organization">Organization</label>
-                                <input type="text" id="organization" name="organization" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="github">GitHub URL</label>
-                                <input type="url" id="github" name="github" placeholder="https://github.com/username">
-                            </div>
-                            <div class="form-group">
-                                <label for="linkedin">LinkedIn URL</label>
-                                <input type="url" id="linkedin" name="linkedin" placeholder="https://linkedin.com/in/username">
-                            </div>
-                            <div class="form-group checkbox">
-                                <input type="checkbox" id="consent" name="consent" required>
-                                <label for="consent">I agree to receive information about quantum cryptography solutions</label>
-                            </div>
-                            <div class="form-actions">
-                                <button type="submit" class="cta-button primary">Download Paper</button>
-                            </div>
-                        </form>
+                <div class="bg-white dark:bg-gray-700 rounded-3xl shadow-xl overflow-hidden">
+                    <div class="bg-gradient-to-r from-quantum-500 to-cyber-500 p-6">
+                        <h3 class="text-2xl font-bold text-white">Performance Data</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50 dark:bg-gray-800">
+                                <tr>
+                                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Qubits</th>
+                                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Error Rate</th>
+                                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Eavesdropper</th>
+                                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Success Rate</th>
+                                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Avg. Time (s)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">500</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">0.01</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">No</td>
+                                    <td class="px-6 py-4 text-sm"><span class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold">98%</span></td>
+                                    <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">0.87</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">1000</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">0.01</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">No</td>
+                                    <td class="px-6 py-4 text-sm"><span class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold">97%</span></td>
+                                    <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">1.52</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">1000</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">0.05</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">No</td>
+                                    <td class="px-6 py-4 text-sm"><span class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold">92%</span></td>
+                                    <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">1.54</td>
+                                </tr>
+                                <tr class="bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30">
+                                    <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">1000</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">0.01</td>
+                                    <td class="px-6 py-4 text-sm"><span class="bg-red-100 text-red-800 px-3 py-1 rounded-full font-semibold">Yes</span></td>
+                                    <td class="px-6 py-4 text-sm"><span class="bg-red-100 text-red-800 px-3 py-1 rounded-full font-semibold">64%</span></td>
+                                    <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">1.67</td>
+                                </tr>
+                                <tr class="bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30">
+                                    <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">1000</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">0.05</td>
+                                    <td class="px-6 py-4 text-sm"><span class="bg-red-100 text-red-800 px-3 py-1 rounded-full font-semibold">Yes</span></td>
+                                    <td class="px-6 py-4 text-sm"><span class="bg-red-100 text-red-800 px-3 py-1 rounded-full font-semibold">28%</span></td>
+                                    <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">1.71</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-            </section>
-        </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Neural Network Architecture -->
+        <section class="slide bg-gradient-to-br from-purple-50 via-white to-pink-50 dark:from-purple-900 dark:via-gray-800 dark:to-pink-900 pt-20 pb-12" id="slide6">
+            <div class="max-w-7xl mx-auto px-8 py-16">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 font-display">Neural Network Fraud Detection</h2>
+                    <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">Advanced AI-powered fraud detection using deep learning</p>
+                </div>
+                
+                <div class="grid lg:grid-cols-2 gap-12">
+                    <div class="space-y-8">
+                        <div class="bg-white dark:bg-gray-700 rounded-3xl shadow-xl p-8">
+                            <img src="/static/neural_network.png" alt="Neural Network Architecture" class="w-full rounded-2xl shadow-md mb-6">
+                            
+                            <div class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/50 dark:to-pink-900/50 rounded-2xl p-6">
+                                <h4 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
+                                    <i class="fas fa-cogs text-purple-500 mr-3"></i>
+                                    Technical Specifications
+                                </h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="bg-white dark:bg-gray-600 rounded-lg p-3">
+                                        <div class="text-sm text-gray-500 dark:text-gray-400">Framework</div>
+                                        <div class="font-semibold text-gray-900 dark:text-white">TensorFlow 2.7</div>
+                                    </div>
+                                    <div class="bg-white dark:bg-gray-600 rounded-lg p-3">
+                                        <div class="text-sm text-gray-500 dark:text-gray-400">Training</div>
+                                        <div class="font-semibold text-gray-900 dark:text-white">50 epochs, batch 64</div>
+                                    </div>
+                                    <div class="bg-white dark:bg-gray-600 rounded-lg p-3">
+                                        <div class="text-sm text-gray-500 dark:text-gray-400">Optimizer</div>
+                                        <div class="font-semibold text-gray-900 dark:text-white">Adam (lr=0.001)</div>
+                                    </div>
+                                    <div class="bg-white dark:bg-gray-600 rounded-lg p-3">
+                                        <div class="text-sm text-gray-500 dark:text-gray-400">Loss Function</div>
+                                        <div class="font-semibold text-gray-900 dark:text-white">Binary Cross-Entropy</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-8">
+                        <div class="bg-white dark:bg-gray-700 rounded-3xl shadow-xl p-8">
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                                <i class="fas fa-network-wired text-purple-500 mr-3"></i>
+                                Network Architecture
+                            </h3>
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead class="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+                                        <tr>
+                                            <th class="px-4 py-3 text-left text-sm font-semibold">Layer</th>
+                                            <th class="px-4 py-3 text-left text-sm font-semibold">Neurons</th>
+                                            <th class="px-4 py-3 text-left text-sm font-semibold">Activation</th>
+                                            <th class="px-4 py-3 text-left text-sm font-semibold">Purpose</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
+                                            <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">Input</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">16</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">-</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">Feature ingestion</td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
+                                            <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">Hidden 1</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">128</td>
+                                            <td class="px-4 py-3 text-sm"><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">ReLU</span></td>
+                                            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">Feature extraction</td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
+                                            <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">Hidden 2</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">64</td>
+                                            <td class="px-4 py-3 text-sm"><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">ReLU</span></td>
+                                            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">Pattern recognition</td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
+                                            <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">Hidden 3</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">32</td>
+                                            <td class="px-4 py-3 text-sm"><span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Tanh</span></td>
+                                            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">Non-linear mapping</td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
+                                            <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">Output</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">1</td>
+                                            <td class="px-4 py-3 text-sm"><span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">Sigmoid</span></td>
+                                            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">Fraud probability</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white dark:bg-gray-700 rounded-3xl shadow-xl p-8">
+                            <h4 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                                <i class="fas fa-trophy text-yellow-500 mr-3"></i>
+                                Advantages of Our Approach
+                            </h4>
+                            <div class="space-y-4">
+                                <div class="flex items-start space-x-3">
+                                    <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                                    <p class="text-gray-600 dark:text-gray-300">Learns complex patterns impossible for rule-based systems</p>
+                                </div>
+                                <div class="flex items-start space-x-3">
+                                    <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                                    <p class="text-gray-600 dark:text-gray-300">Adapts to evolving fraud techniques</p>
+                                </div>
+                                <div class="flex items-start space-x-3">
+                                    <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                                    <p class="text-gray-600 dark:text-gray-300">Reduced false positives compared to traditional methods</p>
+                                </div>
+                                <div class="flex items-start space-x-3">
+                                    <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                                    <p class="text-gray-600 dark:text-gray-300">Complements quantum security for defense-in-depth</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Model Performance -->
+        <section class="slide bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-blue-900 dark:to-indigo-900 pt-20 pb-12" id="slide7">
+            <div class="max-w-7xl mx-auto px-8 py-16">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 font-display">Fraud Detection Performance</h2>
+                    <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">Comprehensive analysis of our neural network's fraud detection capabilities</p>
+                </div>
+                
+                <div class="grid grid-cols-2 lg:grid-cols-5 gap-6 mb-16">
+                    <div class="bg-white dark:bg-gray-700 rounded-3xl p-6 text-center shadow-xl transform hover:scale-105 transition-all duration-300">
+                        <div class="w-16 h-16 bg-gradient-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-bullseye text-2xl text-white"></i>
+                        </div>
+                        <div class="text-3xl font-bold text-gray-900 dark:text-white mb-2">95.8%</div>
+                        <div class="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-1">Accuracy</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">Overall classification correctness</div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-700 rounded-3xl p-6 text-center shadow-xl transform hover:scale-105 transition-all duration-300">
+                        <div class="w-16 h-16 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-crosshairs text-2xl text-white"></i>
+                        </div>
+                        <div class="text-3xl font-bold text-gray-900 dark:text-white mb-2">41.2%</div>
+                        <div class="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-1">Precision</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">Correct fraud predictions</div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-700 rounded-3xl p-6 text-center shadow-xl transform hover:scale-105 transition-all duration-300">
+                        <div class="w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-search text-2xl text-white"></i>
+                        </div>
+                        <div class="text-3xl font-bold text-gray-900 dark:text-white mb-2">13.4%</div>
+                        <div class="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-1">Recall</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">Fraud cases identified</div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-700 rounded-3xl p-6 text-center shadow-xl transform hover:scale-105 transition-all duration-300">
+                        <div class="w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-balance-scale text-2xl text-white"></i>
+                        </div>
+                        <div class="text-3xl font-bold text-gray-900 dark:text-white mb-2">20.2%</div>
+                        <div class="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-1">F1 Score</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">Harmonic mean</div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-700 rounded-3xl p-6 text-center shadow-xl transform hover:scale-105 transition-all duration-300">
+                        <div class="w-16 h-16 bg-gradient-to-r from-red-400 to-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-chart-area text-2xl text-white"></i>
+                        </div>
+                        <div class="text-3xl font-bold text-gray-900 dark:text-white mb-2">73.2%</div>
+                        <div class="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-1">AUC</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">ROC curve area</div>
+                    </div>
+                </div>
+                
+                <div class="grid lg:grid-cols-3 gap-8 mb-12">
+                    <div class="bg-white dark:bg-gray-700 rounded-3xl shadow-xl p-6">
+                        <img src="/static/confusion_matrix.png" alt="Confusion Matrix" class="w-full rounded-2xl shadow-md mb-4">
+                        <p class="text-center text-gray-600 dark:text-gray-300 font-medium">Confusion Matrix: Most legitimate transactions correctly classified</p>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-700 rounded-3xl shadow-xl p-6">
+                        <img src="/static/loss_curves.png" alt="Loss Curves" class="w-full rounded-2xl shadow-md mb-4">
+                        <p class="text-center text-gray-600 dark:text-gray-300 font-medium">Loss Curves: Model convergence without overfitting</p>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-700 rounded-3xl shadow-xl p-6">
+                        <img src="/static/accuracy_curves.png" alt="Accuracy Curves" class="w-full rounded-2xl shadow-md mb-4">
+                        <p class="text-center text-gray-600 dark:text-gray-300 font-medium">Accuracy Curves: Consistent improvement during training</p>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-r from-quantum-500 to-cyber-500 rounded-3xl p-8 text-white shadow-xl">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-lightbulb text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold mb-3">Key Finding</h3>
+                            <p class="text-lg leading-relaxed">Our model achieves high accuracy (95.8%) in an imbalanced dataset where fraud transactions are rare. The quantum-neural hybrid approach provides exceptional protection against both traditional and quantum threats.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: System Implementation -->
+        <section class="slide bg-gradient-to-br from-white via-gray-50 to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900 pt-20 pb-12" id="slide8">
+            <div class="max-w-7xl mx-auto px-8 py-16">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 font-display">System Implementation</h2>
+                    <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">Technical architecture and implementation details</p>
+                </div>
+                
+                <div class="space-y-16">
+                    <!-- System Design -->
+                    <div class="bg-white dark:bg-gray-700 rounded-3xl shadow-xl p-8">
+                        <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 flex items-center">
+                            <i class="fas fa-project-diagram text-blue-500 mr-4"></i>
+                            System Design
+                        </h3>
+                        <div class="grid lg:grid-cols-2 gap-8">
+                            <div class="bg-gray-50 dark:bg-gray-600 rounded-2xl p-6">
+                                <img src="/static/sequence_diagram.png" alt="Sequence Diagram" class="w-full rounded-xl shadow-md mb-4">
+                                <p class="text-center text-gray-600 dark:text-gray-300 font-medium">Transaction flow sequence</p>
+                            </div>
+                            <div class="bg-gray-50 dark:bg-gray-600 rounded-2xl p-6">
+                                <img src="/static/class_diagram.png" alt="Class Diagram" class="w-full rounded-xl shadow-md mb-4">
+                                <p class="text-center text-gray-600 dark:text-gray-300 font-medium">System component architecture</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Core Technologies -->
+                    <div class="bg-white dark:bg-gray-700 rounded-3xl shadow-xl p-8">
+                        <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 flex items-center">
+                            <i class="fas fa-code text-green-500 mr-4"></i>
+                            Core Technologies
+                        </h3>
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                            <div class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/50 dark:to-blue-800/50 rounded-2xl p-6 text-center transform hover:scale-105 transition-all duration-300">
+                                <i class="fab fa-python text-4xl text-blue-600 mb-3"></i>
+                                <div class="font-semibold text-gray-900 dark:text-white">Python 3.8+</div>
+                            </div>
+                            <div class="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/50 dark:to-purple-800/50 rounded-2xl p-6 text-center transform hover:scale-105 transition-all duration-300">
+                                <i class="fas fa-atom text-4xl text-purple-600 mb-3"></i>
+                                <div class="font-semibold text-gray-900 dark:text-white">Qiskit</div>
+                            </div>
+                            <div class="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/50 dark:to-red-800/50 rounded-2xl p-6 text-center transform hover:scale-105 transition-all duration-300">
+                                <i class="fas fa-lock text-4xl text-red-600 mb-3"></i>
+                                <div class="font-semibold text-gray-900 dark:text-white">AES-GCM</div>
+                            </div>
+                            <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/50 dark:to-yellow-800/50 rounded-2xl p-6 text-center transform hover:scale-105 transition-all duration-300">
+                                <i class="fab fa-js-square text-4xl text-yellow-600 mb-3"></i>
+                                <div class="font-semibold text-gray-900 dark:text-white">JavaScript</div>
+                            </div>
+                            <div class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/50 dark:to-green-800/50 rounded-2xl p-6 text-center transform hover:scale-105 transition-all duration-300">
+                                <i class="fas fa-server text-4xl text-green-600 mb-3"></i>
+                                <div class="font-semibold text-gray-900 dark:text-white">Flask</div>
+                            </div>
+                            <div class="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/50 dark:to-orange-800/50 rounded-2xl p-6 text-center transform hover:scale-105 transition-all duration-300">
+                                <i class="fas fa-brain text-4xl text-orange-600 mb-3"></i>
+                                <div class="font-semibold text-gray-900 dark:text-white">TensorFlow</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Integration Approach -->
+                    <div class="bg-white dark:bg-gray-700 rounded-3xl shadow-xl p-8">
+                        <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 flex items-center">
+                            <i class="fas fa-laptop-code text-purple-500 mr-4"></i>
+                            Integration Approach
+                        </h3>
+                        <div class="bg-gray-50 dark:bg-gray-600 rounded-2xl p-6">
+                            <img src="/static/data_flow_diagram.png" alt="Data Flow Diagram" class="w-full rounded-xl shadow-md mb-4">
+                            <p class="text-center text-gray-600 dark:text-gray-300 font-medium text-lg">Data flow between system components</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Future Directions -->
+        <section class="slide bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900 pt-20 pb-12" id="slide9">
+            <div class="max-w-7xl mx-auto px-8 py-16">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 font-display">Future Research Directions</h2>
+                    <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">Exploring the next frontier of quantum-secured financial systems</p>
+                </div>
+                
+                <div class="grid lg:grid-cols-2 gap-12 mb-16">
+                    <div class="bg-white dark:bg-gray-700 rounded-3xl shadow-xl p-8 transform hover:scale-105 transition-all duration-300">
+                        <div class="w-20 h-20 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mb-6 mx-auto">
+                            <i class="fas fa-microchip text-3xl text-white animate-pulse"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 text-center">Hardware Integration</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-6 text-center">Develop FPGA-based QKD hardware for dedicated key generation</p>
+                        <div class="space-y-3">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Custom quantum circuitry for improved performance</p>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Tamper-resistant hardware security modules</p>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Miniaturization for broader deployment scenarios</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-700 rounded-3xl shadow-xl p-8 transform hover:scale-105 transition-all duration-300">
+                        <div class="w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mb-6 mx-auto">
+                            <i class="fas fa-satellite text-3xl text-white animate-bounce"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 text-center">Satellite QKD</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-6 text-center">Partner with space agencies to implement satellite-based QKD</p>
+                        <div class="space-y-3">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Extend secure communication to global scale</p>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Overcome distance limitations of fiber-based QKD</p>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Create quantum secure global financial network</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-700 rounded-3xl shadow-xl p-8 transform hover:scale-105 transition-all duration-300">
+                        <div class="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mb-6 mx-auto">
+                            <i class="fas fa-network-wired text-3xl text-white animate-pulse"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 text-center">Quantum Internet</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-6 text-center">Integrate with emerging quantum internet standards</p>
+                        <div class="space-y-3">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Implement quantum repeaters for extended reach</p>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Develop quantum routers for key distribution</p>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Create end-to-end quantum-secured connections</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-700 rounded-3xl shadow-xl p-8 transform hover:scale-105 transition-all duration-300">
+                        <div class="w-20 h-20 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center mb-6 mx-auto">
+                            <i class="fas fa-shield-alt text-3xl text-white animate-bounce"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 text-center">Post-Quantum Security</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-6 text-center">Combine QKD with post-quantum cryptographic algorithms</p>
+                        <div class="space-y-3">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-red-500 rounded-full"></div>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Hybrid security approach for defense in depth</p>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-red-500 rounded-full"></div>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Lattice-based and hash-based signature schemes</p>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-red-500 rounded-full"></div>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Quantum-resistant wallets and payment tokens</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-700 rounded-3xl shadow-xl p-8">
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">Research Roadmap</h3>
+                    <div class="relative">
+                        <div class="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-quantum-500 to-cyber-500 rounded-full"></div>
+                        <div class="space-y-12">
+                            <div class="flex items-center">
+                                <div class="w-1/2 pr-8 text-right">
+                                    <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-2xl p-6 shadow-lg">
+                                        <h4 class="text-xl font-bold mb-2">Project Initiation</h4>
+                                        <p class="text-blue-100">Simulation-based QKD for Razorpay</p>
+                                    </div>
+                                </div>
+                                <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-lg z-10 relative">1</div>
+                                <div class="w-1/2 pl-8">
+                                    <div class="text-gray-500 dark:text-gray-400">Phase 1</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <div class="w-1/2 pr-8 text-right">
+                                    <div class="text-gray-500 dark:text-gray-400">Phase 2</div>
+                                </div>
+                                <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-lg z-10 relative">2</div>
+                                <div class="w-1/2 pl-8">
+                                    <div class="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-2xl p-6 shadow-lg">
+                                        <h4 class="text-xl font-bold mb-2">Field Testing</h4>
+                                        <p class="text-green-100">Physical QKD implementation with select merchants</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <div class="w-1/2 pr-8 text-right">
+                                    <div class="bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-2xl p-6 shadow-lg">
+                                        <h4 class="text-xl font-bold mb-2">API Platform</h4>
+                                        <p class="text-purple-100">Open QKD-as-a-Service for fintech applications</p>
+                                    </div>
+                                </div>
+                                <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-lg z-10 relative">3</div>
+                                <div class="w-1/2 pl-8">
+                                    <div class="text-gray-500 dark:text-gray-400">Phase 3</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <div class="w-1/2 pr-8 text-right">
+                                    <div class="text-gray-500 dark:text-gray-400">Phase 4</div>
+                                </div>
+                                <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center text-white font-bold text-lg z-10 relative">4</div>
+                                <div class="w-1/2 pl-8">
+                                    <div class="bg-gradient-to-r from-red-500 to-red-600 text-white rounded-2xl p-6 shadow-lg">
+                                        <h4 class="text-xl font-bold mb-2">Global Network</h4>
+                                        <p class="text-red-100">Quantum-secured payment network across continents</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 10: Call to Action -->
+        <section class="slide bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 relative overflow-hidden pt-20 pb-12" id="slide10">
+            <!-- Grid Background Pattern -->
+            <div class="absolute inset-0 opacity-20">
+                <div class="absolute inset-0" style="background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 20px 20px;"></div>
+            </div>
+            <div class="absolute inset-0" id="particles-js"></div>
+            <div class="relative z-10 max-w-7xl mx-auto px-8 py-16">
+                <div class="text-center mb-16">
+                    <h2 class="text-5xl md:text-7xl font-bold text-white mb-6 font-display animate-slide-up">
+                        Quantum-Secure the Future
+                    </h2>
+                    <h3 class="text-3xl md:text-4xl font-semibold text-blue-200 mb-8 animate-slide-up" style="animation-delay: 0.2s">
+                        Join Our Quantum Security Initiative
+                    </h3>
+                    <p class="text-xl text-blue-100 max-w-4xl mx-auto mb-12 animate-slide-up" style="animation-delay: 0.4s">
+                        By integrating quantum technology with traditional payment systems, we've created a security framework that's prepared for tomorrow's quantum threats.
+                    </p>
+                </div>
+                
+                <div class="grid lg:grid-cols-2 gap-12 items-center mb-16">
+                    <!-- Features -->
+                    <div class="space-y-6 animate-slide-up" style="animation-delay: 0.6s">
+                        <div class="flex items-center space-x-4 bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 transform hover:scale-105 transition-all duration-300">
+                            <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-check-circle text-white text-xl"></i>
+                            </div>
+                            <p class="text-white text-lg">Provable security guarantees based on quantum physics</p>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4 bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 transform hover:scale-105 transition-all duration-300">
+                            <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-check-circle text-white text-xl"></i>
+                            </div>
+                            <p class="text-white text-lg">Enhanced fraud detection using neural networks</p>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4 bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 transform hover:scale-105 transition-all duration-300">
+                            <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-check-circle text-white text-xl"></i>
+                            </div>
+                            <p class="text-white text-lg">Seamless integration with existing payment infrastructure</p>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4 bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 transform hover:scale-105 transition-all duration-300">
+                            <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-check-circle text-white text-xl"></i>
+                            </div>
+                            <p class="text-white text-lg">Future-proof against quantum computing threats</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Central Animation -->
+                    <div class="text-center animate-slide-up" style="animation-delay: 0.8s">
+                        <div class="relative inline-block">
+                            <div class="w-64 h-64 bg-white bg-opacity-10 backdrop-blur-lg rounded-full flex items-center justify-center animate-glow">
+                                <i class="fas fa-atom text-8xl text-white animate-quantum-spin"></i>
+                            </div>
+                            <div class="absolute inset-0 rounded-full border-4 border-white border-opacity-30 animate-spin" style="animation-duration: 12s;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="text-center mb-12 animate-slide-up" style="animation-delay: 1s">
+                    <div class="flex flex-col sm:flex-row gap-6 justify-center">
+                        <a href="/" class="bg-white text-quantum-600 px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                            <i class="fas fa-play mr-2"></i>Try Live Demo
+                        </a>
+                        <a href="/static/qkd_razorpay_research_paper.pdf" class="bg-white bg-opacity-20 text-white border-2 border-white px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-white hover:text-quantum-600 transition-all duration-300 transform hover:scale-105">
+                            <i class="fas fa-download mr-2"></i>Download Research Paper
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Contact Information -->
+                <div class="text-center animate-slide-up" style="animation-delay: 1.2s">
+                    <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-3xl p-8 max-w-2xl mx-auto">
+                        <h4 class="text-2xl font-bold text-white mb-6">Get In Touch</h4>
+                        <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-8 text-blue-200 mb-6">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-envelope text-cyber-400"></i>
+                                <span>krrishchoudhary109@gmail.com</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-phone text-cyber-400"></i>
+                                <span>+91 7877624097</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-center space-x-6">
+                            <a href="https://github.com/Krrish2004" target="_blank" class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-white hover:bg-white hover:text-quantum-600 transition-all duration-300 transform hover:scale-110">
+                                <i class="fab fa-github text-xl"></i>
+                            </a>
+                            <a href="https://www.linkedin.com/in/krrish-choudhary-91b1a8281/" target="_blank" class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-white hover:bg-white hover:text-quantum-600 transition-all duration-300 transform hover:scale-110">
+                                <i class="fab fa-linkedin text-xl"></i>
+                            </a>
+                            <a href="#" class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-white hover:bg-white hover:text-quantum-600 transition-all duration-300 transform hover:scale-110">
+                                <i class="fab fa-twitter text-xl"></i>
+                            </a>
+                            <a href="#" class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-white hover:bg-white hover:text-quantum-600 transition-all duration-300 transform hover:scale-110">
+                                <i class="fab fa-youtube text-xl"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+                
     </div>
 
-    <script src="/static/presentation.js"></script>
+    <!-- Enhanced JavaScript for smooth scrolling and navigation -->
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 10;
+
+        // Navigation functions
+        function updateSlideIndicator() {
+            document.getElementById('slideIndicator').textContent = `${currentSlide} / ${totalSlides}`;
+        }
+
+        function goToSlide(slideNumber) {
+            if (slideNumber < 1 || slideNumber > totalSlides) return;
+            
+            currentSlide = slideNumber;
+            const slide = document.getElementById(`slide${slideNumber}`);
+            if (slide) {
+                slide.scrollIntoView({ behavior: 'smooth' });
+                updateSlideIndicator();
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                goToSlide(currentSlide + 1);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                goToSlide(currentSlide - 1);
+            }
+        }
+
+        // Event listeners
+        document.getElementById('nextSlide').addEventListener('click', nextSlide);
+        document.getElementById('prevSlide').addEventListener('click', prevSlide);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+                e.preventDefault();
+                prevSlide();
+            }
+        });
+
+        // Scroll detection for updating current slide
+        let isScrolling = false;
+        function handleScroll() {
+            if (isScrolling) return;
+            
+            const slides = document.querySelectorAll('.slide');
+            const scrollPosition = window.scrollY + window.innerHeight / 2;
+            
+            slides.forEach((slide, index) => {
+                const slideTop = slide.offsetTop;
+                const slideBottom = slideTop + slide.offsetHeight;
+                
+                if (scrollPosition >= slideTop && scrollPosition < slideBottom) {
+                    const newSlide = index + 1;
+                    if (newSlide !== currentSlide) {
+                        currentSlide = newSlide;
+                        updateSlideIndicator();
+                    }
+                }
+            });
+        }
+
+        // Throttled scroll listener
+        let scrollTimer;
+        window.addEventListener('scroll', () => {
+            if (scrollTimer) clearTimeout(scrollTimer);
+            scrollTimer = setTimeout(handleScroll, 100);
+        });
+
+        // Initialize
+        updateSlideIndicator();
+    </script>
     <!-- Particles.js for background effects -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
@@ -603,14 +1227,14 @@
                 particlesJS('particles-js', {
                     "particles": {
                         "number": {
-                            "value": 80,
+                            "value": 120,
                             "density": {
                                 "enable": true,
-                                "value_area": 800
+                                "value_area": 1000
                             }
                         },
                         "color": {
-                            "value": "#0071e3"
+                            "value": ["#0ea5e9", "#22c55e", "#8b5cf6"]
                         },
                         "shape": {
                             "type": "circle",
@@ -620,35 +1244,35 @@
                             },
                         },
                         "opacity": {
-                            "value": 0.3,
+                            "value": 0.4,
                             "random": true,
                             "anim": {
                                 "enable": true,
-                                "speed": 1,
+                                "speed": 1.5,
                                 "opacity_min": 0.1,
                                 "sync": false
                             }
                         },
                         "size": {
-                            "value": 5,
+                            "value": 4,
                             "random": true,
                             "anim": {
                                 "enable": true,
-                                "speed": 2,
-                                "size_min": 0.1,
+                                "speed": 3,
+                                "size_min": 0.3,
                                 "sync": false
                             }
                         },
                         "line_linked": {
                             "enable": true,
-                            "distance": 150,
-                            "color": "#0071e3",
-                            "opacity": 0.2,
-                            "width": 1
+                            "distance": 180,
+                            "color": "#ffffff",
+                            "opacity": 0.3,
+                            "width": 1.5
                         },
                         "move": {
                             "enable": true,
-                            "speed": 1,
+                            "speed": 1.5,
                             "direction": "none",
                             "random": true,
                             "straight": false,
@@ -671,13 +1295,13 @@
                         },
                         "modes": {
                             "grab": {
-                                "distance": 140,
+                                "distance": 200,
                                 "line_linked": {
-                                    "opacity": 0.5
+                                    "opacity": 0.6
                                 }
                             },
                             "push": {
-                                "particles_nb": 3
+                                "particles_nb": 4
                             }
                         }
                     },

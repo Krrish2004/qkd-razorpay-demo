@@ -1,0 +1,26 @@
+# Docker Compose override for development
+# This file is automatically loaded by docker-compose
+# and overrides settings in docker-compose.yml
+
+version: '3.8'
+
+services:
+  qkd-razorpay-app:
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+    volumes:
+      # Mount source code for live reloading during development
+      - .:/app
+      # Override the models and static mounts to preserve local files
+      - ./static:/app/static
+      - ./models:/app/models
+    command: ["python", "app.py"]
+    # Remove health check in development for faster startup
+    healthcheck:
+      disable: true
+
+  # Don't start nginx in development
+  nginx:
+    profiles:
+      - production 

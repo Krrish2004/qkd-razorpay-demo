@@ -1,346 +1,602 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#0071e3">
+    <meta name="theme-color" content="#0ea5e9">
     <title>Quantum Key Distribution for Razorpay Security</title>
-    <link rel="stylesheet" href="/static/style.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'quantum': {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        'cyber': {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    },
+                    fontFamily: {
+                        'sans': ['-apple-system', 'BlinkMacSystemFont', 'SF Pro Text', 'Inter', 'Segoe UI', 'system-ui', 'sans-serif'],
+                        'display': ['-apple-system', 'BlinkMacSystemFont', 'SF Pro Display', 'Inter', 'system-ui', 'sans-serif']
+                    },
+                    animation: {
+                        'quantum-spin': 'spin 8s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                        'fade-in': 'fadeIn 0.6s ease-out',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' }
+                        },
+                        glow: {
+                            'from': { boxShadow: '0 0 20px #0ea5e9' },
+                            'to': { boxShadow: '0 0 30px #22c55e, 0 0 40px #22c55e' }
+                        },
+                        slideUp: {
+                            'from': { transform: 'translateY(20px)', opacity: '0' },
+                            'to': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        fadeIn: {
+                            'from': { opacity: '0' },
+                            'to': { opacity: '1' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Preload critical fonts for performance -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=SF+Pro+Text:wght@400;500;600&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=SF+Pro+Text:wght@400;500;600&display=swap">
+    
+    <!-- Custom CSS for additional animations -->
+    <style>
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 50%, #8b5cf6 100%);
+        }
+        
+        .quantum-glow {
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
+        }
+        
+        .cyber-grid {
+            background-image: 
+                linear-gradient(rgba(14, 165, 233, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(14, 165, 233, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
 </head>
-<body>
-    <header>
-        <div class="logo">
-            <i class="fas fa-atom spin"></i>
-            <h1>QKD + Razorpay</h1>
+
+<body class="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 glass-morphism gradient-bg shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="relative">
+                        <i class="fas fa-atom text-4xl text-white animate-quantum-spin"></i>
+                        <div class="absolute inset-0 animate-glow rounded-full"></div>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl md:text-3xl font-bold text-white font-display">QKD + Razorpay</h1>
+                        <p class="text-blue-100 text-sm hidden sm:block">Quantum-Secured Payments</p>
+                    </div>
+                </div>
+                
+                <!-- Navigation -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="/" class="text-white hover:text-blue-200 transition-colors font-medium">Demo</a>
+                    <a href="/presentation" class="text-blue-200 hover:text-white transition-colors font-medium">Presentation</a>
+                </nav>
+                
+                <!-- Mobile menu button -->
+                <button class="md:hidden text-white hover:text-blue-200 transition-colors">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
         </div>
-        <h2>Quantum-Secured Payment Transactions</h2>
-        <nav class="main-nav">
-            <a href="/" class="active">Demo</a>
-            <a href="/presentation">Presentation</a>
-        </nav>
     </header>
 
-    <main>
-        <section class="card animate-on-scroll" id="intro">
-            <h3>Quantum Key Distribution Demo</h3>
-            <p>This demo shows how quantum key distribution (QKD) can secure online payment transactions. 
-               The BB84 protocol is simulated to generate secure encryption keys that protect payment data,
-               now enhanced with AI-powered fraud detection.</p>
-            <div class="buttons">
-                <button id="startDemo" class="primary">Start New Simulation</button>
-                <button id="showHistory">View History</button>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Hero Section -->
+        <section class="text-center mb-12 animate-fade-in">
+            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 md:p-12 quantum-glow">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-quantum-500 to-cyber-500 rounded-full mb-6 animate-float">
+                    <i class="fas fa-shield-alt text-2xl text-white"></i>
+                </div>
+                
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 font-display">
+                    Quantum Key Distribution Demo
+                </h2>
+                
+                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto mb-8 leading-relaxed">
+                    Experience the future of secure payments with quantum key distribution. Our BB84 protocol simulation 
+                    creates unbreakable encryption keys, enhanced with AI-powered fraud detection for ultimate security.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button id="startDemo" class="bg-gradient-to-r from-quantum-500 to-quantum-600 hover:from-quantum-600 hover:to-quantum-700 text-white px-8 py-4 rounded-2xl font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+                        <i class="fas fa-rocket mr-2"></i>
+                        Start New Simulation
+                    </button>
+                    <button id="showHistory" class="bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-2 border-gray-200 dark:border-gray-600 hover:border-quantum-500 dark:hover:border-quantum-400 px-8 py-4 rounded-2xl font-semibold transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-history mr-2"></i>
+                        View History
+                    </button>
+                </div>
             </div>
         </section>
 
-        <div id="configModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h3>Configure Simulation</h3>
-                <form id="configForm">
-                    <div class="form-group">
-                        <label for="qubits">Number of Qubits:</label>
-                        <input type="number" id="qubits" name="qubits" min="100" max="5000" value="1000">
-                        <span class="tooltip">More qubits = more secure, but slower simulation</span>
-                    </div>
-                    <div class="form-group">
-                        <label for="errorRate">Error Rate:</label>
-                        <input type="number" id="errorRate" name="error_rate" min="0" max="0.2" step="0.01" value="0.01">
-                        <span class="tooltip">Simulates quantum channel noise (0-0.2)</span>
-                    </div>
-                    <div class="form-group checkbox">
-                        <input type="checkbox" id="eavesdropper" name="eavesdropper">
-                        <label for="eavesdropper">Simulate Eavesdropper (Eve)</label>
-                        <span class="tooltip">Adds an eavesdropper that tries to intercept the quantum key</span>
-                    </div>
-                    <div class="form-group">
-                        <label for="amount">Payment Amount (₹):</label>
-                        <input type="number" id="amount" name="amount" min="100" max="1000000" value="500">
-                        <span class="tooltip">Amount in INR (will be converted to paise)</span>
+        <!-- Configuration Modal -->
+        <div id="configModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-slide-up">
+                <div class="p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white font-display">Configure Simulation</h3>
+                        <button class="close text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl transition-colors">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
                     
-                    <!-- New Fraud Detection Settings -->
-                    <div class="form-section">
-                        <h4>Fraud Detection Settings</h4>
-                        <div class="form-group">
-                            <label for="fraudModel">AI Model Type:</label>
-                            <select id="fraudModel" name="fraud_model">
-                                <option value="heuristic">Heuristic (Rule-based)</option>
-                                <option value="ml">Machine Learning</option>
-                                <option value="quantum">Quantum-enhanced</option>
-                            </select>
-                            <span class="tooltip">Type of AI model used for fraud detection</span>
+                    <form id="configForm" class="space-y-6">
+                        <!-- Quantum Parameters -->
+                        <div class="bg-gradient-to-r from-quantum-50 to-cyan-50 dark:from-gray-700 dark:to-gray-600 rounded-2xl p-6">
+                            <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                                <i class="fas fa-atom text-quantum-500 mr-2"></i>
+                                Quantum Parameters
+                            </h4>
+                            
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="qubits" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Number of Qubits</label>
+                                    <input type="number" id="qubits" name="qubits" min="100" max="5000" value="1000" 
+                                           class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-quantum-500 focus:border-transparent transition-all">
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">More qubits = higher security</p>
+                                </div>
+                                
+                                <div>
+                                    <label for="errorRate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Error Rate</label>
+                                    <input type="number" id="errorRate" name="error_rate" min="0" max="0.2" step="0.01" value="0.01" 
+                                           class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-quantum-500 focus:border-transparent transition-all">
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Quantum channel noise (0-0.2)</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <label class="flex items-center space-x-3">
+                                    <input type="checkbox" id="eavesdropper" name="eavesdropper" 
+                                           class="w-5 h-5 text-quantum-500 border-gray-300 rounded focus:ring-quantum-500">
+                                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Simulate Eavesdropper (Eve)</span>
+                                </label>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 ml-8">Test quantum security against interception</p>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="fraudSensitivity">Detection Sensitivity:</label>
-                            <input type="range" id="fraudSensitivity" name="fraud_sensitivity" 
-                                  min="0.1" max="1.0" step="0.1" value="0.7">
-                            <span id="sensitivityValue">0.7</span>
-                            <span class="tooltip">Higher values flag more transactions as suspicious</span>
+                        
+                        <!-- Payment Settings -->
+                        <div class="bg-gradient-to-r from-cyber-50 to-green-50 dark:from-gray-700 dark:to-gray-600 rounded-2xl p-6">
+                            <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                                <i class="fas fa-credit-card text-cyber-500 mr-2"></i>
+                                Payment Settings
+                            </h4>
+                            
+                            <div>
+                                <label for="amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Payment Amount (₹)</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-3 text-gray-500">₹</span>
+                                    <input type="number" id="amount" name="amount" min="100" max="1000000" value="500" 
+                                           class="w-full pl-8 pr-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-cyber-500 focus:border-transparent transition-all">
+                                </div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Amount in Indian Rupees</p>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="submit" class="primary">Start Simulation</button>
-                        <button type="button" class="cancel">Cancel</button>
-                    </div>
-                </form>
+                        
+                        <!-- AI Fraud Detection -->
+                        <div class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-gray-700 dark:to-gray-600 rounded-2xl p-6">
+                            <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                                <i class="fas fa-brain text-purple-500 mr-2"></i>
+                                AI Fraud Detection
+                            </h4>
+                            
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="fraudModel" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">AI Model Type</label>
+                                    <select id="fraudModel" name="fraud_model" 
+                                            class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
+                                        <option value="heuristic">🔍 Heuristic (Rule-based)</option>
+                                        <option value="ml">🤖 Machine Learning</option>
+                                        <option value="quantum">⚛️ Quantum-enhanced</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label for="fraudSensitivity" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Detection Sensitivity</label>
+                                    <div class="flex items-center space-x-3">
+                                        <input type="range" id="fraudSensitivity" name="fraud_sensitivity" 
+                                               min="0.1" max="1.0" step="0.1" value="0.7" 
+                                               class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                        <span id="sensitivityValue" class="text-sm font-medium text-gray-900 dark:text-white bg-purple-100 dark:bg-purple-900 px-2 py-1 rounded-lg">0.7</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Higher = more strict detection</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="flex flex-col sm:flex-row gap-3 pt-4">
+                            <button type="submit" class="flex-1 bg-gradient-to-r from-quantum-500 to-cyber-500 hover:from-quantum-600 hover:to-cyber-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105">
+                                <i class="fas fa-play mr-2"></i>
+                                Start Simulation
+                            </button>
+                            <button type="button" class="cancel flex-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 px-6 py-3 rounded-xl font-semibold transition-all duration-300">
+                                <i class="fas fa-times mr-2"></i>
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
 
-        <section id="simulationContainer" class="hidden">
-            <div class="card" id="simulationInfo">
-                <h3>Simulation <span id="simulationId"></span></h3>
-                <div class="simulation-status">
-                    <div class="status-badge" id="statusBadge">Initializing</div>
-                    <div class="progress-container">
-                        <div class="progress-bar" id="progressBar"></div>
+        <!-- Simulation Container -->
+        <section id="simulationContainer" class="hidden space-y-8 animate-fade-in">
+            <!-- Simulation Status -->
+            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-6 quantum-glow">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white font-display">
+                        Simulation <span id="simulationId" class="text-quantum-500"></span>
+                    </h3>
+                    <div id="statusBadge" class="px-4 py-2 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-800">
+                        Initializing
                     </div>
-                    <div class="step-label" id="currentStep">Initializing simulation...</div>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="bg-gray-100 dark:bg-gray-700 rounded-2xl h-4 overflow-hidden">
+                        <div id="progressBar" class="h-full bg-gradient-to-r from-quantum-500 to-cyber-500 transition-all duration-500 ease-out" style="width: 0%"></div>
+                    </div>
+                    <p id="currentStep" class="text-gray-600 dark:text-gray-300 font-medium">Initializing simulation...</p>
                 </div>
             </div>
 
-            <div class="columns">
-                <section class="card" id="quantumVisualization">
-                    <h3>Quantum Key Distribution</h3>
-                    <div class="visualization-container">
-                        <div id="visualizationPlaceholder">
-                            <i class="fas fa-spinner fa-spin"></i>
-                            <p>Generating visualization...</p>
+            <!-- Main Content Grid -->
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Quantum Visualization -->
+                <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-6">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                        <i class="fas fa-atom text-quantum-500 mr-3"></i>
+                        Quantum Key Distribution
+                    </h3>
+                    
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 mb-6 cyber-grid">
+                        <div id="visualizationPlaceholder" class="text-center py-12">
+                            <div class="inline-flex items-center justify-center w-16 h-16 bg-quantum-100 dark:bg-quantum-900 rounded-full mb-4 animate-spin">
+                                <i class="fas fa-cog text-quantum-500 text-2xl"></i>
+                            </div>
+                            <p class="text-gray-600 dark:text-gray-400">Generating quantum visualization...</p>
                         </div>
-                        <img id="qkdVisualization" class="hidden" alt="QKD Visualization">
+                        <img id="qkdVisualization" class="hidden w-full rounded-xl shadow-lg" alt="QKD Visualization">
                     </div>
-                    <div class="qkd-metrics">
-                        <div class="metric">
-                            <span class="metric-label">Quantum Key:</span>
-                            <span class="metric-value" id="quantumKey">Generating...</span>
+                    
+                    <!-- Quantum Metrics -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-gradient-to-r from-quantum-50 to-cyan-50 dark:from-gray-700 dark:to-gray-600 rounded-xl p-4">
+                            <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-semibold">QKD Time</p>
+                            <p id="qkdTime" class="text-lg font-bold text-gray-900 dark:text-white">-</p>
                         </div>
-                        <div class="metric">
-                            <span class="metric-label">QKD Time:</span>
-                            <span class="metric-value" id="qkdTime">-</span>
+                        <div class="bg-gradient-to-r from-cyber-50 to-green-50 dark:from-gray-700 dark:to-gray-600 rounded-xl p-4">
+                            <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-semibold">Bits Used</p>
+                            <p id="bitsUsed" class="text-lg font-bold text-gray-900 dark:text-white">-</p>
                         </div>
-                        <div class="metric">
-                            <span class="metric-label">Bits Used:</span>
-                            <span class="metric-value" id="bitsUsed">-</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Base Match Rate:</span>
-                            <span class="metric-value" id="baseMatchRate">-</span>
+                        <div class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-gray-700 dark:to-gray-600 rounded-xl p-4 col-span-2">
+                            <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-semibold">Quantum Key</p>
+                            <p id="quantumKey" class="text-sm font-mono text-gray-900 dark:text-white break-all">Generating...</p>
                         </div>
                     </div>
-                </section>
+                </div>
 
-                <section class="card" id="transactionFlow">
-                    <h3>Transaction Flow</h3>
-                    <div class="flow-steps">
-                        <div class="flow-step" data-step="1">
-                            <div class="step-icon"><i class="fas fa-key"></i></div>
-                            <div class="step-content">
-                                <h4>Quantum Key Generation</h4>
-                                <p>BB84 protocol simulation creates a shared secret key</p>
-                                <div class="step-status" id="step1Status">Pending</div>
+                <!-- Transaction Flow -->
+                <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-6">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                        <i class="fas fa-route text-cyber-500 mr-3"></i>
+                        Transaction Flow
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <!-- Step 1 -->
+                        <div class="flow-step flex items-center space-x-4 p-4 rounded-2xl bg-gray-50 dark:bg-gray-700 transition-all duration-300" data-step="1">
+                            <div class="flex-shrink-0 w-12 h-12 bg-quantum-100 dark:bg-quantum-900 rounded-full flex items-center justify-center">
+                                <i class="fas fa-key text-quantum-500"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-gray-900 dark:text-white">Quantum Key Generation</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">BB84 protocol creates shared secret key</p>
+                                <div id="step1Status" class="text-xs text-gray-500 dark:text-gray-400 mt-1">Pending</div>
                             </div>
                         </div>
-                        <div class="flow-step" data-step="2">
-                            <div class="step-icon"><i class="fas fa-lock"></i></div>
-                            <div class="step-content">
-                                <h4>Encryption</h4>
-                                <p>Payment data encrypted with quantum-generated key</p>
-                                <div class="step-status" id="step2Status">Pending</div>
+                        
+                        <!-- Step 2 -->
+                        <div class="flow-step flex items-center space-x-4 p-4 rounded-2xl bg-gray-50 dark:bg-gray-700 transition-all duration-300" data-step="2">
+                            <div class="flex-shrink-0 w-12 h-12 bg-cyber-100 dark:bg-cyber-900 rounded-full flex items-center justify-center">
+                                <i class="fas fa-lock text-cyber-500"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-gray-900 dark:text-white">Encryption</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Secure payment data encryption</p>
+                                <div id="step2Status" class="text-xs text-gray-500 dark:text-gray-400 mt-1">Pending</div>
                             </div>
                         </div>
-                        <div class="flow-step" data-step="3">
-                            <div class="step-icon"><i class="fas fa-shopping-cart"></i></div>
-                            <div class="step-content">
-                                <h4>Razorpay Order</h4>
-                                <p>Creating and processing payment order</p>
-                                <div class="step-status" id="step3Status">Pending</div>
+                        
+                        <!-- Step 3 -->
+                        <div class="flow-step flex items-center space-x-4 p-4 rounded-2xl bg-gray-50 dark:bg-gray-700 transition-all duration-300" data-step="3">
+                            <div class="flex-shrink-0 w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                                <i class="fas fa-shopping-cart text-blue-500"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-gray-900 dark:text-white">Razorpay Order</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Payment processing and verification</p>
+                                <div id="step3Status" class="text-xs text-gray-500 dark:text-gray-400 mt-1">Pending</div>
                             </div>
                         </div>
-                        <!-- New Fraud Detection Step -->
-                        <div class="flow-step" data-step="4">
-                            <div class="step-icon"><i class="fas fa-shield-alt"></i></div>
-                            <div class="step-content">
-                                <h4>Fraud Detection</h4>
-                                <p>AI analysis of transaction for fraud patterns</p>
-                                <div class="step-status" id="step4Status">Pending</div>
+                        
+                        <!-- Step 4 -->
+                        <div class="flow-step flex items-center space-x-4 p-4 rounded-2xl bg-gray-50 dark:bg-gray-700 transition-all duration-300" data-step="4">
+                            <div class="flex-shrink-0 w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center">
+                                <i class="fas fa-shield-alt text-purple-500"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-gray-900 dark:text-white">Fraud Detection</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">AI-powered security analysis</p>
+                                <div id="step4Status" class="text-xs text-gray-500 dark:text-gray-400 mt-1">Pending</div>
                             </div>
                         </div>
-                        <div class="flow-step" data-step="5">
-                            <div class="step-icon"><i class="fas fa-check-circle"></i></div>
-                            <div class="step-content">
-                                <h4>Verification</h4>
-                                <p>Verify payment and decrypt data</p>
-                                <div class="step-status" id="step5Status">Pending</div>
+                        
+                        <!-- Step 5 -->
+                        <div class="flow-step flex items-center space-x-4 p-4 rounded-2xl bg-gray-50 dark:bg-gray-700 transition-all duration-300" data-step="5">
+                            <div class="flex-shrink-0 w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
+                                <i class="fas fa-check-circle text-green-500"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-gray-900 dark:text-white">Verification</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Final payment verification</p>
+                                <div id="step5Status" class="text-xs text-gray-500 dark:text-gray-400 mt-1">Pending</div>
                             </div>
                         </div>
                     </div>
-                </section>
+                </div>
             </div>
 
-            <section class="card" id="results">
-                <h3>Results & Performance Analysis</h3>
-                <div class="results-container">
-                    <div class="result-section">
-                        <h4>Transaction Summary</h4>
-                        <table class="results-table">
-                            <tr>
-                                <td>Order ID:</td>
-                                <td id="resultOrderId">-</td>
-                            </tr>
-                            <tr>
-                                <td>Payment ID:</td>
-                                <td id="resultPaymentId">-</td>
-                            </tr>
-                            <tr>
-                                <td>Amount:</td>
-                                <td id="resultAmount">-</td>
-                            </tr>
-                            <tr>
-                                <td>Status:</td>
-                                <td id="resultStatus">-</td>
-                            </tr>
-                            <tr>
-                                <td>Total Time:</td>
-                                <td id="resultTotalTime">-</td>
-                            </tr>
-                        </table>
+            <!-- Results Section -->
+            <div id="results" class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-6">
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 font-display">
+                    Results & Performance Analysis
+                </h3>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Transaction Summary -->
+                    <div class="space-y-4">
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                            <i class="fas fa-receipt text-quantum-500 mr-3"></i>
+                            Transaction Summary
+                        </h4>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600 dark:text-gray-400">Order ID:</span>
+                                <span id="resultOrderId" class="font-mono text-sm text-gray-900 dark:text-white">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600 dark:text-gray-400">Payment ID:</span>
+                                <span id="resultPaymentId" class="font-mono text-sm text-gray-900 dark:text-white">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600 dark:text-gray-400">Amount:</span>
+                                <span id="resultAmount" class="font-semibold text-cyber-600 dark:text-cyber-400">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600 dark:text-gray-400">Status:</span>
+                                <span id="resultStatus" class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">-</span>
+                            </div>
+                        </div>
                     </div>
                     
-                    <!-- New Fraud Detection Results Section -->
-                    <div class="result-section">
-                        <h4>Fraud Detection Results</h4>
-                        <table class="results-table">
-                            <tr>
-                                <td>Model Type:</td>
-                                <td id="fraudModelType">-</td>
-                            </tr>
-                            <tr>
-                                <td>Risk Score:</td>
-                                <td id="fraudRiskScore">-</td>
-                            </tr>
-                            <tr>
-                                <td>Threshold:</td>
-                                <td id="fraudThreshold">-</td>
-                            </tr>
-                            <tr>
-                                <td>Confidence:</td>
-                                <td id="fraudConfidence">-</td>
-                            </tr>
-                            <tr>
-                                <td>Risk Factors:</td>
-                                <td id="fraudRiskFactors">-</td>
-                            </tr>
-                        </table>
-                    </div>
-                    
-                    <div class="result-section">
-                        <h4>Performance Comparison</h4>
-                        <table class="results-table">
-                            <tr>
-                                <td>QKD-based Encryption:</td>
-                                <td id="qkdEncryptionTime">-</td>
-                            </tr>
-                            <tr>
-                                <td>QKD-based Decryption:</td>
-                                <td id="qkdDecryptionTime">-</td>
-                            </tr>
-                            <tr>
-                                <td>Standard Encryption:</td>
-                                <td id="standardEncryptionTime">-</td>
-                            </tr>
-                            <tr>
-                                <td>Standard Decryption:</td>
-                                <td id="standardDecryptionTime">-</td>
-                            </tr>
-                            <tr>
-                                <td>Fraud Detection Time:</td>
-                                <td id="fraudDetectionTime">-</td>
-                            </tr>
-                            <tr>
-                                <td>Overhead:</td>
-                                <td id="overhead">-</td>
-                            </tr>
-                        </table>
+                    <!-- Performance Metrics -->
+                    <div class="space-y-4">
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                            <i class="fas fa-tachometer-alt text-cyber-500 mr-3"></i>
+                            Performance Metrics
+                        </h4>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-gradient-to-r from-quantum-50 to-cyan-50 dark:from-gray-700 dark:to-gray-600 rounded-xl p-4 text-center">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-semibold">QKD Time</p>
+                                <p id="perfQkdTime" class="text-lg font-bold text-quantum-600 dark:text-quantum-400">-</p>
+                            </div>
+                            <div class="bg-gradient-to-r from-cyber-50 to-green-50 dark:from-gray-700 dark:to-gray-600 rounded-xl p-4 text-center">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-semibold">Encryption</p>
+                                <p id="perfEncryption" class="text-lg font-bold text-cyber-600 dark:text-cyber-400">-</p>
+                            </div>
+                            <div class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-gray-700 dark:to-gray-600 rounded-xl p-4 text-center">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-semibold">Fraud Score</p>
+                                <p id="perfFraudScore" class="text-lg font-bold text-purple-600 dark:text-purple-400">-</p>
+                            </div>
+                            <div class="bg-gradient-to-r from-orange-50 to-red-50 dark:from-gray-700 dark:to-gray-600 rounded-xl p-4 text-center">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-semibold">Total Time</p>
+                                <p id="perfTotalTime" class="text-lg font-bold text-orange-600 dark:text-orange-400">-</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="buttons">
-                    <button id="newSimulation" class="primary">New Simulation</button>
-                    <button id="downloadReport">Download Report</button>
-                </div>
-            </section>
+            </div>
         </section>
 
-        <section class="card hidden" id="historyContainer">
-            <h3>Simulation History</h3>
-            <div class="table-container">
-                <table id="historyTable">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Started</th>
-                            <th>Status</th>
-                            <th>Time</th>
-                            <th>Amount</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="historyTableBody">
-                        <!-- Simulation history rows will be added here -->
-                    </tbody>
-                </table>
-                <div id="noHistory" class="hidden">No simulations found</div>
+        <!-- History Container -->
+        <section id="historyContainer" class="hidden">
+            <div class="mb-8">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-900 dark:text-white font-display">Simulation History</h2>
+                        <p class="text-gray-600 dark:text-gray-400 mt-2">View and manage your past QKD simulations</p>
+                    </div>
+                    <div class="flex space-x-4">
+                        <button id="refreshHistory" class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 px-4 py-2 rounded-xl font-medium transition-all duration-200">
+                            <i class="fas fa-sync-alt mr-2"></i>Refresh
+                        </button>
+                        <button id="exportHistory" class="bg-gradient-to-r from-quantum-500 to-cyber-500 text-white px-4 py-2 rounded-xl font-medium hover:from-quantum-600 hover:to-cyber-600 transition-all duration-200">
+                            <i class="fas fa-download mr-2"></i>Export CSV
+                        </button>
+                        <button id="backToHomeFromHistory" class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-2 border-gray-300 dark:border-gray-600 hover:border-quantum-500 dark:hover:border-quantum-400 px-4 py-2 rounded-xl font-medium transition-all duration-200">
+                            <i class="fas fa-arrow-left mr-2"></i>Back to Home
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div class="buttons">
-                <button id="backToHome" class="primary">Back to Home</button>
+
+            <!-- History Table -->
+            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gradient-to-r from-quantum-500 to-cyber-500 text-white">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">ID</th>
+                                <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider hidden sm:table-cell">Started</th>
+                                <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider hidden md:table-cell">Duration</th>
+                                <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Amount</th>
+                                <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider hidden lg:table-cell">Qubits</th>
+                                <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider hidden lg:table-cell">Fraud Score</th>
+                                <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            <!-- Dynamic content will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- No History Message -->
+                <div id="noHistory" class="text-center py-12 hidden">
+                    <i class="fas fa-history text-6xl text-gray-300 dark:text-gray-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">No Simulations Yet</h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-6">Start your first QKD simulation to see history here</p>
+                    <button id="startFirstSimulation" class="bg-gradient-to-r from-quantum-500 to-cyber-500 text-white px-6 py-3 rounded-xl font-medium hover:from-quantum-600 hover:to-cyber-600 transition-all duration-200">
+                        <i class="fas fa-rocket mr-2"></i>Start First Simulation
+                    </button>
+                </div>
             </div>
         </section>
     </main>
 
-    <footer>
-        <p>Quantum Key Distribution (QKD) with AI Fraud Detection for Enhanced Security in Razorpay API Transactions</p>
-        <p>A System Engineering Demo | <a href="https://github.com/yourusername/qkd-razorpay-demo" target="_blank">GitHub <i class="fab fa-github"></i></a></p>
-    </footer>
-
+    <!-- Enhanced JavaScript -->
     <script src="/static/app.js"></script>
     
+    <!-- Dark mode toggle script -->
     <script>
-        // Helper for smooth scroll to element
-        function scrollToSection(sectionId) {
-            const section = document.getElementById(sectionId);
-            if (section) {
-                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        }
-        
-        // Fix iOS viewport height issues
-        function setVH() {
-            let vh = window.innerHeight * 0.01;
-            document.documentElement.style.setProperty('--vh', `${vh}px`);
-        }
-        
-        // Set the vh value on page load and resize
-        window.addEventListener('load', setVH);
-        window.addEventListener('resize', setVH);
-        
-        // Handle sensitivity slider display
-        document.addEventListener('DOMContentLoaded', function() {
-            const sensitivitySlider = document.getElementById('fraudSensitivity');
-            const sensitivityValue = document.getElementById('sensitivityValue');
-            
-            if (sensitivitySlider && sensitivityValue) {
-                // Update the display value when slider changes
-                sensitivitySlider.addEventListener('input', function() {
-                    sensitivityValue.textContent = this.value;
-                });
-            }
+        // Enhanced sensitivity slider update
+        document.getElementById('fraudSensitivity').addEventListener('input', function() {
+            document.getElementById('sensitivityValue').textContent = this.value;
         });
+        
+        // Enhanced status badge updates
+        function updateStatusBadge(status) {
+            const badge = document.getElementById('statusBadge');
+            badge.className = 'px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300';
+            
+            switch(status) {
+                case 'running':
+                    badge.className += ' bg-blue-100 text-blue-800 animate-pulse';
+                    break;
+                case 'completed':
+                    badge.className += ' bg-green-100 text-green-800';
+                    break;
+                case 'failed':
+                    badge.className += ' bg-red-100 text-red-800';
+                    break;
+                default:
+                    badge.className += ' bg-yellow-100 text-yellow-800';
+            }
+        }
+        
+        // Enhanced progress animation
+        function updateProgress(progress) {
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = progress + '%';
+            progressBar.style.background = progress === 100 ? 
+                'linear-gradient(to right, #22c55e, #16a34a)' : 
+                'linear-gradient(to right, #0ea5e9, #22c55e)';
+        }
+        
+        // Enhanced step status updates
+        function updateStepStatus(stepIndex, status) {
+            const step = document.querySelector(`[data-step="${stepIndex}"]`);
+            if (!step) return;
+            
+            const icon = step.querySelector('div:first-child');
+            const statusEl = step.querySelector('[id$="Status"]');
+            
+            step.className = 'flow-step flex items-center space-x-4 p-4 rounded-2xl transition-all duration-500';
+            
+            switch(status) {
+                case 'active':
+                    step.className += ' bg-blue-100 dark:bg-blue-900 border-2 border-blue-300 transform scale-105';
+                    icon.className = icon.className.replace(/bg-\w+-\d+/, 'bg-blue-200 animate-pulse');
+                    statusEl.textContent = 'In Progress';
+                    statusEl.className = 'text-xs text-blue-600 font-semibold mt-1';
+                    break;
+                case 'completed':
+                    step.className += ' bg-green-50 dark:bg-green-900';
+                    icon.className = icon.className.replace(/bg-\w+-\d+/, 'bg-green-200');
+                    statusEl.textContent = 'Completed';
+                    statusEl.className = 'text-xs text-green-600 font-semibold mt-1';
+                    break;
+                case 'error':
+                    step.className += ' bg-red-50 dark:bg-red-900';
+                    icon.className = icon.className.replace(/bg-\w+-\d+/, 'bg-red-200');
+                    statusEl.textContent = 'Failed';
+                    statusEl.className = 'text-xs text-red-600 font-semibold mt-1';
+                    break;
+                default:
+                    step.className += ' bg-gray-50 dark:bg-gray-700';
+                    statusEl.textContent = 'Pending';
+                    statusEl.className = 'text-xs text-gray-500 dark:text-gray-400 mt-1';
+            }
+        }
     </script>
 </body>
 </html> 

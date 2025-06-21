@@ -1,4 +1,4 @@
-// QKD Razorpay Demo - Frontend JavaScript - Enhanced with Apple-like UX
+// QKD Razorpay Demo - Modern Frontend JavaScript with Tailwind CSS
 
 // Global variables
 let currentSimulation = null;
@@ -19,6 +19,12 @@ const backToHomeBtn = document.getElementById('backToHome');
 const newSimulationBtn = document.getElementById('newSimulation');
 const downloadReportBtn = document.getElementById('downloadReport');
 
+// New history-related elements
+const refreshHistoryBtn = document.getElementById('refreshHistory');
+const exportHistoryBtn = document.getElementById('exportHistory');
+const backToHomeFromHistoryBtn = document.getElementById('backToHomeFromHistory');
+const startFirstSimulationBtn = document.getElementById('startFirstSimulation');
+
 // Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
     // Event listeners
@@ -31,155 +37,159 @@ document.addEventListener('DOMContentLoaded', () => {
     newSimulationBtn.addEventListener('click', openConfigModal);
     downloadReportBtn.addEventListener('click', downloadReport);
 
-    // Enhanced scroll behavior
-    initSmoothScrolling();
-    
-    // Add scroll animation effects
+    // History-related event listeners
+    if (refreshHistoryBtn) refreshHistoryBtn.addEventListener('click', fetchSimulationHistory);
+    if (exportHistoryBtn) exportHistoryBtn.addEventListener('click', exportHistoryData);
+    if (backToHomeFromHistoryBtn) backToHomeFromHistoryBtn.addEventListener('click', showHome);
+    if (startFirstSimulationBtn) startFirstSimulationBtn.addEventListener('click', openConfigModal);
+
+    // Close modal when clicking outside
+    configModal.addEventListener('click', (e) => {
+        if (e.target === configModal) {
+            closeConfigModal();
+        }
+    });
+
+    // Enhanced animations
     initScrollAnimations();
     
-    // Fix iOS scrolling issues
-    fixIOSScrolling();
+    // Add dark mode support
+    initDarkMode();
+    
+    // Add enhanced form interactions
+    initFormEnhancements();
 
     // Fetch previous simulations
     fetchSimulationHistory();
 });
 
-// Initialize smooth scrolling behavior
-function initSmoothScrolling() {
-    // Add smooth scroll behavior to all internal links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
-            
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                // Prevent multiple scroll events
-                if (isScrolling) return;
-                isScrolling = true;
-                
-                // Smooth scroll to target with easing
-                scrollToElement(targetElement);
-                
-                // Update URL hash without jumping
-                window.history.pushState(null, null, targetId);
-                
-                // Reset scrolling flag after animation completes
-                setTimeout(() => {
-                    isScrolling = false;
-                }, 1000);
+// Initialize dark mode support
+function initDarkMode() {
+    // Check for saved theme preference or default to light
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.documentElement.classList.add('dark');
+    }
+    
+    // Listen for system theme changes
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('theme')) {
+            if (e.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
             }
-        });
+        }
     });
 }
 
-// Scroll to element with easing
-function scrollToElement(element) {
-    const headerOffset = 80; // Account for fixed header
-    const elementPosition = element.getBoundingClientRect().top;
-    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+// Initialize enhanced form interactions
+function initFormEnhancements() {
+    // Sensitivity slider with visual feedback
+    const sensitivitySlider = document.getElementById('fraudSensitivity');
+    const sensitivityValue = document.getElementById('sensitivityValue');
     
-    window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
+    if (sensitivitySlider && sensitivityValue) {
+        sensitivitySlider.addEventListener('input', function() {
+            const value = parseFloat(this.value);
+            sensitivityValue.textContent = value;
+            
+            // Update color based on sensitivity level
+            sensitivityValue.className = 'text-sm font-medium px-2 py-1 rounded-lg transition-colors';
+            if (value < 0.4) {
+                sensitivityValue.className += ' bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200';
+            } else if (value < 0.7) {
+                sensitivityValue.className += ' bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200';
+            } else {
+                sensitivityValue.className += ' bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200';
+            }
+        });
+        
+        // Trigger initial update
+        sensitivitySlider.dispatchEvent(new Event('input'));
+    }
+    
+    // Enhanced form validation
+    const numberInputs = document.querySelectorAll('input[type="number"]');
+    numberInputs.forEach(input => {
+        input.addEventListener('input', function() {
+            const value = parseFloat(this.value);
+            const min = parseFloat(this.getAttribute('min'));
+            const max = parseFloat(this.getAttribute('max'));
+            
+            this.classList.remove('border-red-500', 'border-green-500');
+            
+            if (value < min || value > max || isNaN(value)) {
+                this.classList.add('border-red-500');
+            } else {
+                this.classList.add('border-green-500');
+            }
+        });
     });
 }
 
 // Initialize scroll-based animations
 function initScrollAnimations() {
-    // Detect elements that should animate on scroll
-    const animatedElements = document.querySelectorAll('.card, .flow-step, .result-section');
-    
-    // Set initial state (if not visible)
-    animatedElements.forEach(el => {
-        if (!isElementInViewport(el)) {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        }
-    });
-    
-    // Add scroll listener to animate elements as they come into view
-    window.addEventListener('scroll', debounce(() => {
-        animatedElements.forEach(el => {
-            if (isElementInViewport(el)) {
-                el.style.opacity = '1';
-                el.style.transform = 'translateY(0)';
-            }
-        });
-    }, 50));
-}
-
-// Fix iOS scrolling issues
-function fixIOSScrolling() {
-    // Detect iOS
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    
-    if (isIOS) {
-        // Prevent elastic bouncing
-        document.body.addEventListener('touchmove', function(e) {
-            if (e.target === document.body) {
-                e.preventDefault();
-            }
-        }, { passive: false });
-        
-        // Fix modal scrolling on iOS
-        document.querySelectorAll('.modal-content').forEach(modal => {
-            modal.addEventListener('touchmove', function(e) {
-                e.stopPropagation();
-            });
-        });
-    }
-}
-
-// Utility: Check if element is in viewport
-function isElementInViewport(el) {
-    const rect = el.getBoundingClientRect();
-    return (
-        rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.9 &&
-        rect.bottom >= 0
-    );
-}
-
-// Utility: Debounce function for scroll events
-function debounce(func, wait) {
-    let timeout;
-    return function() {
-        const context = this;
-        const args = arguments;
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(context, args), wait);
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
     };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-fade-in');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+    
+    // Observe elements that should animate
+    document.querySelectorAll('[class*="animate-"]').forEach(el => {
+        observer.observe(el);
+    });
 }
 
-// Open configuration modal with animation
+// Open configuration modal with enhanced animation
 function openConfigModal() {
-    configModal.style.display = 'block';
-    // Delay to allow opacity transition
+    configModal.classList.remove('hidden');
+    configModal.classList.add('flex');
+    
+    // Add entrance animation
+    const modalContent = configModal.querySelector('div > div');
+    modalContent.style.transform = 'scale(0.9) translateY(20px)';
+    modalContent.style.opacity = '0';
+    
+    // Animate in
     setTimeout(() => {
-        document.querySelector('.modal-content').style.opacity = '1';
-        document.querySelector('.modal-content').style.transform = 'translateY(0)';
+        modalContent.style.transform = 'scale(1) translateY(0)';
+        modalContent.style.opacity = '1';
+        modalContent.style.transition = 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
     }, 10);
     
-    // Disable body scrolling when modal is open
+    // Disable body scrolling
     document.body.style.overflow = 'hidden';
 }
 
-// Close configuration modal with animation
+// Close configuration modal with enhanced animation
 function closeConfigModal() {
-    document.querySelector('.modal-content').style.opacity = '0';
-    document.querySelector('.modal-content').style.transform = 'translateY(20px)';
+    const modalContent = configModal.querySelector('div > div');
     
-    // Delay hiding the modal to allow animation to complete
+    // Animate out
+    modalContent.style.transform = 'scale(0.9) translateY(20px)';
+    modalContent.style.opacity = '0';
+    modalContent.style.transition = 'all 0.2s ease-in';
+    
     setTimeout(() => {
-        configModal.style.display = 'none';
-        // Re-enable body scrolling
+        configModal.classList.add('hidden');
+        configModal.classList.remove('flex');
         document.body.style.overflow = '';
-    }, 300);
+    }, 200);
 }
 
-// Start a new simulation
+// Start a new simulation with enhanced validation
 function startSimulation(event) {
     event.preventDefault();
     
@@ -194,114 +204,113 @@ function startSimulation(event) {
         fraud_sensitivity: parseFloat(formData.get('fraud_sensitivity'))
     };
     
-    // Validate input
+    // Enhanced validation
+    const errors = [];
+    
     if (isNaN(simulationData.qubits) || simulationData.qubits < 100 || simulationData.qubits > 5000) {
-        showError('Number of qubits must be between 100 and 5000');
-        return;
+        errors.push('Number of qubits must be between 100 and 5000');
     }
     
     if (isNaN(simulationData.error_rate) || simulationData.error_rate < 0 || simulationData.error_rate > 0.2) {
-        showError('Error rate must be between 0 and 0.2');
-        return;
+        errors.push('Error rate must be between 0 and 0.2');
     }
     
     if (isNaN(simulationData.amount) || simulationData.amount < 10000 || simulationData.amount > 100000000) {
-        showError('Amount must be between ₹100 and ₹1,000,000');
+        errors.push('Amount must be between ₹100 and ₹1,000,000');
+    }
+    
+    if (errors.length > 0) {
+        showError(errors.join('<br>'));
         return;
     }
     
     // Show loading state
-    document.getElementById('simulationContainer').classList.remove('hidden');
-    document.getElementById('statusBadge').textContent = 'Starting...';
-    document.getElementById('statusBadge').className = 'status-badge';
-    document.getElementById('progressBar').style.width = '0%';
-    closeConfigModal();
+    const submitBtn = document.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Starting...';
+    submitBtn.disabled = true;
     
-    // Reset result fields
-    document.getElementById('quantumKey').textContent = 'Generating...';
-    document.getElementById('qkdTime').textContent = '-';
-    document.getElementById('bitsUsed').textContent = '-';
-    document.getElementById('baseMatchRate').textContent = '-';
-    document.getElementById('resultOrderId').textContent = '-';
-    document.getElementById('resultPaymentId').textContent = '-';
-    document.getElementById('resultAmount').textContent = '-';
-    document.getElementById('resultStatus').textContent = '-';
-    document.getElementById('resultTotalTime').textContent = '-';
-    document.getElementById('qkdEncryptionTime').textContent = '-';
-    document.getElementById('qkdDecryptionTime').textContent = '-';
-    document.getElementById('standardEncryptionTime').textContent = '-';
-    document.getElementById('standardDecryptionTime').textContent = '-';
-    document.getElementById('overhead').textContent = '-';
-    document.getElementById('fraudModelType').textContent = '-';
-    document.getElementById('fraudRiskScore').textContent = '-';
-    document.getElementById('fraudThreshold').textContent = '-';
-    document.getElementById('fraudConfidence').textContent = '-';
-    document.getElementById('fraudRiskFactors').textContent = '-';
-    document.getElementById('fraudDetectionTime').textContent = '-';
-    
-    // Reset flow steps
-    for (let i = 1; i <= 5; i++) {
-        const step = document.querySelector(`.flow-step[data-step="${i}"]`);
-        step.classList.remove('active', 'completed', 'error');
-        document.getElementById(`step${i}Status`).textContent = 'Pending';
-    }
-    
-    // Hide visualization
-    document.getElementById('qkdVisualization').classList.add('hidden');
-    document.getElementById('visualizationPlaceholder').classList.remove('hidden');
-    
-    // Start the simulation
+    // Start simulation
     fetch('/api/start_simulation', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify(simulationData)
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to start simulation');
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
-        if (data.simulation_id) {
-            // Store simulation ID and start polling for updates
-            document.getElementById('simulationId').textContent = `#${data.simulation_id.substring(0, 8)}`;
+        if (data.success) {
+            currentSimulation = data.simulation_id;
+            closeConfigModal();
+            showSimulationContainer();
             startPolling(data.simulation_id);
+            
+            // Show success message
+            showSuccess('Simulation started successfully!');
+            
+            // Scroll to simulation container
+            setTimeout(() => {
+                simulationContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
         } else {
-            showError('Invalid response from server');
+            showError(data.error || 'Failed to start simulation');
         }
     })
     .catch(error => {
-        showError(`Error: ${error.message}`);
+        console.error('Error starting simulation:', error);
+        showError('Failed to start simulation. Please check your connection and try again.');
+    })
+    .finally(() => {
+        // Reset button state
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
     });
+}
+
+// Show simulation container with animation
+function showSimulationContainer() {
+    simulationContainer.classList.remove('hidden');
+    simulationContainer.classList.add('animate-fade-in');
+    
+    // Initialize progress bar
+    const progressBar = document.getElementById('progressBar');
+    progressBar.style.width = '0%';
+    
+    // Reset all step statuses
+    for (let i = 1; i <= 5; i++) {
+        updateStepStatus(i, 'pending');
+    }
 }
 
 // Start polling for simulation updates
 function startPolling(simulationId) {
-    // Clear any existing polling
     if (pollingInterval) {
         clearInterval(pollingInterval);
     }
     
-    // Set up new polling
     pollingInterval = setInterval(() => {
         fetchSimulationStatus(simulationId);
     }, API_POLL_INTERVAL);
+    
+    // Initial fetch
+    fetchSimulationStatus(simulationId);
 }
 
-// Fetch the status of a simulation
+// Fetch simulation status
 function fetchSimulationStatus(simulationId) {
     fetch(`/api/simulation/${simulationId}`)
         .then(response => response.json())
-        .then(simulation => {
-            updateSimulationUI(simulation);
-            
-            // Stop polling if simulation is complete or failed
-            if (simulation.status === 'completed' || simulation.status === 'failed') {
-                clearInterval(pollingInterval);
-                pollingInterval = null;
+        .then(data => {
+            if (data.success) {
+                updateSimulationUI(data.simulation);
+                
+                if (data.simulation.status === 'completed' || data.simulation.status === 'failed') {
+                    clearInterval(pollingInterval);
+                    pollingInterval = null;
+                }
+            } else {
+                console.error('Error fetching simulation status:', data.error);
             }
         })
         .catch(error => {
@@ -309,24 +318,17 @@ function fetchSimulationStatus(simulationId) {
         });
 }
 
-// Update the UI with simulation data
+// Update simulation UI with modern styling
 function updateSimulationUI(simulation) {
-    // Update progress
-    const progressPercent = Math.min(100, Math.round(simulation.progress * 100));
-    document.getElementById('progressBar').style.width = `${progressPercent}%`;
+    // Update simulation ID
+    const shortId = simulation.id ? simulation.id.substring(0, 8) : 'Unknown';
+    document.getElementById('simulationId').textContent = `#${shortId}`;
     
     // Update status badge
-    const statusBadge = document.getElementById('statusBadge');
-    statusBadge.textContent = simulation.status;
-    statusBadge.className = 'status-badge';
+    updateStatusBadge(simulation.status);
     
-    if (simulation.status === 'Completed') {
-        statusBadge.classList.add('success');
-    } else if (simulation.status === 'Failed') {
-        statusBadge.classList.add('error');
-    } else if (simulation.status === 'Running') {
-        // Default style is fine
-    }
+    // Update progress bar
+    updateProgress(simulation.progress || 0);
     
     // Update current step
     document.getElementById('currentStep').textContent = simulation.current_step || 'Initializing...';
@@ -334,201 +336,321 @@ function updateSimulationUI(simulation) {
     // Update flow steps
     updateFlowSteps(simulation);
     
-    // Update visualization if available
-    if (simulation.visualization_url && simulation.current_step_index >= 2) {
-        const visualizationImg = document.getElementById('qkdVisualization');
-        visualizationImg.src = simulation.visualization_url + '?t=' + new Date().getTime(); // Prevent caching
-        visualizationImg.classList.remove('hidden');
-        document.getElementById('visualizationPlaceholder').classList.add('hidden');
+    // Update QKD visualization
+    if (simulation.qkd_visualization) {
+        const img = document.getElementById('qkdVisualization');
+        const placeholder = document.getElementById('visualizationPlaceholder');
+        
+        img.src = simulation.qkd_visualization + '?t=' + Date.now();
+        img.classList.remove('hidden');
+        placeholder.classList.add('hidden');
     }
     
-    // Update QKD metrics
-    if (simulation.qkd_metrics) {
-        document.getElementById('quantumKey').textContent = 
-            simulation.qkd_metrics.key ? 
-            `${simulation.qkd_metrics.key.substring(0, 8)}...` : 
-            'Generation failed';
-        
-        document.getElementById('qkdTime').textContent = 
-            simulation.qkd_metrics.time ? 
-            `${simulation.qkd_metrics.time.toFixed(2)}s` : 
-            '-';
-        
-        document.getElementById('bitsUsed').textContent = 
-            simulation.qkd_metrics.bits_used || '-';
-        
-        document.getElementById('baseMatchRate').textContent = 
-            simulation.qkd_metrics.match_rate ? 
-            `${(simulation.qkd_metrics.match_rate * 100).toFixed(1)}%` : 
-            '-';
+    // Update metrics from QKD metrics or direct fields
+    const qkdMetrics = simulation.qkd_metrics || {};
+    
+    if (qkdMetrics.time || simulation.qkd_time) {
+        const time = qkdMetrics.time || simulation.qkd_time;
+        document.getElementById('qkdTime').textContent = typeof time === 'number' ? 
+            (time > 1 ? `${time.toFixed(2)}s` : `${(time * 1000).toFixed(0)}ms`) : 
+            time;
     }
     
-    // Update transaction results
-    if (simulation.transaction_results) {
-        const results = simulation.transaction_results;
-        
-        // Transaction summary
-        document.getElementById('resultOrderId').textContent = results.order_id || '-';
-        document.getElementById('resultPaymentId').textContent = results.payment_id || '-';
-        document.getElementById('resultAmount').textContent = results.amount ? 
-            `₹${(results.amount / 100).toFixed(2)} ${results.currency}` : 
-            '-';
-        document.getElementById('resultStatus').textContent = results.status || '-';
-        document.getElementById('resultTotalTime').textContent = results.total_time ? 
-            `${results.total_time.toFixed(2)}s` : 
-            '-';
-        
-        // Performance metrics
-        document.getElementById('qkdEncryptionTime').textContent = results.encryption_time ? 
-            `${results.encryption_time.toFixed(2)}ms` : 
-            '-';
-        document.getElementById('qkdDecryptionTime').textContent = results.decryption_time ? 
-            `${results.decryption_time.toFixed(2)}ms` : 
-            '-';
-        document.getElementById('standardEncryptionTime').textContent = results.standard_encryption_time ? 
-            `${results.standard_encryption_time.toFixed(2)}ms` : 
-            '-';
-        document.getElementById('standardDecryptionTime').textContent = results.standard_decryption_time ? 
-            `${results.standard_decryption_time.toFixed(2)}ms` : 
-            '-';
-        document.getElementById('overhead').textContent = results.overhead ? 
-            `${results.overhead.toFixed(1)}%` : 
-            '-';
-            
-        // Fraud detection results
-        if (results.fraud_detection) {
-            const fraud = results.fraud_detection;
-            document.getElementById('fraudModelType').textContent = fraud.model_type || 'Not used';
-            document.getElementById('fraudRiskScore').textContent = fraud.risk_score !== undefined ? 
-                `${fraud.risk_score.toFixed(3)}` : 
-                '-';
-            document.getElementById('fraudThreshold').textContent = fraud.threshold !== undefined ? 
-                `${fraud.threshold.toFixed(3)}` : 
-                '-';
-            document.getElementById('fraudConfidence').textContent = fraud.confidence !== undefined ? 
-                `${(fraud.confidence * 100).toFixed(1)}%` : 
-                '-';
-            document.getElementById('fraudRiskFactors').textContent = fraud.risk_factors && fraud.risk_factors.length > 0 ? 
-                fraud.risk_factors.join(', ') : 
-                'None detected';
-            document.getElementById('fraudDetectionTime').textContent = fraud.analysis_time ? 
-                `${fraud.analysis_time.toFixed(2)}ms` : 
-                '-';
-                
-            // If fraudulent transaction was detected, show the status as Failed
-            if (fraud.is_fraudulent) {
-                document.getElementById('resultStatus').textContent = 'Failed - Fraud Detected';
-                document.getElementById('resultStatus').classList.add('error-text');
-            }
-        }
+    if (qkdMetrics.bits_used || simulation.bit_count) {
+        document.getElementById('bitsUsed').textContent = qkdMetrics.bits_used || simulation.bit_count;
     }
     
-    // Add smooth reveal animations for updated content
-    const newElements = document.querySelectorAll('.newly-updated');
-    newElements.forEach(el => {
-        el.classList.remove('newly-updated');
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(10px)';
-        
-        // Trigger reflow
-        void el.offsetWidth;
-        
-        // Apply animation
-        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        el.style.opacity = '1';
-        el.style.transform = 'translateY(0)';
-    });
+    if (qkdMetrics.key || simulation.quantum_key) {
+        const key = qkdMetrics.key || simulation.quantum_key;
+        const keyDisplay = key && key.length > 32 ? 
+            key.substring(0, 32) + '...' : 
+            key || 'Generating...';
+        document.getElementById('quantumKey').textContent = keyDisplay;
+    }
+    
+    // Update results if completed
+    if (simulation.status === 'completed' && simulation.transaction_results) {
+        updateResults(simulation.transaction_results);
+    }
 }
 
-// Update the flow steps based on the simulation progress
-function updateFlowSteps(simulation) {
-    // Clear previous states
-    for (let i = 1; i <= 5; i++) {
-        const step = document.querySelector(`.flow-step[data-step="${i}"]`);
-        step.classList.remove('active', 'completed', 'error');
+// Update status badge with modern styling
+function updateStatusBadge(status) {
+    const badge = document.getElementById('statusBadge');
+    badge.className = 'px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300';
+    
+    switch(status) {
+        case 'running':
+            badge.className += ' bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 animate-pulse';
+            badge.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Running';
+            break;
+        case 'completed':
+            badge.className += ' bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200';
+            badge.innerHTML = '<i class="fas fa-check mr-2"></i>Completed';
+            break;
+        case 'failed':
+            badge.className += ' bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200';
+            badge.innerHTML = '<i class="fas fa-times mr-2"></i>Failed';
+            break;
+        default:
+            badge.className += ' bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200';
+            badge.innerHTML = '<i class="fas fa-clock mr-2"></i>Initializing';
     }
+}
+
+// Update progress bar with smooth animation
+function updateProgress(progress) {
+    const progressBar = document.getElementById('progressBar');
+    progressBar.style.width = progress + '%';
     
-    // Get current step index
-    const currentStepIndex = simulation.current_step_index || 0;
-    
-    // Map API step indices to UI steps
-    // 0: Initializing, 1: QKD, 2: Encryption, 3: Payment, 4: Fraud Detection, 5: Verification
-    const stepMap = {
-        0: { uiStep: 0, status: 'Initializing' },
-        1: { uiStep: 1, status: 'Generating quantum key' },
-        2: { uiStep: 2, status: 'Encrypting payment data' },
-        3: { uiStep: 3, status: 'Processing payment' },
-        4: { uiStep: 4, status: 'Analyzing for fraud' },
-        5: { uiStep: 5, status: 'Verifying transaction' }
+    // Change gradient based on progress
+    if (progress === 100) {
+        progressBar.style.background = 'linear-gradient(to right, #22c55e, #16a34a)';
+    } else if (progress > 50) {
+        progressBar.style.background = 'linear-gradient(to right, #0ea5e9, #22c55e)';
+    } else {
+        progressBar.style.background = 'linear-gradient(to right, #0ea5e9, #3b82f6)';
+    }
+}
+
+// Update flow steps with enhanced animations
+function updateFlowSteps(simulation) {
+    const stepMappings = {
+        'Initializing': 1,
+        'Running quantum key distribution': 1,
+        'Generating QKD visualization': 1,
+        'QKD completed': 1,
+        'Preparing payment data': 2,
+        'Encrypting payment data': 2,
+        'Creating Razorpay order': 3,
+        'Creating payment link': 3,
+        'Simulating payment completion': 3,
+        'Analyzing transaction for fraud': 4,
+        'Verifying payment': 5,
+        'Transaction completed': 5
     };
     
-    // Update each step's status
+    const currentStepIndex = stepMappings[simulation.current_step] || 0;
+    
+    // Update step statuses
     for (let i = 1; i <= 5; i++) {
-        const step = document.querySelector(`.flow-step[data-step="${i}"]`);
-        const statusEl = document.getElementById(`step${i}Status`);
-        
         if (i < currentStepIndex) {
-            // Previous steps are completed
-            step.classList.add('completed');
-            statusEl.textContent = 'Completed';
+            updateStepStatus(i, 'completed');
         } else if (i === currentStepIndex) {
-            // Current step is active
-            step.classList.add('active');
-            statusEl.textContent = stepMap[i]?.status || 'Processing';
+            updateStepStatus(i, 'active');
         } else {
-            // Future steps are pending
-            statusEl.textContent = 'Pending';
+            updateStepStatus(i, 'pending');
         }
     }
     
-    // Handle step errors
-    if (simulation.step_errors) {
-        for (const [stepIndex, error] of Object.entries(simulation.step_errors)) {
-            const uiStep = parseInt(stepIndex) + 1; // API steps are 0-indexed
-            const step = document.querySelector(`.flow-step[data-step="${uiStep}"]`);
-            if (step) {
-                step.classList.add('error');
-                step.classList.remove('active', 'completed');
-                document.getElementById(`step${uiStep}Status`).textContent = 'Failed';
-            }
-        }
-    }
-    
-    // Special case for fraud detection result
-    if (simulation.transaction_results && 
-        simulation.transaction_results.fraud_detection && 
-        simulation.transaction_results.fraud_detection.is_fraudulent) {
-        
-        const fraudStep = document.querySelector('.flow-step[data-step="4"]');
-        if (fraudStep) {
-            fraudStep.classList.add('error');
-            fraudStep.classList.remove('active', 'completed');
-            document.getElementById('step4Status').textContent = 'Fraud Detected';
-            
-            // Mark verification step as failed too
-            const verificationStep = document.querySelector('.flow-step[data-step="5"]');
-            if (verificationStep) {
-                verificationStep.classList.add('error');
-                verificationStep.classList.remove('active', 'completed');
-                document.getElementById('step5Status').textContent = 'Failed';
-            }
-        }
+    // Handle errors
+    if (simulation.status === 'failed') {
+        updateStepStatus(currentStepIndex, 'error');
     }
 }
 
-// Fetch the history of simulations
+// Update step status with modern styling
+function updateStepStatus(stepIndex, status) {
+    const step = document.querySelector(`[data-step="${stepIndex}"]`);
+    if (!step) return;
+    
+    const icon = step.querySelector('div:first-child');
+    const statusEl = step.querySelector('[id$="Status"]');
+    
+    // Reset classes
+    step.className = 'flow-step flex items-center space-x-4 p-4 rounded-2xl transition-all duration-500';
+    
+    switch(status) {
+        case 'active':
+            step.className += ' bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-800 transform scale-105';
+            icon.className = icon.className.replace(/bg-\w+-\d+/, 'bg-blue-200 dark:bg-blue-800 animate-pulse');
+            statusEl.textContent = 'In Progress';
+            statusEl.className = 'text-xs text-blue-600 dark:text-blue-400 font-semibold mt-1';
+            break;
+        case 'completed':
+            step.className += ' bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800';
+            icon.className = icon.className.replace(/bg-\w+-\d+/, 'bg-green-200 dark:bg-green-800');
+            statusEl.textContent = 'Completed';
+            statusEl.className = 'text-xs text-green-600 dark:text-green-400 font-semibold mt-1';
+            break;
+        case 'error':
+            step.className += ' bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800';
+            icon.className = icon.className.replace(/bg-\w+-\d+/, 'bg-red-200 dark:bg-red-800');
+            statusEl.textContent = 'Failed';
+            statusEl.className = 'text-xs text-red-600 dark:text-red-400 font-semibold mt-1';
+            break;
+        default:
+            step.className += ' bg-gray-50 dark:bg-gray-700';
+            statusEl.textContent = 'Pending';
+            statusEl.className = 'text-xs text-gray-500 dark:text-gray-400 mt-1';
+    }
+}
+
+// Update results section
+function updateResults(results) {
+    // Transaction Summary
+    document.getElementById('resultOrderId').textContent = results.order_id || '-';
+    document.getElementById('resultPaymentId').textContent = results.payment_id || '-';
+    document.getElementById('resultAmount').textContent = results.amount ? `₹${results.amount / 100}` : '-';
+    
+    // Status badge
+    const statusBadge = document.getElementById('resultStatus');
+    if (results.status) {
+        statusBadge.textContent = results.status;
+        statusBadge.className = 'px-3 py-1 rounded-full text-xs font-semibold';
+        
+        if (results.status === 'Success') {
+            statusBadge.className += ' bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200';
+        } else {
+            statusBadge.className += ' bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200';
+        }
+    }
+    
+    // Performance Metrics
+    const qkdTime = results.qkd_time || results.total_time;
+    document.getElementById('perfQkdTime').textContent = qkdTime ? 
+        (qkdTime > 1 ? `${qkdTime.toFixed(2)}s` : `${(qkdTime * 1000).toFixed(0)}ms`) : '-';
+    
+    document.getElementById('perfEncryption').textContent = results.encryption_time ? 
+        `${results.encryption_time.toFixed(2)}ms` : '-';
+    
+    const fraudScore = results.fraud_detection?.risk_score;
+    document.getElementById('perfFraudScore').textContent = fraudScore ? 
+        `${(fraudScore * 100).toFixed(1)}%` : '-';
+    
+    document.getElementById('perfTotalTime').textContent = results.total_time ? 
+        `${results.total_time.toFixed(2)}s` : '-';
+}
+
+// Show history with enhanced animations
+function showHistory() {
+    // Hide other containers with animation
+    const heroSection = document.querySelector('section');
+    const simContainer = document.getElementById('simulationContainer');
+    
+    if (heroSection) {
+        heroSection.style.opacity = '0';
+        heroSection.style.transform = 'translateY(-20px)';
+        setTimeout(() => heroSection.classList.add('hidden'), 300);
+    }
+    
+    if (simContainer) {
+        simContainer.classList.add('hidden');
+    }
+    
+    // Show history container with animation
+    historyContainer.classList.remove('hidden');
+    historyContainer.style.opacity = '0';
+    historyContainer.style.transform = 'translateY(20px)';
+    
+    setTimeout(() => {
+        historyContainer.style.opacity = '1';
+        historyContainer.style.transform = 'translateY(0)';
+        historyContainer.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    }, 50);
+    
+    // Fetch fresh history data
+    fetchSimulationHistory();
+}
+
+// Show error notification
+function showError(message) {
+    showNotification(message, 'error');
+}
+
+// Show success notification
+function showSuccess(message) {
+    showNotification(message, 'success');
+}
+
+// Show notification with modern styling
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `fixed top-4 right-4 z-50 p-4 rounded-2xl shadow-lg max-w-sm transform translate-x-full transition-all duration-300`;
+    
+    // Set styling based on type
+    switch(type) {
+        case 'error':
+            notification.className += ' bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-200';
+            notification.innerHTML = `<i class="fas fa-exclamation-circle mr-2"></i>${message}`;
+            break;
+        case 'success':
+            notification.className += ' bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-200';
+            notification.innerHTML = `<i class="fas fa-check-circle mr-2"></i>${message}`;
+            break;
+        default:
+            notification.className += ' bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-200';
+            notification.innerHTML = `<i class="fas fa-info-circle mr-2"></i>${message}`;
+    }
+    
+    // Add to DOM
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        notification.style.transform = 'translateX(full)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 5000);
+}
+
+// Utility functions
+function formatTime(ms) {
+    if (ms < 1000) return `${ms}ms`;
+    const seconds = (ms / 1000).toFixed(1);
+    return `${seconds}s`;
+}
+
+function formatKey(key) {
+    if (!key) return '-';
+    return key.length > 32 ? key.substring(0, 32) + '...' : key;
+}
+
+// Fetch the history of simulations with improved error handling
 function fetchSimulationHistory() {
+    // Show loading state
+    const tableBody = document.getElementById('historyTableBody');
+    const noHistory = document.getElementById('noHistory');
+    
+    if (tableBody) {
+        tableBody.innerHTML = '<tr><td colspan="8" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Loading history...</td></tr>';
+    }
+    
     fetch('/api/simulations')
         .then(response => response.json())
-        .then(simulations => {
-            updateHistoryTable(simulations);
+        .then(data => {
+            if (data.success) {
+                updateHistoryTable(data.simulations);
+                
+                // Show count in notification
+                if (data.count > 0) {
+                    showNotification(`Loaded ${data.count} simulation${data.count !== 1 ? 's' : ''}`, 'success');
+                }
+            } else {
+                throw new Error(data.error || 'Failed to fetch simulation history');
+            }
         })
         .catch(error => {
             console.error('Error fetching simulation history:', error);
+            showError('Failed to load simulation history: ' + error.message);
+            
+            // Show error state
+            if (tableBody) {
+                tableBody.innerHTML = '<tr><td colspan="8" class="px-6 py-4 text-center text-red-500 dark:text-red-400"><i class="fas fa-exclamation-triangle mr-2"></i>Failed to load history</td></tr>';
+            }
         });
 }
 
-// Update the history table with simulations
+// Update the history table with simulations - Enhanced version
 function updateHistoryTable(simulations) {
     const tableBody = document.getElementById('historyTableBody');
     const noHistory = document.getElementById('noHistory');
@@ -536,7 +658,7 @@ function updateHistoryTable(simulations) {
     // Clear existing rows
     tableBody.innerHTML = '';
     
-    if (simulations.length === 0) {
+    if (!simulations || simulations.length === 0) {
         noHistory.classList.remove('hidden');
         return;
     }
@@ -549,15 +671,16 @@ function updateHistoryTable(simulations) {
     });
     
     // Add rows for each simulation
-    simulations.forEach(sim => {
+    simulations.forEach((sim, index) => {
         const row = document.createElement('tr');
+        row.className = 'hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200';
         
         // Format date
         const date = new Date(sim.started_at);
-        const formattedDate = date.toLocaleString();
+        const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
         
         // Format amount
-        const amount = sim.config.amount / 100;
+        const amount = sim.config ? (sim.config.amount / 100) : 0;
         
         // Calculate duration
         let duration = '-';
@@ -565,27 +688,73 @@ function updateHistoryTable(simulations) {
             const startTime = new Date(sim.started_at);
             const endTime = new Date(sim.completion_time);
             const durationSec = (endTime - startTime) / 1000;
-            duration = `${durationSec.toFixed(2)}s`;
+            duration = `${durationSec.toFixed(1)}s`;
+        } else if (sim.status === 'running') {
+            duration = 'Running...';
         }
         
-        // Status badge class
-        let statusClass = '';
-        if (sim.status === 'completed') {
-            statusClass = 'success';
-        } else if (sim.status === 'failed') {
-            statusClass = 'error';
-        } else if (sim.status === 'running') {
-            statusClass = '';
+        // Get fraud score
+        const fraudScore = sim.transaction_results?.fraud_detection?.risk_score;
+        const fraudDisplay = fraudScore ? `${(fraudScore * 100).toFixed(1)}%` : '-';
+        
+        // Status badge styling
+        let statusBadge = '';
+        switch(sim.status) {
+            case 'completed':
+                statusBadge = '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"><i class="fas fa-check-circle mr-1"></i>Completed</span>';
+                break;
+            case 'failed':
+                statusBadge = '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"><i class="fas fa-times-circle mr-1"></i>Failed</span>';
+                break;
+            case 'running':
+                statusBadge = '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 animate-pulse"><i class="fas fa-spinner fa-spin mr-1"></i>Running</span>';
+                break;
+            default:
+                statusBadge = '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">Unknown</span>';
         }
         
         row.innerHTML = `
-            <td>${sim.id.substring(0, 8)}</td>
-            <td>${formattedDate}</td>
-            <td><span class="status-badge ${statusClass}">${sim.status}</span></td>
-            <td>${duration}</td>
-            <td>₹${amount}</td>
-            <td><button class="view-simulation" data-id="${sim.id}">View</button></td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-mono text-gray-900 dark:text-white">#${sim.id.substring(0, 8)}</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 sm:hidden">${formattedDate}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap hidden sm:table-cell">
+                <div class="text-sm text-gray-900 dark:text-white">${formattedDate}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                ${statusBadge}
+                <div class="text-xs text-gray-500 dark:text-gray-400 md:hidden mt-1">${duration}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap hidden md:table-cell">
+                <div class="text-sm text-gray-900 dark:text-white">${duration}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-semibold text-cyber-600 dark:text-cyber-400">₹${amount.toFixed(2)}</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 lg:hidden">
+                    ${sim.config ? sim.config.qubits : '-'} qubits • ${fraudDisplay} fraud
+                </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap hidden lg:table-cell">
+                <div class="text-sm text-gray-900 dark:text-white">${sim.config ? sim.config.qubits : '-'}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap hidden lg:table-cell">
+                <div class="text-sm text-gray-900 dark:text-white">${fraudDisplay}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <button class="view-simulation bg-gradient-to-r from-quantum-500 to-cyber-500 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:from-quantum-600 hover:to-cyber-600 transition-all duration-200 transform hover:scale-105" data-id="${sim.id}">
+                    <i class="fas fa-eye mr-1"></i>View
+                </button>
+            </td>
         `;
+        
+        // Add staggered animation
+        row.style.opacity = '0';
+        row.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+            row.style.opacity = '1';
+            row.style.transform = 'translateY(0)';
+            row.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        }, index * 100);
         
         tableBody.appendChild(row);
     });
@@ -600,20 +769,48 @@ function updateHistoryTable(simulations) {
     });
 }
 
-// View a specific simulation
+// View a specific simulation with enhanced navigation
 function viewSimulation(simulationId) {
     fetch(`/api/simulation/${simulationId}`)
         .then(response => response.json())
-        .then(simulation => {
-            // Show simulation container
-            simulationContainer.classList.remove('hidden');
-            historyContainer.classList.add('hidden');
+        .then(data => {
+            if (!data.success) {
+                throw new Error(data.error || 'Failed to fetch simulation');
+            }
             
-            // Update UI
-            currentSimulation = simulationId;
-            document.getElementById('simulationId').textContent = `#${simulationId.substring(0, 8)}`;
+            const simulation = data.simulation;
             
-            updateSimulationUI(simulation);
+            // Hide history container with animation
+            historyContainer.style.opacity = '0';
+            historyContainer.style.transform = 'translateY(-20px)';
+            setTimeout(() => historyContainer.classList.add('hidden'), 300);
+            
+            // Show simulation container with animation
+            setTimeout(() => {
+                showSimulationContainer();
+                currentSimulation = simulationId;
+                
+                // Update simulation ID display
+                const simIdElement = document.getElementById('simulationId');
+                if (simIdElement) {
+                    simIdElement.textContent = `#${simulationId.substring(0, 8)}`;
+                }
+                
+                updateSimulationUI(simulation);
+                
+                // If simulation is completed, show all results immediately
+                if (simulation.status === 'completed') {
+                    updateProgress(100);
+                    updateStatusBadge('completed');
+                    updateFlowSteps(simulation);
+                    if (simulation.transaction_results) {
+                        updateResults(simulation.transaction_results);
+                    }
+                } else if (simulation.status === 'running') {
+                    // Start polling for running simulations
+                    startPolling(simulationId);
+                }
+            }, 350);
         })
         .catch(error => {
             console.error('Error fetching simulation:', error);
@@ -621,19 +818,33 @@ function viewSimulation(simulationId) {
         });
 }
 
-// Show the history view
-function showHistory() {
-    simulationContainer.classList.add('hidden');
-    historyContainer.classList.remove('hidden');
-    
-    // Fetch latest history
-    fetchSimulationHistory();
-}
-
-// Show the home view
+// Show the home view with enhanced animations
 function showHome() {
+    // Hide other containers
     simulationContainer.classList.add('hidden');
     historyContainer.classList.add('hidden');
+    
+    // Show hero section
+    const heroSection = document.querySelector('section');
+    if (heroSection) {
+        heroSection.classList.remove('hidden');
+        heroSection.style.opacity = '0';
+        heroSection.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            heroSection.style.opacity = '1';
+            heroSection.style.transform = 'translateY(0)';
+            heroSection.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        }, 50);
+    }
+    
+    // Clear any active simulation polling
+    if (pollingInterval) {
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+    }
+    
+    currentSimulation = null;
 }
 
 // Generate and download a report of the current simulation
@@ -736,11 +947,93 @@ function generateReportContent(simulation) {
     integrated with Razorpay payment processing and enhanced with AI fraud detection.
     The BB84 protocol was used for key generation.
     `;
-    
-    return content;
+        
+    return content;  
 }
 
-// Show an error message
-function showError(message) {
-    alert(message);
+// Export history data as CSV
+function exportHistoryData() {
+    fetch('/api/simulations')
+        .then(response => response.json())
+        .then(data => {
+            const simulations = data.success ? data.simulations : data;
+            
+            if (!simulations || simulations.length === 0) {
+                showNotification('No simulation data to export', 'info');
+                return;
+            }
+            
+            // Create CSV content
+            const headers = [
+                'Simulation ID',
+                'Started',
+                'Completed',
+                'Status',
+                'Duration (seconds)',
+                'Amount (INR)',
+                'Qubits',
+                'Error Rate',
+                'Eavesdropper',
+                'Fraud Model',
+                'Fraud Sensitivity',
+                'Fraud Score',
+                'QKD Time (ms)',
+                'Encryption Time (ms)',
+                'Total Time (seconds)'
+            ];
+            
+            let csvContent = headers.join(',') + '\n';
+            
+            simulations.forEach(sim => {
+                const startTime = new Date(sim.started_at);
+                const completionTime = sim.completion_time ? new Date(sim.completion_time) : null;
+                const duration = completionTime ? (completionTime - startTime) / 1000 : '';
+                
+                const row = [
+                    sim.id,
+                    sim.started_at,
+                    sim.completion_time || '',
+                    sim.status,
+                    duration,
+                    sim.config ? (sim.config.amount / 100) : '',
+                    sim.config ? sim.config.qubits : '',
+                    sim.config ? sim.config.error_rate : '',
+                    sim.config ? (sim.config.eavesdropper ? 'Yes' : 'No') : '',
+                    sim.config ? sim.config.fraud_model : '',
+                    sim.config ? sim.config.fraud_sensitivity : '',
+                    sim.transaction_results?.fraud_detection?.risk_score || '',
+                    sim.qkd_metrics?.time ? (sim.qkd_metrics.time * 1000) : '',
+                    sim.transaction_results?.encryption_time || '',
+                    sim.transaction_results?.total_time || ''
+                ];
+                
+                // Escape commas and quotes in data
+                const escapedRow = row.map(field => {
+                    const stringField = String(field);
+                    if (stringField.includes(',') || stringField.includes('"')) {
+                        return '"' + stringField.replace(/"/g, '""') + '"';
+                    }
+                    return stringField;
+                });
+                
+                csvContent += escapedRow.join(',') + '\n';
+            });
+            
+            // Create and trigger download
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `qkd-simulation-history-${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showSuccess('History exported successfully!');
+        })
+        .catch(error => {
+            console.error('Error exporting history:', error);
+            showError('Failed to export history: ' + error.message);
+        });
 } 

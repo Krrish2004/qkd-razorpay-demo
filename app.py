@@ -416,7 +416,38 @@ def start_simulation():
         
         # Validate config
         if not config:
-            return jsonify({'error': 'No configuration provided'}), 400
+            return jsonify({
+                'success': False,
+                'error': 'No configuration provided'
+            }), 400
+        
+        # Validate required fields
+        required_fields = ['qubits', 'error_rate', 'amount']
+        for field in required_fields:
+            if field not in config:
+                return jsonify({
+                    'success': False,
+                    'error': f'Missing required field: {field}'
+                }), 400
+        
+        # Validate ranges
+        if config['qubits'] < 100 or config['qubits'] > 5000:
+            return jsonify({
+                'success': False,
+                'error': 'Number of qubits must be between 100 and 5000'
+            }), 400
+            
+        if config['error_rate'] < 0 or config['error_rate'] > 0.2:
+            return jsonify({
+                'success': False,
+                'error': 'Error rate must be between 0 and 0.2'
+            }), 400
+            
+        if config['amount'] < 10000 or config['amount'] > 100000000:  # 100 to 1,000,000 INR in paise
+            return jsonify({
+                'success': False,
+                'error': 'Amount must be between ₹100 and ₹1,000,000'
+            }), 400
         
         # Generate unique simulation ID
         simulation_id = str(uuid.uuid4())
@@ -437,31 +468,89 @@ def start_simulation():
         thread.start()
         
         return jsonify({
+            'success': True,
             'simulation_id': simulation_id,
-            'status': 'initializing'
+            'status': 'initializing',
+            'message': 'Simulation started successfully'
         })
         
     except Exception as e:
         logger.error(f"Error starting simulation: {str(e)}")
-        return jsonify({'error': str(e)}), 500
+        return jsonify({
+            'success': False,
+            'error': f'Internal server error: {str(e)}'
+        }), 500
 
 @app.route('/api/simulation/<simulation_id>', methods=['GET'])
 def get_simulation(simulation_id):
     """Get the status of a simulation"""
     if simulation_id not in simulations:
-        return jsonify({'error': 'Simulation not found'}), 404
+        return jsonify({
+            'success': False,
+            'error': 'Simulation not found'
+        }), 404
     
-    return jsonify(simulations[simulation_id])
+    simulation = simulations[simulation_id].copy()
+    
+    # Add visualization URL if it exists
+    if simulation.get('status') in ['running', 'completed'] and simulation.get('progress', 0) >= 25:
+        viz_path = f"static/qkd_viz_{simulation_id}.png"
+        if os.path.exists(viz_path):
+            simulation['qkd_visualization'] = f"/{viz_path}"
+    
+    # Format the response for the frontend
+    response = {
+        'success': True,
+        'simulation': simulation
+    }
+    
+    return jsonify(response)
 
 @app.route('/api/simulations', methods=['GET'])
 def get_simulations():
-    """Get a list of all simulations"""
-    simulation_list = list(simulations.values())
-    
-    # Sort by start time
-    simulation_list.sort(key=lambda x: x.get('started_at', ''), reverse=True)
-    
-    return jsonify(simulation_list)
+    """Get a list of all simulations with enhanced metadata"""
+    try:
+        simulation_list = list(simulations.values())
+        
+        # Sort by start time (newest first)
+        simulation_list.sort(key=lambda x: x.get('started_at', ''), reverse=True)
+        
+        # Add computed fields for easier frontend processing
+        for sim in simulation_list:
+            # Add computed duration
+            if sim.get('completion_time') and sim.get('started_at'):
+                start_time = datetime.fromisoformat(sim['started_at'])
+                end_time = datetime.fromisoformat(sim['completion_time'])
+                sim['duration_seconds'] = (end_time - start_time).total_seconds()
+            
+            # Ensure all required fields exist
+            if 'config' not in sim:
+                sim['config'] = {}
+            
+            # Add summary fields
+            sim['summary'] = {
+                'id_short': sim['id'][:8],
+                'amount_inr': sim.get('config', {}).get('amount', 0) / 100,
+                'qubits': sim.get('config', {}).get('qubits', 0),
+                'status_display': sim.get('status', 'unknown').title(),
+                'fraud_score': sim.get('transaction_results', {}).get('fraud_detection', {}).get('risk_score'),
+                'qkd_time_ms': sim.get('qkd_metrics', {}).get('time', 0) * 1000 if sim.get('qkd_metrics', {}).get('time') else None
+            }
+        
+        return jsonify({
+            'success': True,
+            'simulations': simulation_list,
+            'count': len(simulation_list)
+        })
+        
+    except Exception as e:
+        logger.error(f"Error fetching simulations: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': f'Failed to fetch simulation history: {str(e)}',
+            'simulations': [],
+            'count': 0
+        }), 500
 
 @app.route('/static/<path:filename>')
 def serve_static(filename):
@@ -483,4 +572,7 @@ def get_visualization(simulation_id):
 
 if __name__ == '__main__':
     logger.info("Starting QKD-Razorpay Demo Web Application")
-    app.run(debug=True, port=5000) 
+    # Get port from environment variable or default to 5000
+    port = int(os.environ.get('PORT', 5000))
+    # Run on all interfaces for Docker compatibility
+    app.run(host='0.0.0.0', port=port, debug=False) 
