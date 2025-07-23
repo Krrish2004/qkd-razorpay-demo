@@ -1,0 +1,191 @@
+[tool.poetry]
+name = "qkd-razorpay-demo"
+version = "1.0.0"
+description = "Quantum Key Distribution (QKD) for Razorpay Integration - A cutting-edge demonstration of quantum-secured financial transactions"
+authors = ["Krrish Choudhary <krrishchoudhary109@gmail.com>"]
+readme = "README.md"
+license = "MIT"
+homepage = "https://github.com/krrishchoudhary/qkd-razorpay-demo"
+repository = "https://github.com/krrishchoudhary/qkd-razorpay-demo"
+documentation = "https://github.com/krrishchoudhary/qkd-razorpay-demo/blob/main/README.md"
+keywords = ["quantum", "qkd", "razorpay", "cryptography", "fraud-detection", "bb84", "quantum-computing", "fintech"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Security :: Cryptography",
+    "Topic :: Office/Business :: Financial",
+    "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
+]
+packages = [{include = "*.py"}]
+
+[tool.poetry.dependencies]
+python = ">=3.8.1,<3.13"
+qiskit = ">=0.43.0,<1.0.0"
+qiskit-aer = ">=0.12.0,<1.0.0"
+razorpay = ">=1.3.0,<2.0.0"
+requests = ">=2.31.0,<3.0.0"
+cryptography = ">=41.0.3,<42.0.0"
+python-dotenv = ">=1.0.0,<2.0.0"
+matplotlib = ">=3.7.2,<4.0.0"
+numpy = ">=1.24.3,<2.0.0"
+scikit-learn = ">=1.2.2,<2.0.0"
+pandas = ">=2.0.3,<3.0.0"
+joblib = ">=1.3.2,<2.0.0"
+torch = ">=2.1.0,<3.0.0"
+flask = ">=2.3.3,<3.0.0"
+flask-cors = ">=4.0.0,<5.0.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+pytest-cov = "^4.1.0"
+pytest-flask = "^1.3.0"
+black = "^23.7.0"
+flake8 = "^6.0.0"
+isort = "^5.12.0"
+mypy = "^1.5.0"
+bandit = "^1.7.5"
+safety = "^2.3.0"
+pre-commit = "^3.3.0"
+
+[tool.poetry.group.docs.dependencies]
+sphinx = "^7.1.0"
+sphinx-rtd-theme = "^1.3.0"
+myst-parser = "^2.0.0"
+
+[tool.poetry.group.test.dependencies]
+coverage = "^7.3.0"
+tox = "^4.8.0"
+hypothesis = "^6.82.0"
+
+[tool.poetry.scripts]
+qkd-demo = "run:main"
+qkd-web = "app:main"
+qkd-cli = "main:main"
+
+[tool.poetry.extras]
+web = ["flask", "flask-cors"]
+quantum = ["qiskit", "qiskit-aer"]
+ml = ["torch", "scikit-learn", "pandas", "joblib"]
+visualization = ["matplotlib"]
+all = ["flask", "flask-cors", "qiskit", "qiskit-aer", "torch", "scikit-learn", "pandas", "joblib", "matplotlib"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 100
+target-version = ['py38', 'py39', 'py310', 'py311', 'py312']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | research_paper
+  | static
+  | templates
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 100
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+skip_glob = ["research_paper/*", "static/*", "templates/*"]
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+exclude = [
+    "research_paper/",
+    "static/",
+    "templates/",
+    "tests/",
+    "venv/",
+    "build/",
+    "dist/"
+]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q --strict-markers --cov=. --cov-report=term-missing --cov-report=html"
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+    "quantum: marks tests that require quantum simulation",
+    "web: marks tests for web interface",
+]
+
+[tool.coverage.run]
+source = ["."]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/__pycache__/*",
+    "*/venv/*",
+    "*/env/*",
+    "research_paper/*",
+    "static/*",
+    "templates/*",
+    "setup.py",
+    "conftest.py"
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+
+[tool.bandit]
+exclude_dirs = ["tests", "research_paper", "static", "templates"]
+skips = ["B101", "B601"]
+
+[tool.safety]
+ignore = [] 

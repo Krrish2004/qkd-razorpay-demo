@@ -9,7 +9,7 @@ import matplotlib
 matplotlib.use('Agg')  
 import matplotlib.pyplot as plt
 from qiskit import QuantumCircuit
-from qiskit.primitives import StatevectorSampler
+from qiskit_aer.primitives import Sampler
 from qiskit_aer import Aer
 from qiskit.visualization import plot_histogram
 import hashlib
@@ -56,7 +56,7 @@ class QKDSimulator:
         bob_results = []
         
         # Set up the Aer simulator
-        sampler = StatevectorSampler()
+        sampler = Sampler()
         
         for i in range(self.n_bits):
             # Create a quantum circuit with one qubit
@@ -90,11 +90,10 @@ class QKDSimulator:
                 # Run Eve's measurement
                 job = sampler.run([qc])
                 result = job.result()
-                # Get the sampler result using new API
-                bit_array = result[0].data.c
+                # Get the sampler result using correct API
+                quasi_dist = result.quasi_dists[0]
                 # Get the most frequent outcome
-                counts = bit_array.get_counts()
-                eve_result = 1 if counts.get('1', 0) > counts.get('0', 0) else 0
+                eve_result = 1 if quasi_dist.get(1, 0) > quasi_dist.get(0, 0) else 0
                 
                 # Create new circuit to re-prepare qubit for Bob
                 qc = QuantumCircuit(1, 1)
@@ -129,13 +128,11 @@ class QKDSimulator:
             # Run and get the result
             job = sampler.run([qc])
             result = job.result()
-            # Get the sampler result using new API
-            bit_array = result[0].data.c
-            # Get the most frequent outcome
-            counts = bit_array.get_counts()
+            # Get the sampler result using correct API
+            quasi_dist = result.quasi_dists[0]
             
             # Get the measured bit (higher probability outcome)
-            measured_bit = 1 if counts.get('1', 0) > counts.get('0', 0) else 0
+            measured_bit = 1 if quasi_dist.get(1, 0) > quasi_dist.get(0, 0) else 0
             bob_results.append(measured_bit)
         
         return bob_results

@@ -1,0 +1,120 @@
+# Pre-commit hooks configuration for QKD-Razorpay Demo
+# See https://pre-commit.com for more information
+repos:
+  # Python code formatting
+  - repo: https://github.com/psf/black
+    rev: 23.12.1
+    hooks:
+      - id: black
+        language_version: python3
+        args: [--line-length=100]
+
+  # Import sorting
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: [--profile=black, --line-length=100]
+
+  # Python linting
+  - repo: https://github.com/pycqa/flake8
+    rev: 6.1.0
+    hooks:
+      - id: flake8
+        additional_dependencies:
+          - flake8-docstrings
+          - flake8-import-order
+          - flake8-bugbear
+        args: [--max-line-length=100, --ignore=E203,W503,F401]
+
+  # Security linting
+  - repo: https://github.com/pycqa/bandit
+    rev: 1.7.5
+    hooks:
+      - id: bandit
+        args: [-r, ., --skip=B101,B601]
+        exclude: ^tests/
+
+  # General file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: ^(.*\.md|.*\.tex)$
+      - id: end-of-file-fixer
+        exclude: ^(.*\.md|.*\.tex|static/.*|templates/.*)$
+      - id: check-yaml
+      - id: check-toml
+      - id: check-json
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      - id: check-merge-conflict
+      - id: debug-statements
+      - id: check-docstring-first
+      - id: check-case-conflict
+
+  # Python-specific checks
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.10.0
+    hooks:
+      - id: python-no-log-warn
+      - id: python-no-eval
+      - id: python-check-mock-methods
+      - id: python-use-type-annotations
+
+  # Type checking
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.8.0
+    hooks:
+      - id: mypy
+        additional_dependencies:
+          - types-requests
+          - types-python-dateutil
+        args: [--ignore-missing-imports, --no-strict-optional]
+        exclude: ^(tests/|research_paper/|static/|templates/)
+
+  # Safety check for known security vulnerabilities
+  - repo: https://github.com/gitguardian/ggshield
+    rev: v1.25.0
+    hooks:
+      - id: ggshield
+        language: python
+        stages: [commit]
+
+  # Dockerfile linting
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.12.0
+    hooks:
+      - id: hadolint-docker
+        args: [--ignore, DL3008, --ignore, DL3009]
+
+  # YAML formatting
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
+    hooks:
+      - id: prettier
+        types_or: [yaml, json]
+        exclude: ^(poetry\.lock|\.vscode/)
+
+  # Python dependency safety check
+  - repo: local
+    hooks:
+      - id: safety
+        name: safety
+        entry: poetry run safety check
+        language: system
+        pass_filenames: false
+        files: ^(pyproject\.toml|poetry\.lock)$
+
+# Configuration for specific tools
+ci:
+  autofix_commit_msg: |
+    [pre-commit.ci] auto fixes from pre-commit.com hooks
+
+    for more information, see https://pre-commit.ci
+  autofix_prs: true
+  autoupdate_branch: ''
+  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
+  autoupdate_schedule: weekly
+  skip: [safety, ggshield]  # Skip hooks that require API keys in CI
+  submodules: false 
